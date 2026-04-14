@@ -3,167 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexora ERP - Clientes integrados con Cotizaciones</title>
-
+<title>Nexora ERP - Completo</title>
 <style>
-:root{
-  --bg:#0b0f1a;--sidebar:#070b16;
-  --accent:#1a7fff;--accent2:#00d4ff;
-  --green:#00c896;--red:#ff4d6a;
-  --text:#e2e8f2;--muted:#6b7a90;
-  --card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.07);
-  --radius:12px;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-input,select,textarea,button{font-family:inherit;}
-select option{background:#0d1220;color:var(--text);}
-
-#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 60% at 55% 30%,rgba(26,127,255,0.1),transparent 70%),linear-gradient(180deg,#08101f,#0b0f1a);}
-.auth-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:22px;padding:44px 40px;width:100%;max-width:420px;backdrop-filter:blur(24px);box-shadow:0 30px 80px rgba(0,0,0,.4);}
-.auth-logo{font-size:22px;font-weight:900;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
-.auth-sub{font-size:13px;color:var(--muted);margin-bottom:30px;}
-.auth-card h2{font-size:20px;font-weight:800;margin-bottom:4px;}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px;}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--text);font-size:14px;transition:border-color .2s,box-shadow .2s;}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,127,255,0.13);}
-.form-group textarea{resize:vertical;min-height:72px;}
-.btn-primary{width:100%;background:linear-gradient(135deg,var(--accent),#0050cc);border:none;color:#fff;font-size:14px;font-weight:700;padding:13px;border-radius:9px;cursor:pointer;transition:opacity .2s,transform .15s;margin-top:4px;}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
-.btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.auth-link{text-align:center;margin-top:18px;font-size:13px;color:var(--muted);}
-.auth-link a{color:var(--accent2);text-decoration:none;font-weight:700;}
-
-#app-screen{display:flex;min-height:100vh;}
-.sidebar{width:240px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:200;}
-.sidebar-logo{padding:20px 20px 16px;font-size:18px;font-weight:900;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;border-bottom:1px solid var(--border);}
-.sidebar-logo span{display:block;font-size:10px;font-weight:500;color:var(--muted);-webkit-text-fill-color:var(--muted);margin-top:2px;}
-.nav-section{padding:14px 14px 4px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.18);}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;margin:2px 8px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--muted);transition:background .2s,color .2s;user-select:none;}
-.nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text);}
-.nav-item.active{background:rgba(26,127,255,0.15);color:var(--accent2);}
-.nav-item .icon{width:22px;text-align:center;font-size:16px;}
-.sidebar-footer{margin-top:auto;padding:14px;border-top:1px solid var(--border);}
-.user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
-.user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.user-biz{font-size:11px;color:var(--muted);}
-.btn-logout{width:100%;background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.22);color:#ff4d6a;padding:8px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:background .2s;}
-.btn-logout:hover{background:rgba(255,77,106,0.2);}
-
-.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{position:sticky;top:0;z-index:100;background:rgba(11,15,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;}
-#mod-title{font-size:17px;font-weight:800;letter-spacing:-.3px;}
-.topbar-biz{font-size:12px;color:var(--muted);background:rgba(255,255,255,0.05);border:1px solid var(--border);padding:5px 12px;border-radius:20px;}
-.content{padding:26px 28px;flex:1;}
-[id^="mod-"]{display:none;}
-
-.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-.dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;transition:transform .2s,border-color .2s;}
-.dash-card:hover{transform:translateY(-3px);border-color:rgba(26,127,255,0.22);}
-.dash-card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;}
-.dash-card-val{font-size:26px;font-weight:900;letter-spacing:-1px;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.dash-card-sub{font-size:12px;color:var(--muted);margin-top:4px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.section-header h3{font-size:14px;font-weight:800;}
-
-.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto;}
-table{width:100%;border-collapse:collapse;min-width:480px;}
-thead tr{background:rgba(255,255,255,0.04);}
-th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);white-space:nowrap;}
-td{padding:11px 14px;font-size:13.5px;border-top:1px solid var(--border);vertical-align:middle;}
-tr:hover td{background:rgba(255,255,255,0.02);}
-.prod-name{font-weight:700;}
-
-.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.toolbar-search{flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-size:14px;transition:border-color .2s;}
-.toolbar-search:focus{outline:none;border-color:var(--accent);}
-.btn-action{background:linear-gradient(135deg,var(--accent),#0050cc);border:none;color:#fff;padding:10px 18px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;transition:opacity .2s,transform .15s;}
-.btn-action:hover{opacity:.88;transform:translateY(-1px);}
-
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:capitalize;}
-.badge-ok{background:rgba(0,200,150,0.15);color:var(--green);}
-.badge-peligro{background:rgba(255,77,106,0.15);color:var(--red);}
-.badge-borrador{background:rgba(107,122,144,0.18);color:var(--muted);}
-.badge-enviada{background:rgba(0,212,255,0.15);color:var(--accent2);}
-.badge-aprobada{background:rgba(0,200,150,0.15);color:var(--green);}
-.badge-rechazada{background:rgba(255,77,106,0.15);color:var(--red);}
-
-.btn-icon{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:5px 9px;border-radius:7px;cursor:pointer;font-size:13px;transition:background .2s;margin-right:3px;}
-.btn-icon:hover{background:rgba(26,127,255,0.15);}
-.btn-icon.danger:hover{background:rgba(255,77,106,0.15);}
-
-.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:1000;overflow-y:auto;padding:32px 16px;}
-.modal{background:#0d1220;border:1px solid rgba(255,255,255,0.1);border-radius:18px;width:100%;max-width:640px;margin:0 auto;animation:slideUp .25s ease;}
-.modal-wide{max-width:860px;}
-@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-header h3{font-size:16px;font-weight:800;}
-.modal-close{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.modal-close:hover{background:rgba(255,77,106,0.15);color:var(--red);}
-.modal-body{padding:22px 24px;}
-.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn-save{background:linear-gradient(135deg,var(--accent),#0050cc);border:none;color:#fff;padding:10px 24px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:700;transition:opacity .2s;}
-.btn-save:hover{opacity:.88;}
-.btn-save:disabled{opacity:.45;cursor:not-allowed;}
-.btn-cancel{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);padding:10px 18px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;transition:background .2s;}
-.btn-cancel:hover{background:rgba(255,255,255,0.09);}
-
-.add-item-row{display:grid;grid-template-columns:1fr 80px 130px auto;gap:10px;align-items:end;background:rgba(26,127,255,0.06);border:1px solid rgba(26,127,255,0.2);border-radius:10px;padding:14px;margin-bottom:14px;}
-.cot-total-row{text-align:right;font-size:20px;font-weight:900;padding:10px 4px;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
-
-.toast{position:fixed;bottom:22px;right:22px;background:#141928;border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:12px 18px;border-radius:10px;font-size:14px;font-weight:500;z-index:9999;transform:translateY(14px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);max-width:340px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast-success{border-color:rgba(0,200,150,.28);}
-.toast-error{border-color:rgba(255,77,106,.3);color:#ff9aaa;}
-
-/* Estilo para el selector de clientes con botón inline */
-.cliente-select-wrapper {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-}
-.cliente-select-wrapper select {
-  flex: 1;
-}
-.btn-icon-small {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 11px 12px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.2s;
-  line-height: 1;
-}
-.btn-icon-small:hover {
-  background: rgba(26,127,255,0.2);
-}
-
-@media(max-width:800px){
-  .sidebar{width:60px;}
-  .sidebar-logo .sub,.nav-section,.nav-item span:not(.icon),.user-name,.user-biz,.btn-logout{display:none;}
-  .main{margin-left:60px;}
-  .dash-grid{grid-template-columns:1fr 1fr;}
-  .form-row,.add-item-row{grid-template-columns:1fr;}
-  .cliente-select-wrapper{flex-direction:column;align-items:stretch;}
-}
+  :root {
+    --bg:#0b0f1a; --sidebar:#070b16; --accent:#1a7fff; --accent2:#00d4ff;
+    --green:#00c896; --red:#ff4d6a; --text:#e2e8f2; --muted:#6b7a90;
+    --card:rgba(255,255,255,0.04); --border:rgba(255,255,255,0.07);
+    --radius:12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+  input,select,textarea,button { font-family:inherit; }
+  select option { background:#0d1220; color:var(--text); }
+  #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse 80% 60% at 55% 30%,rgba(26,127,255,0.1),transparent 70%),linear-gradient(180deg,#08101f,#0b0f1a); }
+  .auth-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:22px; padding:44px 40px; width:100%; max-width:420px; backdrop-filter:blur(24px); box-shadow:0 30px 80px rgba(0,0,0,.4); }
+  .auth-logo { font-size:22px; font-weight:900; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:4px; }
+  .auth-sub { font-size:13px; color:var(--muted); margin-bottom:30px; }
+  .auth-card h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+  .form-group { margin-bottom:14px; }
+  .form-group label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin-bottom:5px; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:9px; padding:11px 14px; color:var(--text); font-size:14px; transition:border-color .2s,box-shadow .2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(26,127,255,0.13); }
+  .btn-primary { width:100%; background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; font-size:14px; font-weight:700; padding:13px; border-radius:9px; cursor:pointer; transition:opacity .2s,transform .15s; margin-top:4px; }
+  .btn-primary:hover { opacity:.88; transform:translateY(-1px); }
+  .btn-primary:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+  .auth-link { text-align:center; margin-top:18px; font-size:13px; color:var(--muted); }
+  .auth-link a { color:var(--accent2); text-decoration:none; font-weight:700; }
+  #app-screen { display:flex; min-height:100vh; }
+  .sidebar { width:240px; background:var(--sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:200; }
+  .sidebar-logo { padding:20px 20px 16px; font-size:18px; font-weight:900; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; border-bottom:1px solid var(--border); }
+  .sidebar-logo span { display:block; font-size:10px; font-weight:500; color:var(--muted); -webkit-text-fill-color:var(--muted); margin-top:2px; }
+  .nav-section { padding:14px 14px 4px; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.18); }
+  .nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; margin:2px 8px; border-radius:9px; cursor:pointer; font-size:13.5px; font-weight:500; color:var(--muted); transition:background .2s,color .2s; user-select:none; }
+  .nav-item:hover { background:rgba(255,255,255,0.05); color:var(--text); }
+  .nav-item.active { background:rgba(26,127,255,0.15); color:var(--accent2); }
+  .nav-item .icon { width:22px; text-align:center; font-size:16px; }
+  .sidebar-footer { margin-top:auto; padding:14px; border-top:1px solid var(--border); }
+  .user-info { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .user-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:#fff; flex-shrink:0; }
+  .user-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .user-biz { font-size:11px; color:var(--muted); }
+  .btn-logout { width:100%; background:rgba(255,77,106,0.1); border:1px solid rgba(255,77,106,0.22); color:#ff4d6a; padding:8px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:background .2s; }
+  .btn-logout:hover { background:rgba(255,77,106,0.2); }
+  .main { margin-left:240px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+  .topbar { position:sticky; top:0; z-index:100; background:rgba(11,15,26,0.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:0 28px; height:58px; display:flex; align-items:center; justify-content:space-between; }
+  #mod-title { font-size:17px; font-weight:800; letter-spacing:-.3px; }
+  .topbar-biz { font-size:12px; color:var(--muted); background:rgba(255,255,255,0.05); border:1px solid var(--border); padding:5px 12px; border-radius:20px; }
+  .content { padding:26px 28px; flex:1; }
+  [id^="mod-"] { display:none; }
+  .dash-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .dash-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px 18px; transition:transform .2s,border-color .2s; }
+  .dash-card:hover { transform:translateY(-3px); border-color:rgba(26,127,255,0.22); }
+  .dash-card-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); margin-bottom:6px; }
+  .dash-card-val { font-size:26px; font-weight:900; letter-spacing:-1px; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .dash-card-sub { font-size:12px; color:var(--muted); margin-top:4px; }
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .section-header h3 { font-size:14px; font-weight:800; }
+  .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:auto; }
+  table { width:100%; border-collapse:collapse; min-width:480px; }
+  thead tr { background:rgba(255,255,255,0.04); }
+  th { padding:11px 14px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); white-space:nowrap; }
+  td { padding:11px 14px; font-size:13.5px; border-top:1px solid var(--border); vertical-align:middle; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+  .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .toolbar-search { flex:1; min-width:200px; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:10px 14px; color:var(--text); font-size:14px; transition:border-color .2s; }
+  .toolbar-search:focus { outline:none; border-color:var(--accent); }
+  .btn-action { background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; padding:10px 18px; border-radius:9px; cursor:pointer; font-size:13px; font-weight:700; white-space:nowrap; transition:opacity .2s,transform .15s; }
+  .btn-action:hover { opacity:.88; transform:translateY(-1px); }
+  .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; text-transform:capitalize; }
+  .badge-ok { background:rgba(0,200,150,0.15); color:var(--green); }
+  .badge-peligro { background:rgba(255,77,106,0.15); color:var(--red); }
+  .badge-borrador { background:rgba(107,122,144,0.18); color:var(--muted); }
+  .badge-enviada { background:rgba(0,212,255,0.15); color:var(--accent2); }
+  .badge-aprobada { background:rgba(0,200,150,0.15); color:var(--green); }
+  .badge-rechazada { background:rgba(255,77,106,0.15); color:var(--red); }
+  .btn-icon { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text); padding:5px 9px; border-radius:7px; cursor:pointer; font-size:13px; transition:background .2s; margin-right:3px; }
+  .btn-icon:hover { background:rgba(26,127,255,0.15); }
+  .btn-icon.danger:hover { background:rgba(255,77,106,0.15); }
+  .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:1000; overflow-y:auto; padding:32px 16px; }
+  .modal { background:#0d1220; border:1px solid rgba(255,255,255,0.1); border-radius:18px; width:100%; max-width:640px; margin:0 auto; animation:slideUp .25s ease; }
+  .modal-wide { max-width:860px; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .modal-header { padding:20px 24px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .modal-header h3 { font-size:16px; font-weight:800; }
+  .modal-close { background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--muted); width:30px; height:30px; border-radius:7px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .modal-close:hover { background:rgba(255,77,106,0.15); color:var(--red); }
+  .modal-body { padding:22px 24px; }
+  .modal-footer { padding:14px 24px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .btn-save { background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; padding:10px 24px; border-radius:9px; cursor:pointer; font-size:14px; font-weight:700; transition:opacity .2s; }
+  .btn-save:hover { opacity:.88; }
+  .btn-save:disabled { opacity:.45; cursor:not-allowed; }
+  .btn-cancel { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--muted); padding:10px 18px; border-radius:9px; cursor:pointer; font-size:14px; font-weight:600; transition:background .2s; }
+  .btn-cancel:hover { background:rgba(255,255,255,0.09); }
+  .add-item-row { display:grid; grid-template-columns:1fr 80px 130px auto; gap:10px; align-items:end; background:rgba(26,127,255,0.06); border:1px solid rgba(26,127,255,0.2); border-radius:10px; padding:14px; margin-bottom:14px; }
+  .cot-total-row { text-align:right; font-size:20px; font-weight:900; padding:10px 4px; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .divider { border:none; border-top:1px solid var(--border); margin:18px 0; }
+  .toast { position:fixed; bottom:22px; right:22px; background:#141928; border:1px solid rgba(255,255,255,0.1); color:var(--text); padding:12px 18px; border-radius:10px; font-size:14px; font-weight:500; z-index:9999; transform:translateY(14px); opacity:0; transition:all .3s cubic-bezier(.22,1,.36,1); max-width:340px; box-shadow:0 10px 40px rgba(0,0,0,.5); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast-success { border-color:rgba(0,200,150,.28); }
+  .toast-error { border-color:rgba(255,77,106,.3); color:#ff9aaa; }
+  .cliente-select-wrapper { display:flex; gap:8px; align-items:flex-end; }
+  .cliente-select-wrapper select { flex:1; }
+  .btn-icon-small { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text); padding:11px 12px; border-radius:9px; cursor:pointer; font-size:16px; transition:background .2s; line-height:1; }
+  .btn-icon-small:hover { background:rgba(26,127,255,0.2); }
+  .report-card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:20px; }
+  .report-title { font-size:16px; font-weight:800; margin-bottom:12px; color:var(--accent2); }
+  .report-list { list-style:none; }
+  .report-list li { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); }
+  .sugerencia-item { background:rgba(255,193,7,0.1); border-left:3px solid #ffc107; padding:10px; margin-bottom:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; }
+  @media(max-width:800px){
+    .sidebar{width:60px;}
+    .sidebar-logo .sub,.nav-section,.nav-item span:not(.icon),.user-name,.user-biz,.btn-logout{display:none;}
+    .main{margin-left:60px;}
+    .dash-grid{grid-template-columns:1fr 1fr;}
+    .form-row,.add-item-row{grid-template-columns:1fr;}
+    .cliente-select-wrapper{flex-direction:column;align-items:stretch;}
+  }
 </style>
 </head>
 <body>
-
-<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">NEXORA ERP</div>
     <p class="auth-sub">Tu sistema inteligente de gestión empresarial</p>
     <div id="login-form">
       <h2>Iniciar sesión</h2>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:22px">Accede a tu negocio en la nube</p>
       <div class="form-group"><label>Email</label><input id="login-email" type="email" placeholder="tu@email.com" autocomplete="email"></div>
       <div class="form-group"><label>Contraseña</label><input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
       <button id="btn-login" class="btn-primary">Entrar →</button>
@@ -171,7 +136,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     </div>
     <div id="register-form" style="display:none">
       <h2>Crear cuenta</h2>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:22px">Registra tu negocio gratis</p>
       <div class="form-group"><label>Tu nombre</label><input id="reg-name" type="text" placeholder="Juan García"></div>
       <div class="form-group"><label>Nombre del negocio</label><input id="reg-biz" type="text" placeholder="Ferretería El Tornillo"></div>
       <div class="form-group"><label>Email</label><input id="reg-email" type="email" placeholder="tu@email.com"></div>
@@ -182,789 +146,214 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
-<!-- APP -->
 <div id="app-screen" style="display:none">
   <aside class="sidebar">
-    <div class="sidebar-logo">NEXORA ERP<span class="sub">Sistema de Gestión</span></div>
+    <div class="sidebar-logo">NEXORA ERP<span class="sub">Gestión Total</span></div>
     <div class="nav-section">Principal</div>
     <div class="nav-item active" data-module="dashboard"><span class="icon">📊</span><span>Dashboard</span></div>
-    <div class="nav-section">Módulos</div>
+    <div class="nav-section">Operaciones</div>
     <div class="nav-item" data-module="inventario"><span class="icon">📦</span><span>Inventario</span></div>
     <div class="nav-item" data-module="cotizaciones"><span class="icon">📄</span><span>Cotizaciones</span></div>
+    <div class="nav-item" data-module="facturas"><span class="icon">🧾</span><span>Facturas</span></div>
+    <div class="nav-item" data-module="compras"><span class="icon">🛒</span><span>Compras</span></div>
+    <div class="nav-section">Base de datos</div>
     <div class="nav-item" data-module="clientes"><span class="icon">👥</span><span>Clientes</span></div>
     <div class="nav-item" data-module="proveedores"><span class="icon">🚚</span><span>Proveedores</span></div>
+    <div class="nav-section">Analítica</div>
+    <div class="nav-item" data-module="reportes"><span class="icon">📈</span><span>Reportes</span></div>
     <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">U</div>
-        <div><div class="user-name" id="user-name">—</div><div class="user-biz biz-el">—</div></div>
-      </div>
+      <div class="user-info"><div class="user-avatar" id="user-avatar">U</div><div><div class="user-name" id="user-name">—</div><div class="user-biz biz-el">—</div></div></div>
       <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
     </div>
   </aside>
-
   <div class="main">
-    <div class="topbar">
-      <div id="mod-title">Dashboard</div>
-      <span class="topbar-biz biz-el">—</span>
-    </div>
+    <div class="topbar"><div id="mod-title">Dashboard</div><span class="topbar-biz biz-el">—</span></div>
     <div class="content">
-
       <!-- DASHBOARD -->
       <div id="mod-dashboard">
         <div class="dash-grid">
           <div class="dash-card"><div class="dash-card-label">📦 Productos</div><div class="dash-card-val" id="dash-productos">—</div><div class="dash-card-sub">en inventario</div></div>
           <div class="dash-card"><div class="dash-card-label">📄 Cotizaciones</div><div class="dash-card-val" id="dash-cotizaciones">—</div><div class="dash-card-sub">registradas</div></div>
+          <div class="dash-card"><div class="dash-card-label">🧾 Facturas</div><div class="dash-card-val" id="dash-facturas">—</div><div class="dash-card-sub">emitidas</div></div>
           <div class="dash-card"><div class="dash-card-label">👥 Clientes</div><div class="dash-card-val" id="dash-clientes">—</div><div class="dash-card-sub">registrados</div></div>
-          <div class="dash-card"><div class="dash-card-label">🚚 Proveedores</div><div class="dash-card-val" id="dash-proveedores">—</div><div class="dash-card-sub">activos</div></div>
         </div>
-        <div class="section-header">
-          <h3>Cotizaciones recientes</h3>
-          <button class="btn-action" onclick="loadModule('cotizaciones')">Ver todas →</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>N°</th><th>Cliente</th><th>Total</th><th>Estado</th></tr></thead>
-            <tbody id="dash-recent"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:28px">Cargando…</td></tr></tbody>
-          </table>
-        </div>
+        <div class="section-header"><h3>📈 Sugerencias de compra</h3></div>
+        <div id="sugerencias-container" class="table-wrap" style="padding:16px; margin-bottom:20px;">Cargando sugerencias...</div>
+        <div class="section-header"><h3>🏆 Top Clientes</h3></div>
+        <div id="top-clientes" class="table-wrap" style="padding:16px; margin-bottom:20px;">Cargando...</div>
+        <div class="section-header"><h3>🔥 Top Productos más vendidos</h3></div>
+        <div id="top-productos" class="table-wrap" style="padding:16px;">Cargando...</div>
       </div>
 
-      <!-- INVENTARIO -->
-      <div id="mod-inventario">
-        <div class="toolbar">
-          <input class="toolbar-search" id="prod-search" placeholder="🔍  Buscar producto, referencia, categoría…">
-          <button class="btn-action" onclick="openProductoModal()">+ Nuevo producto</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Producto</th><th>Referencia</th><th>Precio</th><th>Stock</th><th>Mín.</th><th>Descripción</th><th>Acciones</th></tr></thead>
-            <tbody id="prod-tbody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- COTIZACIONES (modal modificado) -->
-      <div id="mod-cotizaciones">
-        <div class="toolbar">
-          <button class="btn-action" onclick="openCotizacionModal()">+ Nueva cotización</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>N°</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="cot-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
+      <!-- INVENTARIO (igual que antes, con alerta stock) -->
+      <div id="mod-inventario"><div class="toolbar"><input class="toolbar-search" id="prod-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openProductoModal()">+ Nuevo producto</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Ref</th><th>Precio</th><th>Stock</th><th>Mín</th><th>Acciones</th></tr></thead><tbody id="prod-tbody"></tbody></table></div></div>
+      <!-- COTIZACIONES -->
+      <div id="mod-cotizaciones"><div class="toolbar"><button class="btn-action" onclick="openCotizacionModal()">+ Nueva cotización</button></div><div class="table-wrap"><table><thead><tr><th>N°</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="cot-tbody"></tbody></table></div></div>
+      <!-- FACTURAS -->
+      <div id="mod-facturas"><div class="table-wrap"><table><thead><tr><th>N° Factura</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div></div>
+      <!-- COMPRAS -->
+      <div id="mod-compras"><div class="toolbar"><button class="btn-action" onclick="openCompraModal()">+ Registrar compra</button></div><div class="table-wrap"><table><thead><tr><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="compras-tbody"></tbody></table></div></div>
       <!-- CLIENTES -->
-      <div id="mod-clientes">
-        <div class="toolbar">
-          <input class="toolbar-search" id="cliente-search" placeholder="🔍 Buscar por nombre, email o teléfono...">
-          <button class="btn-action" onclick="openClienteModal()">+ Nuevo cliente</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>NIT</th><th>Acciones</th></tr></thead>
-            <tbody id="cliente-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
+      <div id="mod-clientes"><div class="toolbar"><input class="toolbar-search" id="cliente-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openClienteModal()">+ Nuevo cliente</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="cliente-tbody"></tbody></table></div></div>
       <!-- PROVEEDORES -->
-      <div id="mod-proveedores">
-        <div class="toolbar">
-          <input class="toolbar-search" id="proveedor-search" placeholder="🔍 Buscar por nombre, contacto o teléfono...">
-          <button class="btn-action" onclick="openProveedorModal()">+ Nuevo proveedor</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th>Acciones</th></tr></thead>
-            <tbody id="proveedor-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
+      <div id="mod-proveedores"><div class="toolbar"><input class="toolbar-search" id="proveedor-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openProveedorModal()">+ Nuevo proveedor</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="proveedor-tbody"></tbody></table></div></div>
+      <!-- REPORTES (top ya mostrado en dashboard, aquí puede ir más detalle) -->
+      <div id="mod-reportes"><div class="report-card"><div class="report-title">📊 Resumen de Ventas</div><div id="reporte-detalle"></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- MODAL PRODUCTO (sin cambios) -->
-<div class="modal-backdrop" id="prod-modal">
-  <div class="modal">
-    <div class="modal-header"><h3 id="prod-modal-title">Nuevo Producto</h3><button class="modal-close">✕</button></div>
-    <form id="prod-form">
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label>Nombre *</label><input id="prod-nombre" placeholder="Ej: Tornillo hexagonal 3/8"></div>
-          <div class="form-group"><label>Referencia</label><input id="prod-ref" placeholder="REF-001"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Categoría</label><input id="prod-cat" placeholder="Ferretería, Eléctrico…"></div>
-          <div class="form-group"><label>Unidad</label><select id="prod-unidad"><option>und</option><option>kg</option><option>lt</option><option>mt</option><option>caja</option><option>par</option><option>rollo</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Precio de venta ($)</label><input id="prod-precio" type="number" min="0" step="0.01" value="0"></div>
-          <div class="form-group"><label>Stock actual</label><input id="prod-stock" type="number" min="0" value="0"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Stock mínimo (alerta)</label><input id="prod-stockmin" type="number" min="0" value="5"></div>
-          <div class="form-group"><label>Descripción</label><input id="prod-desc" placeholder="Descripción corta…"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-cancel modal-close">Cancelar</button>
-        <button type="submit" id="prod-save" class="btn-save">Guardar producto</button>
-      </div>
-    </form>
-  </div>
-</div>
+<!-- MODALES (Producto, Cliente, Proveedor, Cotización, Compra) -->
+<div class="modal-backdrop" id="prod-modal"><div class="modal"><div class="modal-header"><h3 id="prod-modal-title">Producto</h3><button class="modal-close">✕</button></div><form id="prod-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="prod-nombre"></div><div class="form-row"><div class="form-group"><label>Precio</label><input id="prod-precio" type="number" step="0.01"></div><div class="form-group"><label>Stock</label><input id="prod-stock" type="number"></div></div><div class="form-group"><label>Stock mínimo</label><input id="prod-stockmin" type="number" value="5"></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="prod-save" class="btn-save">Guardar</button></div></form></div></div>
+<div class="modal-backdrop" id="cliente-modal"><div class="modal"><div class="modal-header"><h3 id="cliente-modal-title">Cliente</h3><button class="modal-close">✕</button></div><form id="cliente-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="cliente-nombre"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="cliente-email" type="email"></div><div class="form-group"><label>Teléfono</label><input id="cliente-telefono"></div></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="cliente-save" class="btn-save">Guardar</button></div></form></div></div>
+<div class="modal-backdrop" id="proveedor-modal"><div class="modal"><div class="modal-header"><h3 id="proveedor-modal-title">Proveedor</h3><button class="modal-close">✕</button></div><form id="proveedor-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="proveedor-nombre"></div><div class="form-group"><label>Contacto</label><input id="proveedor-contacto"></div><div class="form-row"><div class="form-group"><label>Teléfono</label><input id="proveedor-telefono"></div><div class="form-group"><label>Email</label><input id="proveedor-email"></div></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="proveedor-save" class="btn-save">Guardar</button></div></form></div></div>
 
-<!-- MODAL COTIZACIÓN (con selector de clientes y botón +) -->
-<div class="modal-backdrop" id="cot-modal">
-  <div class="modal modal-wide">
-    <div class="modal-header"><h3 id="cot-modal-title">Nueva Cotización</h3><button class="modal-close">✕</button></div>
-    <form id="cot-form">
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label>N° Cotización</label><input id="cot-numero" placeholder="COT-0001"></div>
-          <div class="form-group"><label>Estado</label><select id="cot-estado"><option value="Borrador">Borrador</option><option value="Enviada">Enviada</option><option value="Aprobada">Aprobada</option><option value="Rechazada">Rechazada</option></select></div>
-        </div>
-        
-        <!-- Cliente con selector y botón nuevo -->
-        <div class="form-group">
-          <label>Cliente *</label>
-          <div class="cliente-select-wrapper">
-            <select id="cot-cliente-id">
-              <option value="">-- Seleccione un cliente --</option>
-            </select>
-            <button type="button" id="btn-nuevo-cliente-cot" class="btn-icon-small" title="Nuevo cliente">➕</button>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group"><label>Email del cliente</label><input id="cot-email" type="email" placeholder="cliente@email.com" readonly style="background:rgba(255,255,255,0.02); cursor:default;"></div>
-          <div class="form-group"><label>Teléfono</label><input id="cot-telefono" placeholder="310 000 0000" readonly style="background:rgba(255,255,255,0.02); cursor:default;"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Fecha</label><input id="cot-fecha" type="date"></div>
-          <div class="form-group"><label>Válida por (días)</label><input id="cot-validez" type="number" value="30" min="1"></div>
-        </div>
-        <div class="form-group"><label>Notas / condiciones</label><input id="cot-notas" placeholder="Ej: precio sin IVA, incluye envío…"></div>
+<!-- MODAL COTIZACIÓN (con descuento, IVA) -->
+<div class="modal-backdrop" id="cot-modal"><div class="modal modal-wide"><div class="modal-header"><h3 id="cot-modal-title">Cotización</h3><button class="modal-close">✕</button></div><form id="cot-form"><div class="modal-body"><div class="form-row"><div class="form-group"><label>N°</label><input id="cot-numero"></div><div class="form-group"><label>Estado</label><select id="cot-estado"><option>Borrador</option><option>Aprobada</option></select></div></div><div class="form-group"><label>Cliente</label><div class="cliente-select-wrapper"><select id="cot-cliente-id"><option value="">-- Seleccionar --</option></select><button type="button" id="btn-nuevo-cliente-cot" class="btn-icon-small">➕</button></div></div><div class="form-row"><div class="form-group"><label>Email</label><input id="cot-email" readonly></div><div class="form-group"><label>Teléfono</label><input id="cot-telefono" readonly></div></div><div class="form-row"><div class="form-group"><label>Descuento (%)</label><input id="cot-descuento" type="number" step="0.1" value="0"></div><div class="form-group"><label>IVA (%)</label><input id="cot-iva" type="number" step="0.1" value="19"></div></div><hr><div class="add-item-row"><select id="cot-item-prod"></select><input id="cot-item-qty" type="number" value="1"><input id="cot-item-precio" type="number" step="0.01"><button type="button" id="btn-add-item">+ Agregar</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th><th></th></tr></thead><tbody id="cot-items-tbody"></tbody></table></div><div class="cot-total-row">Subtotal: $<span id="cot-subtotal">0</span> | Descuento: -<span id="cot-desc-monto">0</span> | IVA: +<span id="cot-iva-monto">0</span> | <strong>TOTAL: $<span id="cot-total">0</span></strong></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="cot-save" class="btn-save">Guardar</button></div></form></div></div>
 
-        <hr class="divider">
-        <p style="font-size:13px;font-weight:800;margin-bottom:12px">📦 Agregar productos</p>
-
-        <div class="add-item-row">
-          <div class="form-group" style="margin:0"><label>Producto del inventario</label><select id="cot-item-prod"><option value="">— Cargando productos… —</option></select></div>
-          <div class="form-group" style="margin:0"><label>Cantidad</label><input id="cot-item-qty" type="number" value="1" min="1"></div>
-          <div class="form-group" style="margin:0"><label>Precio unit. ($)</label><input id="cot-item-precio" type="number" min="0" step="0.01" placeholder="0"></div>
-          <div style="padding-top:20px"><button type="button" id="btn-add-item" class="btn-action">+ Agregar</button></div>
-        </div>
-
-        <div class="table-wrap" style="margin-bottom:10px">
-          <table><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th><th></th></tr></thead>
-          <tbody id="cot-items-tbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:18px;font-size:13px">Agrega productos usando el selector de arriba</td></tr></tbody>
-        </table>
-        </div>
-        <div class="cot-total-row">TOTAL: <span id="cot-total">$0</span></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-cancel modal-close">Cancelar</button>
-        <button type="submit" id="cot-save" class="btn-save">Guardar cotización</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- MODAL CLIENTE (sin cambios) -->
-<div class="modal-backdrop" id="cliente-modal">
-  <div class="modal">
-    <div class="modal-header"><h3 id="cliente-modal-title">Nuevo Cliente</h3><button class="modal-close">✕</button></div>
-    <form id="cliente-form">
-      <div class="modal-body">
-        <div class="form-group"><label>Nombre / Razón social *</label><input id="cliente-nombre" placeholder="Ej: Juan Pérez S.A."></div>
-        <div class="form-row"><div class="form-group"><label>Email</label><input id="cliente-email" type="email" placeholder="cliente@email.com"></div><div class="form-group"><label>Teléfono</label><input id="cliente-telefono" placeholder="+57 300 000 0000"></div></div>
-        <div class="form-group"><label>Dirección</label><input id="cliente-direccion" placeholder="Calle 123, Ciudad"></div>
-        <div class="form-group"><label>NIT / Identificación</label><input id="cliente-nit" placeholder="NIT: 900.000.000-1"></div>
-        <div class="form-group"><label>Notas adicionales</label><textarea id="cliente-notas" rows="2" placeholder="Información extra..."></textarea></div>
-      </div>
-      <div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="cliente-save" class="btn-save">Guardar cliente</button></div>
-    </form>
-  </div>
-</div>
-
-<!-- MODAL PROVEEDOR (sin cambios) -->
-<div class="modal-backdrop" id="proveedor-modal">
-  <div class="modal"><div class="modal-header"><h3 id="proveedor-modal-title">Nuevo Proveedor</h3><button class="modal-close">✕</button></div>
-    <form id="proveedor-form"><div class="modal-body">
-      <div class="form-group"><label>Nombre / Empresa *</label><input id="proveedor-nombre" placeholder="Ej: Distribuidora XYZ"></div>
-      <div class="form-group"><label>Persona de contacto</label><input id="proveedor-contacto" placeholder="Nombre del contacto"></div>
-      <div class="form-row"><div class="form-group"><label>Teléfono</label><input id="proveedor-telefono" placeholder="+57 300 000 0000"></div><div class="form-group"><label>Email</label><input id="proveedor-email" type="email" placeholder="proveedor@email.com"></div></div>
-      <div class="form-group"><label>Dirección</label><input id="proveedor-direccion" placeholder="Calle 123, Ciudad"></div>
-      <div class="form-group"><label>Productos / servicios que ofrece</label><textarea id="proveedor-productos" rows="2"></textarea></div>
-      <div class="form-group"><label>Notas</label><textarea id="proveedor-notas" rows="2"></textarea></div>
-    </div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="proveedor-save" class="btn-save">Guardar proveedor</button></div></form>
-  </div>
-</div>
+<!-- MODAL COMPRA -->
+<div class="modal-backdrop" id="compra-modal"><div class="modal"><div class="modal-header"><h3>Registrar Compra</h3><button class="modal-close">✕</button></div><form id="compra-form"><div class="modal-body"><div class="form-group"><label>Proveedor</label><select id="compra-proveedor-id"></select></div><div class="form-group"><label>Fecha</label><input id="compra-fecha" type="date"></div><div id="compra-items-container"></div><button type="button" id="btn-add-compra-item" class="btn-action">+ Agregar producto</button></div><div class="modal-footer"><button type="submit" class="btn-save">Guardar compra</button></div></form></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",
-  authDomain: "nexora-erp-2b417.firebaseapp.com",
-  projectId: "nexora-erp-2b417",
-  storageBucket: "nexora-erp-2b417.firebasestorage.app",
-  messagingSenderId: "803467842564",
-  appId: "1:803467842564:web:ceee51faad6dbae218d151"
-};
-
+const firebaseConfig = { apiKey: "AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU", authDomain: "nexora-erp-2b417.firebaseapp.com", projectId: "nexora-erp-2b417", storageBucket: "nexora-erp-2b417.firebasestorage.app", messagingSenderId: "803467842564", appId: "1:803467842564:web:ceee51faad6dbae218d151" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-let currentUser = null;
-let currentTenant = null;
-let editingId = null;
-let cotItems = [];
-
+let currentUser = null, currentTenant = null;
+let cotItems = [], editingCotId = null, editingProductoId = null, editingClienteId = null, editingProveedorId = null;
+const $ = id => document.getElementById(id);
 const tenantCol = (col) => collection(db, 'businesses', currentTenant, col);
 const tenantDoc = (col, id) => doc(db, 'businesses', currentTenant, col, id);
-const $ = id => document.getElementById(id);
-
-function toast(msg, type='success'){
-  const t=document.createElement('div');
-  t.className=`toast toast-${type}`;
-  t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),400); },3200);
-}
-function setLoading(id,on){
-  const b=$(id); if(!b) return;
-  b.disabled=on;
-  if(on){ b.dataset.orig=b.textContent; b.textContent='Cargando…'; }
-  else b.textContent=b.dataset.orig||b.textContent;
-}
+function toast(msg, type='success'){ const t=document.createElement('div'); t.className=`toast toast-${type}`; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>t.remove(),3200); }
 function esc(str){ const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; }
 
-// ══ AUTH (con autofix para usuarios sin businessId) ══
+// Autenticación
 onAuthStateChanged(auth, async user => {
-  if (user) {
+  if(user){
     currentUser = user;
     let udSnap = await getDoc(doc(db, 'users', user.uid));
-    if (!udSnap.exists() || !udSnap.data().businessId) {
-      console.log("Usuario sin negocio. Creando automáticamente...");
+    if(!udSnap.exists() || !udSnap.data().businessId){
       const bizRef = doc(collection(db, 'businesses'));
       await setDoc(bizRef, { name: "Mi Negocio", ownerUid: user.uid, createdAt: serverTimestamp() });
       await setDoc(doc(db, 'users', user.uid), { email: user.email, name: user.displayName || user.email.split('@')[0], businessId: bizRef.id }, { merge: true });
       udSnap = await getDoc(doc(db, 'users', user.uid));
-      toast("Negocio creado automáticamente. ¡Bienvenido!");
+      toast("Negocio creado");
     }
     currentTenant = udSnap.data().businessId;
     const biz = await getDoc(doc(db, 'businesses', currentTenant));
-    const bn = biz.exists() ? biz.data().name : 'Mi Negocio';
-    document.querySelectorAll('.biz-el').forEach(el => el.textContent = bn);
-    const dn = user.displayName || user.email.split('@')[0];
-    $('user-name').textContent = dn;
-    $('user-avatar').textContent = dn[0].toUpperCase();
+    document.querySelectorAll('.biz-el').forEach(el => el.textContent = biz.exists() ? biz.data().name : 'Mi Negocio');
+    $('user-name').textContent = user.displayName || user.email.split('@')[0];
+    $('user-avatar').textContent = (user.displayName || user.email)[0].toUpperCase();
     $('auth-screen').style.display = 'none';
     $('app-screen').style.display = 'flex';
     loadModule('dashboard');
   } else {
-    currentUser = null; currentTenant = null;
     $('auth-screen').style.display = 'flex';
     $('app-screen').style.display = 'none';
   }
 });
-
-$('btn-login').addEventListener('click', async()=>{
-  const email=$('login-email').value.trim(), pass=$('login-pass').value;
-  if(!email||!pass){ toast('Ingresa email y contraseña','error'); return; }
-  try{ setLoading('btn-login',true); await signInWithEmailAndPassword(auth,email,pass); }
-  catch(e){ toast('Email o contraseña incorrectos','error'); }
-  finally{ setLoading('btn-login',false); }
-});
-$('btn-register').addEventListener('click', async()=>{
-  const name=$('reg-name').value.trim(), biz=$('reg-biz').value.trim(), email=$('reg-email').value.trim(), pass=$('reg-pass').value;
-  if(!name||!biz||!email||!pass){ toast('Completa todos los campos','error'); return; }
-  try{
-    setLoading('btn-register',true);
-    const cred=await createUserWithEmailAndPassword(auth,email,pass);
-    await updateProfile(cred.user,{displayName:name});
-    const bizRef=doc(collection(db,'businesses'));
-    await setDoc(bizRef,{name:biz,ownerUid:cred.user.uid,createdAt:serverTimestamp()});
-    await setDoc(doc(db,'users',cred.user.uid),{businessId:bizRef.id,email,name});
-    toast('¡Bienvenido a Nexora ERP! 🎉');
-  } catch(e){
-    if(e.code==='auth/email-already-in-use') toast('Ese email ya está registrado','error');
-    else if(e.code==='auth/weak-password') toast('Mínimo 6 caracteres','error');
-    else toast(e.message,'error');
-  } finally{ setLoading('btn-register',false); }
-});
+$('btn-login').addEventListener('click', async()=>{ try{ await signInWithEmailAndPassword(auth, $('login-email').value, $('login-pass').value); }catch(e){ toast('Error','error'); } });
+$('btn-register').addEventListener('click', async()=>{ try{ const cred=await createUserWithEmailAndPassword(auth, $('reg-email').value, $('reg-pass').value); await updateProfile(cred.user,{displayName:$('reg-name').value}); const bizRef=doc(collection(db,'businesses')); await setDoc(bizRef,{name:$('reg-biz').value,ownerUid:cred.user.uid,createdAt:serverTimestamp()}); await setDoc(doc(db,'users',cred.user.uid),{businessId:bizRef.id,email:$('reg-email').value,name:$('reg-name').value}); toast('Registro exitoso'); }catch(e){ toast(e.message,'error'); } });
 $('btn-logout').addEventListener('click',()=>signOut(auth));
 $('link-to-register').addEventListener('click',e=>{ e.preventDefault(); $('login-form').style.display='none'; $('register-form').style.display='block'; });
 $('link-to-login').addEventListener('click',e=>{ e.preventDefault(); $('register-form').style.display='none'; $('login-form').style.display='block'; });
-['login-email','login-pass'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') $('btn-login').click(); }));
 
-// ══ NAV ══
-window.loadModule = function(mod){
+window.loadModule = async function(mod){
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.module===mod));
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
-  $('mod-'+mod).style.display='block';
-  const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',clientes:'Clientes',proveedores:'Proveedores'};
+  $(`mod-${mod}`).style.display='block';
+  const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',reportes:'Reportes'};
   $('mod-title').textContent=titles[mod]||mod;
-  if(mod==='dashboard') loadDashboard();
-  if(mod==='inventario') loadInventario();
-  if(mod==='cotizaciones') loadCotizaciones();
-  if(mod==='clientes') loadClientes();
-  if(mod==='proveedores') loadProveedores();
-};
-document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',()=>window.loadModule(i.dataset.module)));
-
-// ══ DASHBOARD ══
-async function loadDashboard(){
-  if(!currentTenant) return;
-  try{
-    const [ps, cs, cls, prs] = await Promise.all([getDocs(tenantCol('productos')), getDocs(tenantCol('cotizaciones')), getDocs(tenantCol('clientes')), getDocs(tenantCol('proveedores'))]);
-    $('dash-productos').textContent=ps.size;
-    $('dash-cotizaciones').textContent=cs.size;
-    $('dash-clientes').textContent=cls.size;
-    $('dash-proveedores').textContent=prs.size;
-    let low=0,val=0;
-    ps.forEach(d=>{ const p=d.data(); if((p.stock||0)<=(p.stockMin||5)) low++; val+=(p.precio||0)*(p.stock||0); });
-    $('dash-lowstock').textContent=low;
-    $('dash-valor').textContent='$'+val.toLocaleString('es-CO');
-    const tbody=$('dash-recent'); tbody.innerHTML='';
-    const cots=[]; cs.forEach(d=>cots.push({id:d.id,...d.data()}));
-    cots.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    if(!cots.length){ tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">Sin cotizaciones aún</td></tr>'; return; }
-    cots.slice(0,5).forEach(c=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td><strong>${esc(c.numero||'—')}</strong></td><td>${esc(c.cliente||'—')}</td><td>$${(c.total||0).toLocaleString('es-CO')}</td><td><span class="badge badge-${(c.estado||'borrador').toLowerCase()}">${c.estado||'Borrador'}</span></td>`; tbody.appendChild(tr); });
-  }catch(e){ console.error(e); toast('Error cargando dashboard','error'); }
-}
-
-// ══ INVENTARIO (sin cambios) ══
-async function loadInventario(){
-  if(!currentTenant) return;
-  try{ const snap=await getDocs(query(tenantCol('productos'),orderBy('nombre'))); renderProductos(snap.docs); }catch(e){ toast('Error cargando inventario','error'); console.error(e);}
-}
-function renderProductos(docs){
-  const tb=$('prod-tbody'); tb.innerHTML='';
-  if(!docs.length){ tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:48px">Sin productos — haz clic en <strong>+ Nuevo producto</strong></td></tr>'; return; }
-  docs.forEach(d=>{
-    const p={id:d.id,...d.data()};
-    const low=(p.stock||0)<=(p.stockMin||5);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="prod-name">${esc(p.nombre)}</span><br><small style="color:var(--muted)">${esc(p.categoria||'')}</small></td><td>${esc(p.referencia||'—')}</td><td><strong>$${(p.precio||0).toLocaleString('es-CO')}</strong></td><td><span class="badge ${low?'badge-peligro':'badge-ok'}">${p.stock||0} ${esc(p.unidad||'und')}</span></td><td>${p.stockMin||5}</td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.descripcion||'—')}</td><td><button class="btn-icon" onclick="window.editProducto('${p.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProducto('${p.id}')">🗑️</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-$('prod-search')?.addEventListener('input', async e=>{
-  if(!currentTenant) return;
-  const q=e.target.value.toLowerCase();
-  const snap=await getDocs(tenantCol('productos'));
-  renderProductos(snap.docs.filter(d=>{ const p=d.data(); return (p.nombre||'').toLowerCase().includes(q)||(p.referencia||'').toLowerCase().includes(q)||(p.categoria||'').toLowerCase().includes(q); }));
-});
-window.openProductoModal = function(){
-  editingId=null;
-  $('prod-form').reset();
-  $('prod-precio').value='0'; $('prod-stock').value='0'; $('prod-stockmin').value='5'; $('prod-unidad').value='und';
-  $('prod-modal-title').textContent='Nuevo Producto';
-  $('prod-modal').style.display='flex';
-  setTimeout(()=>$('prod-nombre').focus(),80);
-};
-window.editProducto = async function(id){
-  if(!currentTenant) return;
-  try{ const d=await getDoc(tenantDoc('productos',id)); if(!d.exists()) return; const p=d.data(); editingId=id;
-    $('prod-nombre').value=p.nombre||''; $('prod-ref').value=p.referencia||''; $('prod-cat').value=p.categoria||''; $('prod-desc').value=p.descripcion||'';
-    $('prod-precio').value=p.precio||0; $('prod-stock').value=p.stock||0; $('prod-stockmin').value=p.stockMin||5; $('prod-unidad').value=p.unidad||'und';
-    $('prod-modal-title').textContent='Editar Producto'; $('prod-modal').style.display='flex';
-  }catch(e){ toast('Error al cargar','error'); console.error(e);}
-};
-window.deleteProducto = async function(id){
-  if(!currentTenant) return;
-  if(!confirm('¿Eliminar este producto?')) return;
-  try{ await deleteDoc(tenantDoc('productos',id)); toast('Producto eliminado'); loadInventario(); }catch(e){ toast('Error al eliminar','error'); console.error(e);}
-};
-$('prod-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
-  const data={ nombre:$('prod-nombre').value.trim(), referencia:$('prod-ref').value.trim(), categoria:$('prod-cat').value.trim(), descripcion:$('prod-desc').value.trim(), precio:parseFloat($('prod-precio').value)||0, stock:parseInt($('prod-stock').value)||0, stockMin:parseInt($('prod-stockmin').value)||5, unidad:$('prod-unidad').value||'und', updatedAt:serverTimestamp() };
-  if(!data.nombre){ toast('El nombre es requerido','error'); return; }
-  try{
-    setLoading('prod-save',true);
-    if(editingId){ await updateDoc(tenantDoc('productos',editingId),data); toast('Producto actualizado ✓'); }
-    else{ data.createdAt=serverTimestamp(); await addDoc(tenantCol('productos'),data); toast('Producto creado ✓'); }
-    $('prod-modal').style.display='none'; loadInventario();
-  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
-  finally{ setLoading('prod-save',false); }
-});
-
-// ══ COTIZACIONES (con selector de clientes) ══
-let clientesList = []; // para cache
-
-async function loadClientesSelect() {
-  if(!currentTenant) return [];
-  const snap = await getDocs(query(tenantCol('clientes'), orderBy('nombre')));
-  clientesList = [];
-  snap.forEach(d => clientesList.push({ id: d.id, ...d.data() }));
-  const select = $('cot-cliente-id');
-  select.innerHTML = '<option value="">-- Seleccione un cliente --</option>';
-  clientesList.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.nombre;
-    if (c.email) opt.dataset.email = c.email;
-    if (c.telefono) opt.dataset.telefono = c.telefono;
-    select.appendChild(opt);
-  });
-  return clientesList;
-}
-
-function autoFillClienteFields() {
-  const select = $('cot-cliente-id');
-  const selectedOpt = select.options[select.selectedIndex];
-  if (selectedOpt && selectedOpt.value) {
-    $('cot-email').value = selectedOpt.dataset.email || '';
-    $('cot-telefono').value = selectedOpt.dataset.telefono || '';
-    $('cot-email').readOnly = true;
-    $('cot-telefono').readOnly = true;
-  } else {
-    $('cot-email').value = '';
-    $('cot-telefono').value = '';
-    $('cot-email').readOnly = true;
-    $('cot-telefono').readOnly = true;
-  }
-}
-
-$('cot-cliente-id')?.addEventListener('change', autoFillClienteFields);
-
-// Botón nuevo cliente dentro del modal de cotización
-$('btn-nuevo-cliente-cot')?.addEventListener('click', async () => {
-  // Abrir modal de cliente normal pero con promesa para refrescar al cerrar
-  window.openClienteModalDesdeCot = true;
-  window.openClienteModal();
-});
-
-// Modificamos openClienteModal para que si viene desde cotización, al guardar refresque el select
-let openFromCot = false;
-window.openClienteModal = function() {
-  editingClienteId = null;
-  $('cliente-form').reset();
-  $('cliente-modal-title').textContent = 'Nuevo Cliente';
-  $('cliente-modal').style.display = 'flex';
-  setTimeout(()=>$('cliente-nombre').focus(),80);
-  openFromCot = true;
+  if(mod==='dashboard') await cargarDashboard();
+  if(mod==='inventario') await cargarInventario();
+  if(mod==='cotizaciones') await cargarCotizaciones();
+  if(mod==='facturas') await cargarFacturas();
+  if(mod==='compras') await cargarCompras();
+  if(mod==='clientes') await cargarClientes();
+  if(mod==='proveedores') await cargarProveedores();
+  if(mod==='reportes') await cargarReportes();
 };
 
-// Guardar cliente con callback para refrescar select
-const originalClienteSubmit = null;
-$('cliente-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
-  const nombre = $('cliente-nombre').value.trim();
-  if(!nombre){ toast('El nombre es requerido','error'); return; }
-  const data = { nombre, email:$('cliente-email').value.trim(), telefono:$('cliente-telefono').value.trim(), direccion:$('cliente-direccion').value.trim(), nit:$('cliente-nit').value.trim(), notas:$('cliente-notas').value.trim(), updatedAt:serverTimestamp() };
-  try{
-    setLoading('cliente-save',true);
-    let newId;
-    if(editingClienteId){ await updateDoc(tenantDoc('clientes',editingClienteId),data); toast('Cliente actualizado ✓'); }
-    else{ data.createdAt=serverTimestamp(); const docRef = await addDoc(tenantCol('clientes'),data); newId = docRef.id; toast('Cliente creado ✓'); }
-    $('cliente-modal').style.display='none';
-    loadClientes(); // refrescar tabla
-    if (openFromCot) {
-      // Recargar el select de clientes en cotización y seleccionar el nuevo
-      await loadClientesSelect();
-      if (newId) {
-        $('cot-cliente-id').value = newId;
-        autoFillClienteFields();
+// ---- INVENTARIO ----
+async function cargarInventario(){ const snap=await getDocs(query(tenantCol('productos'),orderBy('nombre'))); renderProductos(snap.docs); }
+function renderProductos(docs){ const tb=$('prod-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.referencia||'')}</td><td>$${p.precio}</td><td><span class="badge ${p.stock<=p.stockMin?'badge-peligro':'badge-ok'}">${p.stock}</span></td><td>${p.stockMin}</td><td><button class="btn-icon" onclick="window.editProducto('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProducto('${d.id}')">🗑️</button></td></tr>`; }); }
+window.openProductoModal = ()=>{ editingProductoId=null; $('prod-form').reset(); $('prod-modal').style.display='flex'; };
+window.editProducto = async (id)=>{ const d=await getDoc(tenantDoc('productos',id)); const p=d.data(); editingProductoId=id; $('prod-nombre').value=p.nombre; $('prod-precio').value=p.precio; $('prod-stock').value=p.stock; $('prod-stockmin').value=p.stockMin; $('prod-modal').style.display='flex'; };
+window.deleteProducto = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('productos',id)); toast('Eliminado'); cargarInventario(); } };
+$('prod-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('prod-nombre').value, precio:parseFloat($('prod-precio').value), stock:parseInt($('prod-stock').value), stockMin:parseInt($('prod-stockmin').value), updatedAt:serverTimestamp() }; if(editingProductoId) await updateDoc(tenantDoc('productos',editingProductoId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('productos'),data); } $('prod-modal').style.display='none'; cargarInventario(); });
+
+// ---- CLIENTES ----
+async function cargarClientes(){ const snap=await getDocs(query(tenantCol('clientes'),orderBy('nombre'))); renderClientes(snap.docs); }
+function renderClientes(docs){ const tb=$('cliente-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${esc(c.nombre)}</td><td>${esc(c.email||'')}</td><td>${esc(c.telefono||'')}</td><td><button class="btn-icon" onclick="window.editCliente('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteCliente('${d.id}')">🗑️</button></td></tr>`; }); }
+window.openClienteModal = ()=>{ editingClienteId=null; $('cliente-form').reset(); $('cliente-modal').style.display='flex'; };
+window.editCliente = async (id)=>{ const d=await getDoc(tenantDoc('clientes',id)); const c=d.data(); editingClienteId=id; $('cliente-nombre').value=c.nombre; $('cliente-email').value=c.email; $('cliente-telefono').value=c.telefono; $('cliente-modal').style.display='flex'; };
+window.deleteCliente = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('clientes',id)); toast('Eliminado'); cargarClientes(); } };
+$('cliente-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('cliente-nombre').value, email:$('cliente-email').value, telefono:$('cliente-telefono').value, updatedAt:serverTimestamp() }; if(editingClienteId) await updateDoc(tenantDoc('clientes',editingClienteId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('clientes'),data); } $('cliente-modal').style.display='none'; cargarClientes(); if(window.cotModalOpen) await cargarSelectClientes(); });
+
+// ---- PROVEEDORES ----
+async function cargarProveedores(){ const snap=await getDocs(query(tenantCol('proveedores'),orderBy('nombre'))); renderProveedores(snap.docs); }
+function renderProveedores(docs){ const tb=$('proveedor-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.contacto||'')}</td><td>${esc(p.telefono||'')}</td><td><button class="btn-icon" onclick="window.editProveedor('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProveedor('${d.id}')">🗑️</button></td></tr>`; }); }
+window.openProveedorModal = ()=>{ editingProveedorId=null; $('proveedor-form').reset(); $('proveedor-modal').style.display='flex'; };
+window.editProveedor = async (id)=>{ const d=await getDoc(tenantDoc('proveedores',id)); const p=d.data(); editingProveedorId=id; $('proveedor-nombre').value=p.nombre; $('proveedor-contacto').value=p.contacto; $('proveedor-telefono').value=p.telefono; $('proveedor-email').value=p.email; $('proveedor-modal').style.display='flex'; };
+window.deleteProveedor = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('proveedores',id)); toast('Eliminado'); cargarProveedores(); } };
+$('proveedor-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('proveedor-nombre').value, contacto:$('proveedor-contacto').value, telefono:$('proveedor-telefono').value, email:$('proveedor-email').value, updatedAt:serverTimestamp() }; if(editingProveedorId) await updateDoc(tenantDoc('proveedores',editingProveedorId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('proveedores'),data); } $('proveedor-modal').style.display='none'; cargarProveedores(); });
+
+// ---- COTIZACIONES con descuento/IVA y descuento de stock al aprobar ----
+async function cargarSelectClientes(){ const snap=await getDocs(tenantCol('clientes')); const sel=$('cot-cliente-id'); sel.innerHTML='<option value="">-- Seleccionar --</option>'; snap.forEach(d=>{ const opt=document.createElement('option'); opt.value=d.id; opt.textContent=d.data().nombre; opt.dataset.email=d.data().email||''; opt.dataset.telefono=d.data().telefono||''; sel.appendChild(opt); }); }
+function actualizarTotalesCot(){ const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc = parseFloat($('cot-descuento').value)||0; const ivaPorc = parseFloat($('cot-iva').value)||0; const descMonto = subtotal * descuentoPorc / 100; const subtotalDesc = subtotal - descMonto; const ivaMonto = subtotalDesc * ivaPorc / 100; const total = subtotalDesc + ivaMonto; $('cot-subtotal').textContent=subtotal.toFixed(2); $('cot-desc-monto').textContent=descMonto.toFixed(2); $('cot-iva-monto').textContent=ivaMonto.toFixed(2); $('cot-total').textContent=total.toFixed(2); }
+function renderCotItems(){ const tb=$('cot-items-tbody'); tb.innerHTML=''; cotItems.forEach((item,i)=>{ tb.innerHTML+=`<tr><td>${esc(item.nombre)}</td><td><input type="number" value="${item.cantidad}" onchange="window.updateQty(${i},this.value)" style="width:60px;"></td><td>$${item.precio}</td><td>$${item.precio*item.cantidad}</td><td><button class="btn-icon danger" onclick="window.removeItem(${i})">✕</button></td></tr>`; }); actualizarTotalesCot(); }
+window.updateQty = (i,v)=>{ cotItems[i].cantidad=parseInt(v); renderCotItems(); };
+window.removeItem = (i)=>{ cotItems.splice(i,1); renderCotItems(); };
+async function populateProdSelect(){ const snap=await getDocs(tenantCol('productos')); const sel=$('cot-item-prod'); sel.innerHTML='<option value="">-- Producto --</option>'; snap.forEach(d=>{ const p=d.data(); const opt=document.createElement('option'); opt.value=d.id; opt.dataset.precio=p.precio; opt.textContent=`${p.nombre} - $${p.precio}`; sel.appendChild(opt); }); }
+$('cot-item-prod').addEventListener('change',e=>{ const opt=e.target.options[e.target.selectedIndex]; $('cot-item-precio').value=opt.dataset.precio||0; });
+$('btn-add-item').addEventListener('click',()=>{ const sel=$('cot-item-prod'); if(!sel.value) return; const prodId=sel.value; const nombre=sel.options[sel.selectedIndex].text.split(' -')[0]; const cantidad=parseInt($('cot-item-qty').value); const precio=parseFloat($('cot-item-precio').value); cotItems.push({prodId,nombre,cantidad,precio}); renderCotItems(); sel.value=''; $('cot-item-qty').value='1'; $('cot-item-precio').value=''; });
+$('cot-descuento').addEventListener('input',actualizarTotalesCot);
+$('cot-iva').addEventListener('input',actualizarTotalesCot);
+$('btn-nuevo-cliente-cot').addEventListener('click',()=>{ window.openClienteModal(); window.cotModalOpen=true; });
+window.openCotizacionModal = async ()=>{ editingCotId=null; cotItems=[]; $('cot-form').reset(); $('cot-descuento').value='0'; $('cot-iva').value='19'; await cargarSelectClientes(); await populateProdSelect(); $('cot-modal').style.display='flex'; renderCotItems(); };
+window.editCotizacion = async (id)=>{ const d=await getDoc(tenantDoc('cotizaciones',id)); const c=d.data(); editingCotId=id; cotItems=c.items||[]; await cargarSelectClientes(); $('cot-cliente-id').value=c.clienteId||''; $('cot-email').value=c.email||''; $('cot-telefono').value=c.telefono||''; $('cot-numero').value=c.numero; $('cot-estado').value=c.estado; $('cot-descuento').value=c.descuento||0; $('cot-iva').value=c.iva||19; await populateProdSelect(); renderCotItems(); $('cot-modal').style.display='flex'; };
+$('cot-form').addEventListener('submit', async e=>{ e.preventDefault(); const clienteId=$('cot-cliente-id').value; if(!clienteId){ toast('Seleccione cliente','error'); return; } const clienteNombre=$('cot-cliente-id').options[$('cot-cliente-id').selectedIndex].text; const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc=parseFloat($('cot-descuento').value); const ivaPorc=parseFloat($('cot-iva').value); const descMonto=subtotal*descuentoPorc/100; const subtotalDesc=subtotal-descMonto; const ivaMonto=subtotalDesc*ivaPorc/100; const total=subtotalDesc+ivaMonto; const data={ numero:$('cot-numero').value, cliente:clienteNombre, clienteId, email:$('cot-email').value, telefono:$('cot-telefono').value, items:cotItems, subtotal, descuento:descuentoPorc, iva:ivaPorc, total, estado:$('cot-estado').value, updatedAt:serverTimestamp() }; if(editingCotId){ await updateDoc(tenantDoc('cotizaciones',editingCotId),data); } else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('cotizaciones'),data); } // Descontar stock si estado es Aprobada y no se había descontado
+  if(data.estado==='Aprobada'){
+    const docRef = editingCotId ? tenantDoc('cotizaciones',editingCotId) : null;
+    const cotDoc = docRef ? await getDoc(docRef) : null;
+    if(!cotDoc?.data()?.stockDescontado){
+      for(const item of cotItems){
+        const prodRef=tenantDoc('productos',item.prodId);
+        const prodSnap=await getDoc(prodRef);
+        if(prodSnap.exists()){
+          const nuevoStock=(prodSnap.data().stock||0)-item.cantidad;
+          await updateDoc(prodRef,{stock:nuevoStock});
+        }
       }
-      openFromCot = false;
+      if(editingCotId) await updateDoc(tenantDoc('cotizaciones',editingCotId),{stockDescontado:true});
     }
-  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
-  finally{ setLoading('cliente-save',false); }
-});
-
-async function loadCotizaciones(){
-  if(!currentTenant) return;
-  try{
-    const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc')));
-    const tb=$('cot-tbody'); tb.innerHTML='';
-    if(snap.empty){ tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:48px">Sin cotizaciones — haz clic en <strong>+ Nueva cotización</strong></td></tr>'; return; }
-    snap.forEach(d=>{
-      const c={id:d.id,...d.data()};
-      const ec=(c.estado||'borrador').toLowerCase();
-      const tr=document.createElement('tr');
-      tr.innerHTML=`<td><strong>${esc(c.numero||'—')}</strong></td><td>${esc(c.cliente||'—')}</td><td>${c.fecha||'—'}</td><td><strong>$${(c.total||0).toLocaleString('es-CO')}</strong></td><td><span class="badge badge-${ec}">${c.estado||'Borrador'}</span></td><td><button class="btn-icon" onclick="window.viewCotizacion('${c.id}')" title="Imprimir">🖨️</button><button class="btn-icon" onclick="window.editCotizacion('${c.id}')" title="Editar">✏️</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${c.id}')" title="Eliminar">🗑️</button></td>`;
-      tb.appendChild(tr);
-    });
-  }catch(e){ toast('Error cargando cotizaciones','error'); console.error(e);}
-}
-async function fetchProductosFresh(){
-  if(!currentTenant) return [];
-  const snap=await getDocs(tenantCol('productos'));
-  const prods=[]; snap.forEach(d=>prods.push({id:d.id,...d.data()})); return prods;
-}
-async function populateProdSelect(){
-  const prods=await fetchProductosFresh();
-  const sel=$('cot-item-prod');
-  sel.innerHTML='<option value="">— Elige un producto del inventario —</option>';
-  if(!prods.length){ sel.innerHTML+='<option disabled value="">⚠ Sin productos. Ve a Inventario y crea productos primero.</option>'; return prods; }
-  prods.sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''));
-  prods.forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.dataset.precio=p.precio||0; o.dataset.nombre=p.nombre; o.textContent=`${p.nombre}  ·  $${(p.precio||0).toLocaleString('es-CO')} / ${p.unidad||'und'}`; sel.appendChild(o); });
-  return prods;
-}
-window.openCotizacionModal = async function(){
-  if(!currentTenant) { toast('No hay sesión activa','error'); return; }
-  editingId=null; cotItems=[];
-  $('cot-modal-title').textContent='Nueva Cotización';
-  $('cot-form').reset();
-  $('cot-estado').value='Borrador';
-  $('cot-validez').value='30';
-  $('cot-fecha').value=new Date().toISOString().slice(0,10);
-  $('cot-item-qty').value='1';
-  $('cot-item-precio').value='';
-  $('cot-modal').style.display='flex';
-  renderCotItems();
-  try{ const snap=await getDocs(tenantCol('cotizaciones')); $('cot-numero').value='COT-'+(snap.size+1).toString().padStart(4,'0'); }catch(e){ $('cot-numero').value='COT-0001'; }
-  await populateProdSelect();
-  await loadClientesSelect(); // llenar select de clientes
-  // limpiar campos de email/teléfono
-  $('cot-email').value = '';
-  $('cot-telefono').value = '';
-  $('cot-cliente-id').value = '';
-  setTimeout(()=>$('cot-cliente-id').focus(),80);
-};
-window.editCotizacion = async function(id){
-  if(!currentTenant) return;
-  try{
-    const d=await getDoc(tenantDoc('cotizaciones',id)); if(!d.exists()) return;
-    const c=d.data(); editingId=id; cotItems=c.items?[...c.items]:[];
-    $('cot-numero').value=c.numero||''; 
-    // Cargar clientes select y luego seleccionar el cliente si existe clienteId
-    await loadClientesSelect();
-    if (c.clienteId) {
-      $('cot-cliente-id').value = c.clienteId;
-    } else {
-      // Si no hay clienteId, buscar por nombre (legacy)
-      const found = clientesList.find(cl => cl.nombre === c.cliente);
-      if (found) $('cot-cliente-id').value = found.id;
-      else $('cot-cliente-id').value = '';
-    }
-    autoFillClienteFields();
-    $('cot-email').value = c.email||'';
-    $('cot-telefono').value = c.telefono||'';
-    $('cot-fecha').value=c.fecha||''; $('cot-validez').value=c.validez||30;
-    $('cot-notas').value=c.notas||''; $('cot-estado').value=c.estado||'Borrador';
-    $('cot-item-qty').value='1'; $('cot-item-precio').value='';
-    $('cot-modal-title').textContent='Editar Cotización';
-    $('cot-modal').style.display='flex';
-    renderCotItems();
-    await populateProdSelect();
-  }catch(e){ toast('Error al cargar cotización','error'); console.error(e);}
-};
-window.deleteCotizacion = async function(id){
-  if(!currentTenant) return;
-  if(!confirm('¿Eliminar esta cotización?')) return;
-  try{ await deleteDoc(tenantDoc('cotizaciones',id)); toast('Cotización eliminada'); loadCotizaciones(); }catch(e){ toast('Error al eliminar','error'); console.error(e);}
-};
-$('cot-item-prod')?.addEventListener('change',e=>{ const opt=e.target.options[e.target.selectedIndex]; $('cot-item-precio').value=opt?.dataset.precio||''; if(opt?.value) $('cot-item-qty').focus(); });
-$('btn-add-item')?.addEventListener('click',()=>{
-  const sel=$('cot-item-prod'); const qty=parseInt($('cot-item-qty').value)||1; const precio=parseFloat($('cot-item-precio').value)||0;
-  if(!sel.value){ toast('Selecciona un producto primero','error'); sel.focus(); return; }
-  if(qty<1){ toast('Cantidad debe ser mayor a 0','error'); return; }
-  const opt=sel.options[sel.selectedIndex]; const nombre=opt.dataset.nombre||opt.text.split('  ·')[0];
-  cotItems.push({prodId:sel.value, nombre, cantidad:qty, precio});
-  renderCotItems();
-  sel.value=''; $('cot-item-qty').value='1'; $('cot-item-precio').value=''; sel.focus();
-});
-function renderCotItems(){
-  const tb=$('cot-items-tbody'); tb.innerHTML='';
-  if(!cotItems.length){ tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:18px;font-size:13px">Usa el selector de arriba para agregar productos</td></tr>'; $('cot-total').textContent='$0'; return; }
-  let total=0;
-  cotItems.forEach((item,i)=>{
-    const sub=(item.precio||0)*(item.cantidad||1); total+=sub;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${esc(item.nombre)}</td><td><input type="number" min="1" value="${item.cantidad}" style="width:60px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px" onchange="window.updateQty(${i},this.value)"></td><td>$${(item.precio||0).toLocaleString('es-CO')}</td><td><strong>$${sub.toLocaleString('es-CO')}</strong></td><td><button class="btn-icon danger" onclick="window.removeItem(${i})" title="Quitar">✕</button></td>`;
-    tb.appendChild(tr);
-  });
-  $('cot-total').textContent='$'+total.toLocaleString('es-CO');
-}
-window.updateQty = function(i,v){ cotItems[i].cantidad=parseInt(v)||1; renderCotItems(); };
-window.removeItem = function(i){ cotItems.splice(i,1); renderCotItems(); };
-$('cot-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
-  const clienteId = $('cot-cliente-id').value;
-  let clienteNombre = '';
-  if (clienteId) {
-    const selectedOpt = $('cot-cliente-id').options[$('cot-cliente-id').selectedIndex];
-    clienteNombre = selectedOpt.textContent;
-  } else {
-    toast('Debes seleccionar un cliente','error'); $('cot-cliente-id').focus(); return;
   }
-  if(!cotItems.length){ toast('Agrega al menos un producto','error'); return; }
-  const total=cotItems.reduce((s,i)=>s+(i.precio||0)*(i.cantidad||1),0);
-  const data={
-    numero:$('cot-numero').value.trim(), cliente:clienteNombre, clienteId: clienteId || null,
-    email:$('cot-email').value.trim(), telefono:$('cot-telefono').value.trim(),
-    fecha:$('cot-fecha').value, validez:parseInt($('cot-validez').value)||30,
-    notas:$('cot-notas').value.trim(), estado:$('cot-estado').value,
-    items:cotItems.map(i=>({...i})), total, updatedAt:serverTimestamp()
-  };
-  try{
-    setLoading('cot-save',true);
-    if(editingId){ await updateDoc(tenantDoc('cotizaciones',editingId),data); toast('Cotización actualizada ✓'); }
-    else{ data.createdAt=serverTimestamp(); await addDoc(tenantCol('cotizaciones'),data); toast('Cotización creada ✓'); }
-    $('cot-modal').style.display='none';
-    loadCotizaciones();
-  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
-  finally{ setLoading('cot-save',false); }
-});
-window.viewCotizacion = async function(id){
-  if(!currentTenant) return;
-  try{
-    const [cd,bd]=await Promise.all([getDoc(tenantDoc('cotizaciones',id)),getDoc(doc(db,'businesses',currentTenant))]);
-    if(!cd.exists()) return;
-    printCot({id,...cd.data()},bd.data()||{});
-  }catch(e){ toast('Error al abrir','error'); console.error(e);}
-};
-function printCot(c,biz){
-  const rows=(c.items||[]).map(i=>`<tr><td>${esc(i.nombre)}</td><td style="text-align:center">${i.cantidad}</td><td style="text-align:right">$${(i.precio||0).toLocaleString('es-CO')}</td><td style="text-align:right"><strong>$${((i.precio||0)*(i.cantidad||1)).toLocaleString('es-CO')}</strong></td></tr>`).join('');
-  const w=window.open('','_blank','width=820,height=720');
-  w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Cotización ${esc(c.numero||'')}</title>
-  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;padding:40px;color:#111;font-size:14px}
-  .hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
-  .brand{font-size:22px;font-weight:900;color:#0066ff}.brand span{display:block;font-size:12px;font-weight:400;color:#666;margin-top:2px}
-  .cnum{font-size:19px;font-weight:800;color:#0066ff;text-align:right}
-  hr{border:none;border-top:2px solid #0066ff;margin:18px 0}
-  .cbox{background:#f4f8ff;border-left:4px solid #0066ff;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:20px}
-  .cbox h3{font-size:15px;font-weight:800;margin-bottom:3px}
-  table{width:100%;border-collapse:collapse;margin:14px 0}
-  th{background:#0066ff;color:#fff;padding:9px 13px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
-  td{padding:9px 13px;border-bottom:1px solid #eee}tr:nth-child(even) td{background:#fafafa}
-  .tot{text-align:right;padding:12px 16px;background:#eef5ff;border-radius:8px;margin-top:10px}
-  .tot .lbl{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px}
-  .tot .amt{font-size:24px;font-weight:900;color:#0066ff}
-  .ftr{margin-top:36px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;color:#aaa;font-size:11px}
-  .badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:#e8f0ff;color:#0066ff}
-  @media print{body{padding:20px}}</style>
-  </head><body>
-  <div class="hdr"><div><div class="brand">NEXORA ERP<span>${esc(biz.name||'Mi Negocio')}</span></div></div><div><div class="cnum">${esc(c.numero||'—')}</div><div style="color:#666;text-align:right;margin-top:4px">Fecha: <strong>${c.fecha||'—'}</strong><br>Válida: <strong>${c.validez||30} días</strong></div><div style="margin-top:6px;text-align:right"><span class="badge">${c.estado||'Borrador'}</span></div></div></div>
-  <hr><div class="cbox"><h3>${esc(c.cliente||'—')}</h3>${c.email?`<div style="color:#555">📧 ${esc(c.email)}</div>`:''}${c.telefono?`<div style="color:#555">📱 ${esc(c.telefono)}</div>`:''}</div>
-  <table><thead><tr><th>Producto / Servicio</th><th style="text-align:center">Cant.</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>${rows}</tbody></table>
-  <div class="tot"><div class="lbl">Total cotización</div><div class="amt">$${(c.total||0).toLocaleString('es-CO')}</div></div>
-  ${c.notas?`<div style="margin-top:18px;padding:12px;background:#fffef0;border:1px solid #ffe08a;border-radius:8px"><strong>📝 Notas:</strong> ${esc(c.notas)}</div>`:''}
-  <div class="ftr"><span>Nexora ERP</span><span>${new Date().toLocaleDateString('es-CO')}</span></div>
-  <script>setTimeout(()=>window.print(),250);<\/script></body></html>`);
-  w.document.close();
-}
+  $('cot-modal').style.display='none'; cargarCotizaciones(); cargarDashboard(); });
+async function cargarCotizaciones(){ const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc'))); const tb=$('cot-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>${c.estado}</td><td><button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${d.id}')">🗑️</button></td></tr>`; }); }
+window.deleteCotizacion = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('cotizaciones',id)); cargarCotizaciones(); cargarDashboard(); } };
+window.facturarCotizacion = async (cotId)=>{ const cotDoc=await getDoc(tenantDoc('cotizaciones',cotId)); if(!cotDoc.exists()) return; const cot=cotDoc.data(); if(cot.facturada){ toast('Ya facturada','error'); return; } const facturaData={ numero:'FAC-'+Date.now(), cotizacionId:cotId, cliente:cot.cliente, clienteId:cot.clienteId, fecha:new Date().toISOString().slice(0,10), items:cot.items, subtotal:cot.subtotal, descuento:cot.descuento||0, iva:cot.iva||0, total:cot.total, createdAt:serverTimestamp() }; await addDoc(tenantCol('facturas'),facturaData); await updateDoc(tenantDoc('cotizaciones',cotId),{facturada:true, estado:'Facturada'}); if(!cot.stockDescontado){ for(const item of cot.items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } await updateDoc(tenantDoc('cotizaciones',cotId),{stockDescontado:true}); } toast('Factura generada'); cargarCotizaciones(); cargarFacturas(); cargarDashboard(); };
+async function cargarFacturas(){ const snap=await getDocs(query(tenantCol('facturas'),orderBy('createdAt','desc'))); const tb=$('facturas-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const f=d.data(); tb.innerHTML+=`<tr><td>${f.numero}</td><td>${f.cliente}</td><td>${f.fecha}</td><td>$${f.total}</td><td><button class="btn-icon" onclick="window.imprimirFactura('${d.id}')">🖨️</button></td></tr>`; }); }
+window.imprimirFactura = async (id)=>{ const f=await getDoc(tenantDoc('facturas',id)); if(!f.exists()) return; const data=f.data(); const w=window.open(''); w.document.write(`<html><body><pre>FACTURA ${data.numero}\nCliente: ${data.cliente}\nTotal: $${data.total}</pre></body></html>`); w.print(); };
+// ---- COMPRAS ----
+let compraItems=[];
+function renderCompraItems(){ const container=$('compra-items-container'); container.innerHTML=''; compraItems.forEach((item,i)=>{ container.innerHTML+=`<div><select class="compra-prod-select" data-index="${i}"></select><input type="number" placeholder="Cantidad" value="${item.cantidad}" onchange="compraItems[${i}].cantidad=parseInt(this.value)"><input type="number" placeholder="Precio" value="${item.precio}" onchange="compraItems[${i}].precio=parseFloat(this.value)"><button onclick="compraItems.splice(${i},1);renderCompraItems()">❌</button></div>`; }); (async()=>{ const prods=await getDocs(tenantCol('productos')); prods.forEach(p=>{ document.querySelectorAll('.compra-prod-select').forEach(sel=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=p.data().nombre; if(compraItems[sel.dataset.index]?.prodId===p.id) opt.selected=true; sel.appendChild(opt); }); }); })(); }
+$('btn-add-compra-item').addEventListener('click',()=>{ compraItems.push({prodId:'', cantidad:1, precio:0}); renderCompraItems(); });
+window.openCompraModal=async()=>{ compraItems=[]; const proveedores=await getDocs(tenantCol('proveedores')); const sel=$('compra-proveedor-id'); sel.innerHTML='<option value="">-- Seleccionar --</option>'; proveedores.forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=p.data().nombre; sel.appendChild(opt); }); $('compra-fecha').value=new Date().toISOString().slice(0,10); renderCompraItems(); $('compra-modal').style.display='flex'; };
+$('compra-form').addEventListener('submit', async e=>{ e.preventDefault(); const proveedorId=$('compra-proveedor-id').value; if(!proveedorId) return; const proveedorNombre=$('compra-proveedor-id').options[$('compra-proveedor-id').selectedIndex].text; const total=compraItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const compra={ proveedorId, proveedorNombre, fecha:$('compra-fecha').value, items:compraItems, total, createdAt:serverTimestamp() }; await addDoc(tenantCol('compras'),compra); // aumentar stock
+  for(const item of compraItems){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)+item.cantidad}); } } toast('Compra registrada'); $('compra-modal').style.display='none'; cargarCompras(); cargarInventario(); });
+async function cargarCompras(){ const snap=await getDocs(query(tenantCol('compras'),orderBy('createdAt','desc'))); const tb=$('compras-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.proveedorNombre}</td><td>${c.fecha}</td><td>$${c.total}</td><td><button class="btn-icon danger" onclick="window.deleteCompra('${d.id}')">🗑️</button></td></tr>`; }); }
+window.deleteCompra=async(id)=>{ if(confirm('Eliminar compra? Revierte stock')){ const compra=await getDoc(tenantDoc('compras',id)); if(compra.exists()){ for(const item of compra.data().items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } await deleteDoc(tenantDoc('compras',id)); toast('Eliminada'); cargarCompras(); cargarInventario(); } } };
 
-// ══ CLIENTES (módulo normal) ══
-let editingClienteId = null;
-async function loadClientes(){
-  if(!currentTenant) return;
-  try{
-    const snap=await getDocs(query(tenantCol('clientes'),orderBy('nombre')));
-    renderClientes(snap.docs);
-  }catch(e){ toast('Error cargando clientes','error'); console.error(e);}
-}
-function renderClientes(docs){
-  const tb=$('cliente-tbody'); tb.innerHTML='';
-  if(!docs.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:48px">Sin clientes — haz clic en <strong>+ Nuevo cliente</strong></td></tr>'; return; }
-  docs.forEach(d=>{
-    const c={id:d.id,...d.data()};
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><strong>${esc(c.nombre)}</strong></td><td>${esc(c.email||'—')}</td><td>${esc(c.telefono||'—')}</td><td>${esc(c.direccion||'—')}</td><td>${esc(c.nit||'—')}</td><td><button class="btn-icon" onclick="window.editCliente('${c.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteCliente('${c.id}')">🗑️</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-$('cliente-search')?.addEventListener('input', async e=>{
-  if(!currentTenant) return;
-  const q=e.target.value.toLowerCase();
-  const snap=await getDocs(tenantCol('clientes'));
-  renderClientes(snap.docs.filter(d=>{ const c=d.data(); return (c.nombre||'').toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)||(c.telefono||'').includes(q); }));
-});
-window.editCliente = async function(id){
-  if(!currentTenant) return;
-  try{
-    const d=await getDoc(tenantDoc('clientes',id)); if(!d.exists()) return;
-    const c=d.data(); editingClienteId=id;
-    $('cliente-nombre').value=c.nombre||''; $('cliente-email').value=c.email||''; $('cliente-telefono').value=c.telefono||'';
-    $('cliente-direccion').value=c.direccion||''; $('cliente-nit').value=c.nit||''; $('cliente-notas').value=c.notas||'';
-    $('cliente-modal-title').textContent='Editar Cliente';
-    $('cliente-modal').style.display='flex';
-    openFromCot = false;
-  }catch(e){ toast('Error al cargar','error'); console.error(e);}
-};
-window.deleteCliente = async function(id){
-  if(!currentTenant) return;
-  if(!confirm('¿Eliminar este cliente?')) return;
-  try{ await deleteDoc(tenantDoc('clientes',id)); toast('Cliente eliminado'); loadClientes(); }catch(e){ toast('Error al eliminar','error'); console.error(e);}
-};
-
-// ══ PROVEEDORES (módulo) ══
-let editingProveedorId = null;
-async function loadProveedores(){
-  if(!currentTenant) return;
-  try{ const snap=await getDocs(query(tenantCol('proveedores'),orderBy('nombre'))); renderProveedores(snap.docs); }catch(e){ toast('Error cargando proveedores','error'); console.error(e);}
-}
-function renderProveedores(docs){
-  const tb=$('proveedor-tbody'); tb.innerHTML='';
-  if(!docs.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:48px">Sin proveedores — haz clic en <strong>+ Nuevo proveedor</strong></td></tr>'; return; }
-  docs.forEach(d=>{
-    const p={id:d.id,...d.data()};
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><strong>${esc(p.nombre)}</strong></td><td>${esc(p.contacto||'—')}</td><td>${esc(p.telefono||'—')}</td><td>${esc(p.email||'—')}</td><td>${esc(p.direccion||'—')}</td><td><button class="btn-icon" onclick="window.editProveedor('${p.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProveedor('${p.id}')">🗑️</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-$('proveedor-search')?.addEventListener('input', async e=>{
-  if(!currentTenant) return;
-  const q=e.target.value.toLowerCase();
-  const snap=await getDocs(tenantCol('proveedores'));
-  renderProveedores(snap.docs.filter(d=>{ const p=d.data(); return (p.nombre||'').toLowerCase().includes(q)||(p.contacto||'').toLowerCase().includes(q)||(p.telefono||'').includes(q); }));
-});
-window.openProveedorModal = function(){
-  editingProveedorId=null;
-  $('proveedor-form').reset();
-  $('proveedor-modal-title').textContent='Nuevo Proveedor';
-  $('proveedor-modal').style.display='flex';
-  setTimeout(()=>$('proveedor-nombre').focus(),80);
-};
-window.editProveedor = async function(id){
-  if(!currentTenant) return;
-  try{
-    const d=await getDoc(tenantDoc('proveedores',id)); if(!d.exists()) return;
-    const p=d.data(); editingProveedorId=id;
-    $('proveedor-nombre').value=p.nombre||''; $('proveedor-contacto').value=p.contacto||''; $('proveedor-telefono').value=p.telefono||'';
-    $('proveedor-email').value=p.email||''; $('proveedor-direccion').value=p.direccion||''; $('proveedor-productos').value=p.productos||''; $('proveedor-notas').value=p.notas||'';
-    $('proveedor-modal-title').textContent='Editar Proveedor';
-    $('proveedor-modal').style.display='flex';
-  }catch(e){ toast('Error al cargar','error'); console.error(e);}
-};
-window.deleteProveedor = async function(id){
-  if(!currentTenant) return;
-  if(!confirm('¿Eliminar este proveedor?')) return;
-  try{ await deleteDoc(tenantDoc('proveedores',id)); toast('Proveedor eliminado'); loadProveedores(); }catch(e){ toast('Error al eliminar','error'); console.error(e);}
-};
-$('proveedor-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
-  const nombre=$('proveedor-nombre').value.trim();
-  if(!nombre){ toast('El nombre es requerido','error'); return; }
-  const data={ nombre, contacto:$('proveedor-contacto').value.trim(), telefono:$('proveedor-telefono').value.trim(), email:$('proveedor-email').value.trim(), direccion:$('proveedor-direccion').value.trim(), productos:$('proveedor-productos').value.trim(), notas:$('proveedor-notas').value.trim(), updatedAt:serverTimestamp() };
-  try{
-    setLoading('proveedor-save',true);
-    if(editingProveedorId){ await updateDoc(tenantDoc('proveedores',editingProveedorId),data); toast('Proveedor actualizado ✓'); }
-    else{ data.createdAt=serverTimestamp(); await addDoc(tenantCol('proveedores'),data); toast('Proveedor creado ✓'); }
-    $('proveedor-modal').style.display='none';
-    loadProveedores();
-  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
-  finally{ setLoading('proveedor-save',false); }
-});
+// ---- DASHBOARD Y REPORTES ----
+async function cargarDashboard(){ const productos=(await getDocs(tenantCol('productos'))).size; const cotizaciones=(await getDocs(tenantCol('cotizaciones'))).size; const facturas=(await getDocs(tenantCol('facturas'))).size; const clientes=(await getDocs(tenantCol('clientes'))).size; $('dash-productos').textContent=productos; $('dash-cotizaciones').textContent=cotizaciones; $('dash-facturas').textContent=facturas; $('dash-clientes').textContent=clientes; await generarSugerencias(); await generarTopClientes(); await generarTopProductos(); }
+async function generarSugerencias(){ const productosSnap=await getDocs(tenantCol('productos')); const ventasUltimos30Dias={}; const cotizacionesSnap=await getDocs(tenantCol('cotizaciones')); const hace30Dias=new Date(); hace30Dias.setDate(hace30Dias.getDate()-30); cotizacionesSnap.forEach(doc=>{ const c=doc.data(); if(c.createdAt && c.createdAt.toDate()>hace30Dias){ (c.items||[]).forEach(item=>{ ventasUltimos30Dias[item.prodId]=(ventasUltimos30Dias[item.prodId]||0)+item.cantidad; }); } }); const sugerencias=[]; for(const prodDoc of productosSnap.docs){ const p=prodDoc.data(); const ventas=ventasUltimos30Dias[prodDoc.id]||0; const promedioDiario=ventas/30; const stockRecomendado=(p.stockMin||5)+(promedioDiario*14); if((p.stock||0)<stockRecomendado){ sugerencias.push({nombre:p.nombre, stock:p.stock, sugerido:Math.ceil(stockRecomendado-p.stock)}); } } const container=$('sugerencias-container'); if(sugerencias.length===0) container.innerHTML='<div class="sugerencia-item">✅ Sin sugerencias de compra por ahora</div>'; else container.innerHTML=sugerencias.map(s=>`<div class="sugerencia-item"><span>📦 ${esc(s.nombre)} (stock: ${s.stock})</span><span>🛒 Sugerencia: comprar ${s.sugerido} unidades</span></div>`).join(''); }
+async function generarTopClientes(){ const facturasSnap=await getDocs(tenantCol('facturas')); const clientesMap=new Map(); facturasSnap.forEach(d=>{ const f=d.data(); const nombre=f.cliente; const total=f.total||0; clientesMap.set(nombre, (clientesMap.get(nombre)||0)+total); }); const top=Array.from(clientesMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,5); const container=$('top-clientes'); if(top.length===0) container.innerHTML='<div>Sin datos aún</div>'; else container.innerHTML=`<ul class="report-list">${top.map(([nombre,total])=>`<li><span>${esc(nombre)}</span><span>$${total.toFixed(2)}</span></li>`).join('')}</ul>`; }
+async function generarTopProductos(){ const facturasSnap=await getDocs(tenantCol('facturas')); const productosMap=new Map(); facturasSnap.forEach(d=>{ const f=d.data(); (f.items||[]).forEach(item=>{ productosMap.set(item.nombre, (productosMap.get(item.nombre)||0)+item.cantidad); }); }); const top=Array.from(productosMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,5); const container=$('top-productos'); if(top.length===0) container.innerHTML='<div>Sin datos aún</div>'; else container.innerHTML=`<ul class="report-list">${top.map(([nombre,cant])=>`<li><span>${esc(nombre)}</span><span>${cant} unidades</span></li>`).join('')}</ul>`; }
+async function cargarReportes(){ await generarTopClientes(); await generarTopProductos(); $('reporte-detalle').innerHTML='<p>Reportes actualizados desde facturas.</p>'; }
 
 // Cerrar modales
 document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.style.display='none'; }));
