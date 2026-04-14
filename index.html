@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexora ERP Pro - PIN 1234</title>
+  <title>Nexora ERP Pro - Sin PIN al inicio</title>
   <style>
     :root {
       --bg: #0b0f1a;
@@ -81,9 +81,8 @@
       <h2>Iniciar sesión</h2>
       <div class="form-group"><label>Email</label><input id="login-email" type="email"></div>
       <div class="form-group"><label>Contraseña</label><input id="login-pass" type="password"></div>
-      <div class="form-group"><label>PIN (4 dígitos)</label><input id="login-pin" type="password" maxlength="4"></div>
       <button id="btn-login" class="btn-primary">Entrar</button>
-      <p class="auth-link">Sistema protegido con PIN</p>
+      <p class="auth-link">Acceso seguro</p>
     </div>
   </div>
 </div>
@@ -179,7 +178,7 @@ window.loadModule = async (mod) => {
   if (mod==='admin' && currentUserRole==='admin') await cargarAdmin();
 };
 
-// Autenticación con PIN por defecto 1234
+// Autenticación (sin PIN)
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const userDocRef = doc(db, 'users', user.uid);
@@ -223,21 +222,14 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Login con email, contraseña y PIN (por defecto 1234)
+// Login (solo email y contraseña)
 $('#btn-login').addEventListener('click', async () => {
   const email=$('#login-email').value.trim();
   const pass=$('#login-pass').value;
-  const pin=$('#login-pin').value;
-  if (!email||!pass||!pin) { toast('Complete todos los campos','error'); return; }
+  if (!email||!pass) { toast('Complete todos los campos','error'); return; }
   try {
-    const cred = await signInWithEmailAndPassword(auth, email, pass);
-    const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
-    if (userDoc.exists() && userDoc.data().pin === pin) {
-      toast('Bienvenido');
-    } else {
-      await signOut(auth);
-      toast('PIN incorrecto. Por defecto es 1234','error');
-    }
+    await signInWithEmailAndPassword(auth, email, pass);
+    toast('Bienvenido');
   } catch(e) { toast('Credenciales inválidas','error'); }
 });
 
@@ -266,7 +258,7 @@ window.eliminarProducto = async (id,nombre) => { if(confirm(`¿Mover "${nombre}"
 // CLIENTES
 async function cargarClientes() {
   const snap = await getDocs(query(tenantCol('clientes'), orderBy('nombre')));
-  $('#mod-clientes').innerHTML = `<div class="toolbar"><input class="toolbar-search" id="cliente-search" placeholder="Buscar..."><button class="btn-action" onclick="window.openClienteModal()">+ Nuevo cliente</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="cliente-tbody"></tbody></table></div>`;
+  $('#mod-clientes').innerHTML = `<div class="toolbar"><input class="toolbar-search" id="cliente-search" placeholder="Buscar..."><button class="btn-action" onclick="window.openClienteModal()">+ Nuevo cliente</button></div><div class="table-wrap"><tr><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="cliente-tbody"></tbody></table></div>`;
   const tbody = $('#cliente-tbody');
   snap.forEach(doc => { const c=doc.data(); tbody.innerHTML += `<tr><td>${esc(c.nombre)}</td><td>${esc(c.email||'')}</td><td>${esc(c.telefono||'')}</td><td><button class="btn-icon" onclick="window.editCliente('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarCliente('${doc.id}','${c.nombre}')">🗑️</button></td>`; });
 }
@@ -288,7 +280,7 @@ window.eliminarProveedor = async (id,nombre) => { if(confirm(`Mover "${nombre}" 
 // COTIZACIONES
 async function cargarCotizaciones() {
   const snap = await getDocs(query(tenantCol('cotizaciones'), orderBy('createdAt','desc')));
-  $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="window.openCotizacionModal()">+ Nueva cotización</button></div><div class="table-wrap"><tr><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="cot-tbody"></tbody></table></div>`;
+  $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="window.openCotizacionModal()">+ Nueva cotización</button></div><div class="table-wrap"></table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="cot-tbody"></tbody></table></div>`;
   const tbody = $('#cot-tbody');
   snap.forEach(doc => { const c=doc.data(); tbody.innerHTML += `<tr><td>${c.numero}</td><td>${c.cliente}</td><td>$${c.total}</td><td>${c.estado}</td><td><button class="btn-icon" onclick="window.editCotizacion('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarCotizacion('${doc.id}','${c.numero}')">🗑️</button></td>`; });
 }
@@ -309,12 +301,12 @@ window.eliminarCompra = async (id) => { if(confirm("Mover compra a papelera?")){
 // FACTURAS
 async function cargarFacturas() {
   const snap = await getDocs(query(tenantCol('facturas'), orderBy('createdAt','desc')));
-  $('#mod-facturas').innerHTML = `<div class="table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div>`;
+  $('#mod-facturas').innerHTML = `<div class="table-wrap"></table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div>`;
   const tbody = $('#facturas-tbody');
   snap.forEach(doc => { const f=doc.data(); tbody.innerHTML += `<tr><td>${f.numero}</td><td>${f.cliente}</td><td>$${f.total}</td><td><button class="btn-icon" onclick="window.editarFactura('${doc.id}')">✏️ Editar</button><button class="btn-icon" onclick="window.imprimirFactura('${doc.id}')">🖨️</button><button class="btn-icon danger" onclick="window.eliminarFactura('${doc.id}')">🗑️</button></td>`; });
 }
 window.editarFactura = async (id) => {
-  const pin = prompt("Ingrese PIN de 4 dígitos para editar esta factura:");
+  const pin = prompt("Ingrese PIN de 4 dígitos para editar esta factura (por defecto 1234):");
   if (pin !== currentUserPin) { toast("PIN incorrecto", "error"); return; }
   const facturaDoc = await getDoc(tenantDoc('facturas', id));
   if (!facturaDoc.exists()) return;
@@ -346,7 +338,7 @@ window.imprimirFactura = async (id) => {
 // PAPELERA
 async function cargarPapelera() {
   const snap = await getDocs(query(collection(db, 'businesses', currentTenant, 'papelera'), orderBy('eliminadoEn', 'desc')));
-  $('#mod-papelera').innerHTML = `<div class="table-wrap"><table><thead><tr><th>Colección</th><th>ID Original</th><th>Datos</th><th>Acciones</th></tr></thead><tbody id="papelera-tbody"></tbody></table></div>`;
+  $('#mod-papelera').innerHTML = `<div class="table-wrap"><tr><thead><tr><th>Colección</th><th>ID Original</th><th>Datos</th><th>Acciones</th></tr></thead><tbody id="papelera-tbody"></tbody></table></div>`;
   const tbody = $('#papelera-tbody');
   snap.forEach(doc => { const item=doc.data(); tbody.innerHTML += `<tr><td>${item.coleccionOriginal}</td><td>${item.documentoId}</td><td><pre>${JSON.stringify(item.datos).substring(0,50)}...</pre></td><td><button class="btn-icon" onclick="window.recuperarItem('${doc.id}')">↩️ Recuperar</button><button class="btn-icon danger" onclick="window.eliminarDefinitivo('${doc.id}')">❌ Eliminar</button></td>`; });
 }
