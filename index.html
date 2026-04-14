@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexora ERP - Completo</title>
+<title>Nexora ERP - Con Papelera</title>
 <style>
   :root {
     --bg:#0b0f1a; --sidebar:#070b16; --accent:#1a7fff; --accent2:#00d4ff;
-    --green:#00c896; --red:#ff4d6a; --text:#e2e8f2; --muted:#6b7a90;
+    --green:#00c896; --red:#ff4d6a; --orange:#ff9f43;
+    --text:#e2e8f2; --muted:#6b7a90;
     --card:rgba(255,255,255,0.04); --border:rgba(255,255,255,0.07);
     --radius:12px;
   }
@@ -80,6 +81,8 @@
   .btn-icon { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text); padding:5px 9px; border-radius:7px; cursor:pointer; font-size:13px; transition:background .2s; margin-right:3px; }
   .btn-icon:hover { background:rgba(26,127,255,0.15); }
   .btn-icon.danger:hover { background:rgba(255,77,106,0.15); }
+  .btn-icon.warning { color:var(--orange); }
+  .btn-icon.warning:hover { background:rgba(255,159,67,0.15); }
   .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:1000; overflow-y:auto; padding:32px 16px; }
   .modal { background:#0d1220; border:1px solid rgba(255,255,255,0.1); border-radius:18px; width:100%; max-width:640px; margin:0 auto; animation:slideUp .25s ease; }
   .modal-wide { max-width:860px; }
@@ -112,6 +115,7 @@
   .report-list { list-style:none; }
   .report-list li { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); }
   .sugerencia-item { background:rgba(255,193,7,0.1); border-left:3px solid #ffc107; padding:10px; margin-bottom:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; }
+  .papelera-icon { color:var(--orange); }
   @media(max-width:800px){
     .sidebar{width:60px;}
     .sidebar-logo .sub,.nav-section,.nav-item span:not(.icon),.user-name,.user-biz,.btn-logout{display:none;}
@@ -159,6 +163,8 @@
     <div class="nav-section">Base de datos</div>
     <div class="nav-item" data-module="clientes"><span class="icon">👥</span><span>Clientes</span></div>
     <div class="nav-item" data-module="proveedores"><span class="icon">🚚</span><span>Proveedores</span></div>
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span></div>
     <div class="nav-section">Analítica</div>
     <div class="nav-item" data-module="reportes"><span class="icon">📈</span><span>Reportes</span></div>
     <div class="sidebar-footer">
@@ -169,7 +175,6 @@
   <div class="main">
     <div class="topbar"><div id="mod-title">Dashboard</div><span class="topbar-biz biz-el">—</span></div>
     <div class="content">
-      <!-- DASHBOARD -->
       <div id="mod-dashboard">
         <div class="dash-grid">
           <div class="dash-card"><div class="dash-card-label">📦 Productos</div><div class="dash-card-val" id="dash-productos">—</div><div class="dash-card-sub">en inventario</div></div>
@@ -184,34 +189,23 @@
         <div class="section-header"><h3>🔥 Top Productos más vendidos</h3></div>
         <div id="top-productos" class="table-wrap" style="padding:16px;">Cargando...</div>
       </div>
-
-      <!-- INVENTARIO (igual que antes, con alerta stock) -->
       <div id="mod-inventario"><div class="toolbar"><input class="toolbar-search" id="prod-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openProductoModal()">+ Nuevo producto</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Ref</th><th>Precio</th><th>Stock</th><th>Mín</th><th>Acciones</th></tr></thead><tbody id="prod-tbody"></tbody></table></div></div>
-      <!-- COTIZACIONES -->
       <div id="mod-cotizaciones"><div class="toolbar"><button class="btn-action" onclick="openCotizacionModal()">+ Nueva cotización</button></div><div class="table-wrap"><table><thead><tr><th>N°</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="cot-tbody"></tbody></table></div></div>
-      <!-- FACTURAS -->
-      <div id="mod-facturas"><div class="table-wrap"><table><thead><tr><th>N° Factura</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div></div>
-      <!-- COMPRAS -->
+      <div id="mod-facturas"><div class="table-wrap"><tr><thead><tr><th>N° Factura</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div></div>
       <div id="mod-compras"><div class="toolbar"><button class="btn-action" onclick="openCompraModal()">+ Registrar compra</button></div><div class="table-wrap"><table><thead><tr><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="compras-tbody"></tbody></table></div></div>
-      <!-- CLIENTES -->
       <div id="mod-clientes"><div class="toolbar"><input class="toolbar-search" id="cliente-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openClienteModal()">+ Nuevo cliente</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="cliente-tbody"></tbody></table></div></div>
-      <!-- PROVEEDORES -->
-      <div id="mod-proveedores"><div class="toolbar"><input class="toolbar-search" id="proveedor-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openProveedorModal()">+ Nuevo proveedor</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="proveedor-tbody"></tbody></table></div></div>
-      <!-- REPORTES (top ya mostrado en dashboard, aquí puede ir más detalle) -->
+      <div id="mod-proveedores"><div class="toolbar"><input class="toolbar-search" id="proveedor-search" placeholder="🔍 Buscar..."><button class="btn-action" onclick="openProveedorModal()">+ Nuevo proveedor</button></div><div class="table-wrap"><tr><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="proveedor-tbody"></tbody></table></div></div>
+      <div id="mod-papelera"><div class="toolbar"><button class="btn-action" onclick="vaciarPapelera()">🗑️ Vaciar papelera</button></div><div class="table-wrap"><tr><thead><tr><th>Tipo</th><th>Nombre/ID</th><th>Fecha eliminación</th><th>Acciones</th></tr></thead><tbody id="papelera-tbody"></tbody></table></div></div>
       <div id="mod-reportes"><div class="report-card"><div class="report-title">📊 Resumen de Ventas</div><div id="reporte-detalle"></div></div></div>
     </div>
   </div>
 </div>
 
 <!-- MODALES (Producto, Cliente, Proveedor, Cotización, Compra) -->
-<div class="modal-backdrop" id="prod-modal"><div class="modal"><div class="modal-header"><h3 id="prod-modal-title">Producto</h3><button class="modal-close">✕</button></div><form id="prod-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="prod-nombre"></div><div class="form-row"><div class="form-group"><label>Precio</label><input id="prod-precio" type="number" step="0.01"></div><div class="form-group"><label>Stock</label><input id="prod-stock" type="number"></div></div><div class="form-group"><label>Stock mínimo</label><input id="prod-stockmin" type="number" value="5"></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="prod-save" class="btn-save">Guardar</button></div></form></div></div>
+<div class="modal-backdrop" id="prod-modal"><div class="modal"><div class="modal-header"><h3 id="prod-modal-title">Producto</h3><button class="modal-close">✕</button></div><form id="prod-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="prod-nombre"></div><div class="form-row"><div class="form-group"><label>Precio</label><input id="prod-precio" type="number" step="0.01"></div><div class="form-group"><label>Stock</label><input id="prod-stock" type="number"></div></div><div class="form-group"><label>Stock mínimo</label><input id="prod-stockmin" type="number" value="5"></div><div class="form-group"><label>Referencia</label><input id="prod-ref" placeholder="Opcional"></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="prod-save" class="btn-save">Guardar</button></div></form></div></div>
 <div class="modal-backdrop" id="cliente-modal"><div class="modal"><div class="modal-header"><h3 id="cliente-modal-title">Cliente</h3><button class="modal-close">✕</button></div><form id="cliente-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="cliente-nombre"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="cliente-email" type="email"></div><div class="form-group"><label>Teléfono</label><input id="cliente-telefono"></div></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="cliente-save" class="btn-save">Guardar</button></div></form></div></div>
 <div class="modal-backdrop" id="proveedor-modal"><div class="modal"><div class="modal-header"><h3 id="proveedor-modal-title">Proveedor</h3><button class="modal-close">✕</button></div><form id="proveedor-form"><div class="modal-body"><div class="form-group"><label>Nombre</label><input id="proveedor-nombre"></div><div class="form-group"><label>Contacto</label><input id="proveedor-contacto"></div><div class="form-row"><div class="form-group"><label>Teléfono</label><input id="proveedor-telefono"></div><div class="form-group"><label>Email</label><input id="proveedor-email"></div></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="proveedor-save" class="btn-save">Guardar</button></div></form></div></div>
-
-<!-- MODAL COTIZACIÓN (con descuento, IVA) -->
 <div class="modal-backdrop" id="cot-modal"><div class="modal modal-wide"><div class="modal-header"><h3 id="cot-modal-title">Cotización</h3><button class="modal-close">✕</button></div><form id="cot-form"><div class="modal-body"><div class="form-row"><div class="form-group"><label>N°</label><input id="cot-numero"></div><div class="form-group"><label>Estado</label><select id="cot-estado"><option>Borrador</option><option>Aprobada</option></select></div></div><div class="form-group"><label>Cliente</label><div class="cliente-select-wrapper"><select id="cot-cliente-id"><option value="">-- Seleccionar --</option></select><button type="button" id="btn-nuevo-cliente-cot" class="btn-icon-small">➕</button></div></div><div class="form-row"><div class="form-group"><label>Email</label><input id="cot-email" readonly></div><div class="form-group"><label>Teléfono</label><input id="cot-telefono" readonly></div></div><div class="form-row"><div class="form-group"><label>Descuento (%)</label><input id="cot-descuento" type="number" step="0.1" value="0"></div><div class="form-group"><label>IVA (%)</label><input id="cot-iva" type="number" step="0.1" value="19"></div></div><hr><div class="add-item-row"><select id="cot-item-prod"></select><input id="cot-item-qty" type="number" value="1"><input id="cot-item-precio" type="number" step="0.01"><button type="button" id="btn-add-item">+ Agregar</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th><th></th></tr></thead><tbody id="cot-items-tbody"></tbody></table></div><div class="cot-total-row">Subtotal: $<span id="cot-subtotal">0</span> | Descuento: -<span id="cot-desc-monto">0</span> | IVA: +<span id="cot-iva-monto">0</span> | <strong>TOTAL: $<span id="cot-total">0</span></strong></div></div><div class="modal-footer"><button type="button" class="btn-cancel modal-close">Cancelar</button><button type="submit" id="cot-save" class="btn-save">Guardar</button></div></form></div></div>
-
-<!-- MODAL COMPRA -->
 <div class="modal-backdrop" id="compra-modal"><div class="modal"><div class="modal-header"><h3>Registrar Compra</h3><button class="modal-close">✕</button></div><form id="compra-form"><div class="modal-body"><div class="form-group"><label>Proveedor</label><select id="compra-proveedor-id"></select></div><div class="form-group"><label>Fecha</label><input id="compra-fecha" type="date"></div><div id="compra-items-container"></div><button type="button" id="btn-add-compra-item" class="btn-action">+ Agregar producto</button></div><div class="modal-footer"><button type="submit" class="btn-save">Guardar compra</button></div></form></div></div>
 
 <script type="module">
@@ -231,7 +225,98 @@ const tenantDoc = (col, id) => doc(db, 'businesses', currentTenant, col, id);
 function toast(msg, type='success'){ const t=document.createElement('div'); t.className=`toast toast-${type}`; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>t.remove(),3200); }
 function esc(str){ const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; }
 
-// Autenticación
+// ==================== PAPELERA ====================
+async function moverAPapelera(coleccion, id, datos, nombreMostrar = '') {
+  try {
+    await addDoc(collection(db, 'businesses', currentTenant, 'papelera'), {
+      coleccionOriginal: coleccion,
+      documentoId: id,
+      datos: datos,
+      nombreMostrar: nombreMostrar || datos.nombre || datos.cliente || datos.proveedorNombre || datos.numero || id,
+      eliminadoPor: currentUser?.uid || 'sistema',
+      eliminadoEn: serverTimestamp()
+    });
+    await deleteDoc(tenantDoc(coleccion, id));
+    toast(`Movido a papelera: ${nombreMostrar}`);
+    return true;
+  } catch(e) { toast('Error al mover a papelera', 'error'); return false; }
+}
+
+async function recuperarDePapelera(itemId) {
+  try {
+    const papeleraDoc = await getDoc(doc(db, 'businesses', currentTenant, 'papelera', itemId));
+    if (!papeleraDoc.exists()) { toast('Item no encontrado', 'error'); return false; }
+    const { coleccionOriginal, documentoId, datos } = papeleraDoc.data();
+    await setDoc(tenantDoc(coleccionOriginal, documentoId), datos);
+    await deleteDoc(papeleraDoc.ref);
+    toast('Elemento restaurado exitosamente');
+    return true;
+  } catch(e) { toast('Error al restaurar', 'error'); return false; }
+}
+
+async function eliminarDefinitivamente(itemId) {
+  if (!confirm('¿Eliminar este elemento definitivamente? No podrá recuperarse.')) return false;
+  try {
+    await deleteDoc(doc(db, 'businesses', currentTenant, 'papelera', itemId));
+    toast('Elemento eliminado definitivamente');
+    return true;
+  } catch(e) { toast('Error al eliminar', 'error'); return false; }
+}
+
+async function vaciarPapelera() {
+  if (!confirm('⚠️ ¿VACIAR TODA LA PAPELERA? Esta acción es irreversible.')) return;
+  try {
+    const snap = await getDocs(collection(db, 'businesses', currentTenant, 'papelera'));
+    for (const doc of snap.docs) {
+      await deleteDoc(doc.ref);
+    }
+    toast('Papelera vaciada completamente');
+    cargarPapelera();
+  } catch(e) { toast('Error al vaciar papelera', 'error'); }
+}
+
+async function cargarPapelera() {
+  if (!currentTenant) return;
+  const snap = await getDocs(query(collection(db, 'businesses', currentTenant, 'papelera'), orderBy('eliminadoEn', 'desc')));
+  const tbody = $('#papelera-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  if (snap.empty) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--muted)">🗑️ Papelera vacía</td></tr>';
+    return;
+  }
+  snap.forEach(doc => {
+    const item = doc.data();
+    const fecha = item.eliminadoEn?.toDate ? item.eliminadoEn.toDate().toLocaleString() : 'Fecha desconocida';
+    tbody.innerHTML += `
+      <tr>
+        <td><span class="badge">${item.coleccionOriginal}</span></td>
+        <td>${esc(item.nombreMostrar || item.documentoId)}</td>
+        <td style="font-size:12px">${fecha}</td>
+        <td>
+          <button class="btn-icon" onclick="recuperarItem('${doc.id}')" title="Restaurar">↩️ Restaurar</button>
+          <button class="btn-icon danger" onclick="eliminarItemDefinitivo('${doc.id}')" title="Eliminar para siempre">❌ Eliminar</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+window.recuperarItem = async (id) => { await recuperarDePapelera(id); cargarPapelera(); await cargarModuloActual(); };
+window.eliminarItemDefinitivo = async (id) => { await eliminarDefinitivamente(id); cargarPapelera(); };
+window.vaciarPapelera = vaciarPapelera;
+
+async function cargarModuloActual() {
+  const active = document.querySelector('.nav-item.active')?.dataset.module;
+  if (active === 'inventario') await cargarInventario();
+  if (active === 'clientes') await cargarClientes();
+  if (active === 'proveedores') await cargarProveedores();
+  if (active === 'cotizaciones') await cargarCotizaciones();
+  if (active === 'facturas') await cargarFacturas();
+  if (active === 'compras') await cargarCompras();
+  if (active === 'dashboard') await cargarDashboard();
+}
+
+// ==================== AUTENTICACIÓN ====================
 onAuthStateChanged(auth, async user => {
   if(user){
     currentUser = user;
@@ -261,10 +346,11 @@ $('btn-register').addEventListener('click', async()=>{ try{ const cred=await cre
 $('btn-logout').addEventListener('click',()=>signOut(auth));
 $('link-to-register').addEventListener('click',e=>{ e.preventDefault(); $('login-form').style.display='none'; $('register-form').style.display='block'; });
 $('link-to-login').addEventListener('click',e=>{ e.preventDefault(); $('register-form').style.display='none'; $('login-form').style.display='block'; });
+
 window.loadModule = async function(mod){
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
   $(`mod-${mod}`).style.display='block';
-  const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',reportes:'Reportes'};
+  const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',papelera:'Papelera',reportes:'Reportes'};
   $('mod-title').textContent=titles[mod]||mod;
   if(mod==='dashboard') await cargarDashboard();
   if(mod==='inventario') await cargarInventario();
@@ -273,51 +359,46 @@ window.loadModule = async function(mod){
   if(mod==='compras') await cargarCompras();
   if(mod==='clientes') await cargarClientes();
   if(mod==='proveedores') await cargarProveedores();
+  if(mod==='papelera') await cargarPapelera();
   if(mod==='reportes') await cargarReportes();
 };
 
-// Asignar eventos a los items del menú (esto va FUERA de loadModule)
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', (e) => {
     e.preventDefault();
     const modulo = item.getAttribute('data-module');
-    if (modulo && typeof window.loadModule === 'function') {
-      window.loadModule(modulo);
-    } else {
-      console.error("No se pudo cambiar al módulo:", modulo);
-    }
+    if (modulo && typeof window.loadModule === 'function') window.loadModule(modulo);
   });
 });
 
-
-// ---- INVENTARIO ----
+// ==================== INVENTARIO (con papelera) ====================
 async function cargarInventario(){ const snap=await getDocs(query(tenantCol('productos'),orderBy('nombre'))); renderProductos(snap.docs); }
-function renderProductos(docs){ const tb=$('prod-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.referencia||'')}</td><td>$${p.precio}</td><td><span class="badge ${p.stock<=p.stockMin?'badge-peligro':'badge-ok'}">${p.stock}</span></td><td>${p.stockMin}</td><td><button class="btn-icon" onclick="window.editProducto('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProducto('${d.id}')">🗑️</button></td></tr>`; }); }
+function renderProductos(docs){ const tb=$('prod-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.referencia||'')}</td><td>$${p.precio}</td><td><span class="badge ${p.stock<=p.stockMin?'badge-peligro':'badge-ok'}">${p.stock}</span></td><td>${p.stockMin}</td><td><button class="btn-icon" onclick="editProducto('${d.id}')">✏️</button><button class="btn-icon danger" onclick="eliminarProducto('${d.id}','${p.nombre}')">🗑️</button></td>`; }); }
 window.openProductoModal = ()=>{ editingProductoId=null; $('prod-form').reset(); $('prod-modal').style.display='flex'; };
-window.editProducto = async (id)=>{ const d=await getDoc(tenantDoc('productos',id)); const p=d.data(); editingProductoId=id; $('prod-nombre').value=p.nombre; $('prod-precio').value=p.precio; $('prod-stock').value=p.stock; $('prod-stockmin').value=p.stockMin; $('prod-modal').style.display='flex'; };
-window.deleteProducto = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('productos',id)); toast('Eliminado'); cargarInventario(); } };
-$('prod-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('prod-nombre').value, precio:parseFloat($('prod-precio').value), stock:parseInt($('prod-stock').value), stockMin:parseInt($('prod-stockmin').value), updatedAt:serverTimestamp() }; if(editingProductoId) await updateDoc(tenantDoc('productos',editingProductoId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('productos'),data); } $('prod-modal').style.display='none'; cargarInventario(); });
+window.editProducto = async (id)=>{ const d=await getDoc(tenantDoc('productos',id)); const p=d.data(); editingProductoId=id; $('prod-nombre').value=p.nombre; $('prod-precio').value=p.precio; $('prod-stock').value=p.stock; $('prod-stockmin').value=p.stockMin; $('prod-ref').value=p.referencia||''; $('prod-modal').style.display='flex'; };
+window.eliminarProducto = async (id, nombre)=>{ if(confirm(`¿Mover "${nombre}" a la papelera?`)){ const docSnap=await getDoc(tenantDoc('productos',id)); if(docSnap.exists()) await moverAPapelera('productos',id,docSnap.data(),nombre); cargarInventario(); } };
+$('prod-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('prod-nombre').value, referencia:$('prod-ref').value||'', precio:parseFloat($('prod-precio').value), stock:parseInt($('prod-stock').value), stockMin:parseInt($('prod-stockmin').value), updatedAt:serverTimestamp() }; if(editingProductoId) await updateDoc(tenantDoc('productos',editingProductoId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('productos'),data); } $('prod-modal').style.display='none'; cargarInventario(); });
 
-// ---- CLIENTES ----
+// ==================== CLIENTES (con papelera) ====================
 async function cargarClientes(){ const snap=await getDocs(query(tenantCol('clientes'),orderBy('nombre'))); renderClientes(snap.docs); }
-function renderClientes(docs){ const tb=$('cliente-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${esc(c.nombre)}</td><td>${esc(c.email||'')}</td><td>${esc(c.telefono||'')}</td><td><button class="btn-icon" onclick="window.editCliente('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteCliente('${d.id}')">🗑️</button></td></tr>`; }); }
+function renderClientes(docs){ const tb=$('cliente-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${esc(c.nombre)}</td><td>${esc(c.email||'')}</td><td>${esc(c.telefono||'')}</td><td><button class="btn-icon" onclick="editCliente('${d.id}')">✏️</button><button class="btn-icon danger" onclick="eliminarCliente('${d.id}','${c.nombre}')">🗑️</button></td>`; }); }
 window.openClienteModal = ()=>{ editingClienteId=null; $('cliente-form').reset(); $('cliente-modal').style.display='flex'; };
 window.editCliente = async (id)=>{ const d=await getDoc(tenantDoc('clientes',id)); const c=d.data(); editingClienteId=id; $('cliente-nombre').value=c.nombre; $('cliente-email').value=c.email; $('cliente-telefono').value=c.telefono; $('cliente-modal').style.display='flex'; };
-window.deleteCliente = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('clientes',id)); toast('Eliminado'); cargarClientes(); } };
+window.eliminarCliente = async (id, nombre)=>{ if(confirm(`¿Mover "${nombre}" a la papelera?`)){ const docSnap=await getDoc(tenantDoc('clientes',id)); if(docSnap.exists()) await moverAPapelera('clientes',id,docSnap.data(),nombre); cargarClientes(); if(window.cotModalOpen) await cargarSelectClientes(); } };
 $('cliente-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('cliente-nombre').value, email:$('cliente-email').value, telefono:$('cliente-telefono').value, updatedAt:serverTimestamp() }; if(editingClienteId) await updateDoc(tenantDoc('clientes',editingClienteId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('clientes'),data); } $('cliente-modal').style.display='none'; cargarClientes(); if(window.cotModalOpen) await cargarSelectClientes(); });
 
-// ---- PROVEEDORES ----
+// ==================== PROVEEDORES (con papelera) ====================
 async function cargarProveedores(){ const snap=await getDocs(query(tenantCol('proveedores'),orderBy('nombre'))); renderProveedores(snap.docs); }
-function renderProveedores(docs){ const tb=$('proveedor-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.contacto||'')}</td><td>${esc(p.telefono||'')}</td><td><button class="btn-icon" onclick="window.editProveedor('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProveedor('${d.id}')">🗑️</button></td></tr>`; }); }
+function renderProveedores(docs){ const tb=$('proveedor-tbody'); tb.innerHTML=''; docs.forEach(d=>{ const p=d.data(); tb.innerHTML+=`<tr><td>${esc(p.nombre)}</td><td>${esc(p.contacto||'')}</td><td>${esc(p.telefono||'')}</td><td><button class="btn-icon" onclick="editProveedor('${d.id}')">✏️</button><button class="btn-icon danger" onclick="eliminarProveedor('${d.id}','${p.nombre}')">🗑️</button></td>`; }); }
 window.openProveedorModal = ()=>{ editingProveedorId=null; $('proveedor-form').reset(); $('proveedor-modal').style.display='flex'; };
 window.editProveedor = async (id)=>{ const d=await getDoc(tenantDoc('proveedores',id)); const p=d.data(); editingProveedorId=id; $('proveedor-nombre').value=p.nombre; $('proveedor-contacto').value=p.contacto; $('proveedor-telefono').value=p.telefono; $('proveedor-email').value=p.email; $('proveedor-modal').style.display='flex'; };
-window.deleteProveedor = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('proveedores',id)); toast('Eliminado'); cargarProveedores(); } };
+window.eliminarProveedor = async (id, nombre)=>{ if(confirm(`¿Mover "${nombre}" a la papelera?`)){ const docSnap=await getDoc(tenantDoc('proveedores',id)); if(docSnap.exists()) await moverAPapelera('proveedores',id,docSnap.data(),nombre); cargarProveedores(); } };
 $('proveedor-form').addEventListener('submit', async e=>{ e.preventDefault(); const data={ nombre:$('proveedor-nombre').value, contacto:$('proveedor-contacto').value, telefono:$('proveedor-telefono').value, email:$('proveedor-email').value, updatedAt:serverTimestamp() }; if(editingProveedorId) await updateDoc(tenantDoc('proveedores',editingProveedorId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('proveedores'),data); } $('proveedor-modal').style.display='none'; cargarProveedores(); });
 
-// ---- COTIZACIONES con descuento/IVA y descuento de stock al aprobar ----
+// ==================== COTIZACIONES (con papelera) ====================
 async function cargarSelectClientes(){ const snap=await getDocs(tenantCol('clientes')); const sel=$('cot-cliente-id'); sel.innerHTML='<option value="">-- Seleccionar --</option>'; snap.forEach(d=>{ const opt=document.createElement('option'); opt.value=d.id; opt.textContent=d.data().nombre; opt.dataset.email=d.data().email||''; opt.dataset.telefono=d.data().telefono||''; sel.appendChild(opt); }); }
 function actualizarTotalesCot(){ const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc = parseFloat($('cot-descuento').value)||0; const ivaPorc = parseFloat($('cot-iva').value)||0; const descMonto = subtotal * descuentoPorc / 100; const subtotalDesc = subtotal - descMonto; const ivaMonto = subtotalDesc * ivaPorc / 100; const total = subtotalDesc + ivaMonto; $('cot-subtotal').textContent=subtotal.toFixed(2); $('cot-desc-monto').textContent=descMonto.toFixed(2); $('cot-iva-monto').textContent=ivaMonto.toFixed(2); $('cot-total').textContent=total.toFixed(2); }
-function renderCotItems(){ const tb=$('cot-items-tbody'); tb.innerHTML=''; cotItems.forEach((item,i)=>{ tb.innerHTML+=`<tr><td>${esc(item.nombre)}</td><td><input type="number" value="${item.cantidad}" onchange="window.updateQty(${i},this.value)" style="width:60px;"></td><td>$${item.precio}</td><td>$${item.precio*item.cantidad}</td><td><button class="btn-icon danger" onclick="window.removeItem(${i})">✕</button></td></tr>`; }); actualizarTotalesCot(); }
+function renderCotItems(){ const tb=$('cot-items-tbody'); tb.innerHTML=''; cotItems.forEach((item,i)=>{ tb.innerHTML+=`<tr><td>${esc(item.nombre)}</td><td><input type="number" value="${item.cantidad}" onchange="window.updateQty(${i},this.value)" style="width:60px;"></td><td>$${item.precio}</td><td>$${item.precio*item.cantidad}</td><td><button class="btn-icon danger" onclick="window.removeItem(${i})">✕</button></td>`; }); actualizarTotalesCot(); }
 window.updateQty = (i,v)=>{ cotItems[i].cantidad=parseInt(v); renderCotItems(); };
 window.removeItem = (i)=>{ cotItems.splice(i,1); renderCotItems(); };
 async function populateProdSelect(){ const snap=await getDocs(tenantCol('productos')); const sel=$('cot-item-prod'); sel.innerHTML='<option value="">-- Producto --</option>'; snap.forEach(d=>{ const p=d.data(); const opt=document.createElement('option'); opt.value=d.id; opt.dataset.precio=p.precio; opt.textContent=`${p.nombre} - $${p.precio}`; sel.appendChild(opt); }); }
@@ -328,252 +409,26 @@ $('cot-iva').addEventListener('input',actualizarTotalesCot);
 $('btn-nuevo-cliente-cot').addEventListener('click',()=>{ window.openClienteModal(); window.cotModalOpen=true; });
 window.openCotizacionModal = async ()=>{ editingCotId=null; cotItems=[]; $('cot-form').reset(); $('cot-descuento').value='0'; $('cot-iva').value='19'; await cargarSelectClientes(); await populateProdSelect(); $('cot-modal').style.display='flex'; renderCotItems(); };
 window.editCotizacion = async (id)=>{ const d=await getDoc(tenantDoc('cotizaciones',id)); const c=d.data(); editingCotId=id; cotItems=c.items||[]; await cargarSelectClientes(); $('cot-cliente-id').value=c.clienteId||''; $('cot-email').value=c.email||''; $('cot-telefono').value=c.telefono||''; $('cot-numero').value=c.numero; $('cot-estado').value=c.estado; $('cot-descuento').value=c.descuento||0; $('cot-iva').value=c.iva||19; await populateProdSelect(); renderCotItems(); $('cot-modal').style.display='flex'; };
-$('cot-form').addEventListener('submit', async e=>{ e.preventDefault(); const clienteId=$('cot-cliente-id').value; if(!clienteId){ toast('Seleccione cliente','error'); return; } const clienteNombre=$('cot-cliente-id').options[$('cot-cliente-id').selectedIndex].text; const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc=parseFloat($('cot-descuento').value); const ivaPorc=parseFloat($('cot-iva').value); const descMonto=subtotal*descuentoPorc/100; const subtotalDesc=subtotal-descMonto; const ivaMonto=subtotalDesc*ivaPorc/100; const total=subtotalDesc+ivaMonto; const data={ numero:$('cot-numero').value, cliente:clienteNombre, clienteId, email:$('cot-email').value, telefono:$('cot-telefono').value, items:cotItems, subtotal, descuento:descuentoPorc, iva:ivaPorc, total, estado:$('cot-estado').value, updatedAt:serverTimestamp() }; if(editingCotId){ await updateDoc(tenantDoc('cotizaciones',editingCotId),data); } else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('cotizaciones'),data); } // Descontar stock si estado es Aprobada y no se había descontado
-  if(data.estado==='Aprobada'){
-    const docRef = editingCotId ? tenantDoc('cotizaciones',editingCotId) : null;
-    const cotDoc = docRef ? await getDoc(docRef) : null;
-    if(!cotDoc?.data()?.stockDescontado){
-      for(const item of cotItems){
-        const prodRef=tenantDoc('productos',item.prodId);
-        const prodSnap=await getDoc(prodRef);
-        if(prodSnap.exists()){
-          const nuevoStock=(prodSnap.data().stock||0)-item.cantidad;
-          await updateDoc(prodRef,{stock:nuevoStock});
-        }
-      }
-      if(editingCotId) await updateDoc(tenantDoc('cotizaciones',editingCotId),{stockDescontado:true});
-    }
-  }
-  $('cot-modal').style.display='none'; cargarCotizaciones(); cargarDashboard(); });
-async function cargarCotizaciones(){ const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc'))); const tb=$('cot-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>${c.estado}</td><td><button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${d.id}')">🗑️</button></td></tr>`; }); }
-window.deleteCotizacion = async (id)=>{ if(confirm('Eliminar?')){ await deleteDoc(tenantDoc('cotizaciones',id)); cargarCotizaciones(); cargarDashboard(); } };
-window.facturarCotizacion = async (cotId)=>{ const cotDoc=await getDoc(tenantDoc('cotizaciones',cotId)); if(!cotDoc.exists()) return; const cot=cotDoc.data(); if(cot.facturada){ toast('Ya facturada','error'); return; } const facturaData={ numero:'FAC-'+Date.now(), cotizacionId:cotId, cliente:cot.cliente, clienteId:cot.clienteId, fecha:new Date().toISOString().slice(0,10), items:cot.items, subtotal:cot.subtotal, descuento:cot.descuento||0, iva:cot.iva||0, total:cot.total, createdAt:serverTimestamp() }; await addDoc(tenantCol('facturas'),facturaData); await updateDoc(tenantDoc('cotizaciones',cotId),{facturada:true, estado:'Facturada'}); if(!cot.stockDescontado){ for(const item of cot.items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } await updateDoc(tenantDoc('cotizaciones',cotId),{stockDescontado:true}); } toast('Factura generada'); cargarCotizaciones(); cargarFacturas(); cargarDashboard(); };
-async function cargarFacturas(){ const snap=await getDocs(query(tenantCol('facturas'),orderBy('createdAt','desc'))); const tb=$('facturas-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const f=d.data(); tb.innerHTML+=`<tr><td>${f.numero}</td><td>${f.cliente}</td><td>${f.fecha}</td><td>$${f.total}</td><td><button class="btn-icon" onclick="window.imprimirFactura('${d.id}')">🖨️</button></td></tr>`; }); }
-window.imprimirFactura = async (id) => {
-  if (!currentTenant) return;
-  try {
-    const facturaDoc = await getDoc(tenantDoc('facturas', id));
-    if (!facturaDoc.exists()) return;
-    const factura = facturaDoc.data();
-    
-    // Obtener datos del negocio
-    const bizDoc = await getDoc(doc(db, 'businesses', currentTenant));
-    const negocio = bizDoc.exists() ? bizDoc.data() : { name: 'Mi Negocio' };
-    
-    // Construir HTML con el mismo estilo profesional que las cotizaciones
-    const rows = (factura.items || []).map(item => `
-      <tr>
-        <td>${esc(item.nombre)}</td>
-        <td style="text-align:center">${item.cantidad}</td>
-        <td style="text-align:right">$${(item.precio || 0).toLocaleString('es-CO')}</td>
-        <td style="text-align:right"><strong>$${((item.precio || 0) * (item.cantidad || 1)).toLocaleString('es-CO')}</strong></td>
-      </tr>
-    `).join('');
-    
-    const subtotal = factura.subtotal || 0;
-    const descuento = factura.descuento || 0;
-    const iva = factura.iva || 0;
-    const descuentoMonto = subtotal * (descuento / 100);
-    const subtotalConDescuento = subtotal - descuentoMonto;
-    const ivaMonto = subtotalConDescuento * (iva / 100);
-    const total = factura.total || (subtotalConDescuento + ivaMonto);
-    
-    const w = window.open('', '_blank', 'width=820,height=720');
-    w.document.write(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <title>Factura ${esc(factura.numero || '')}</title>
-        <style>
-          * { margin:0; padding:0; box-sizing:border-box; }
-          body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            padding: 40px;
-            color: #111;
-            font-size: 14px;
-          }
-          .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 28px;
-          }
-          .brand {
-            font-size: 22px;
-            font-weight: 900;
-            color: #0066ff;
-          }
-          .brand span {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            color: #666;
-            margin-top: 2px;
-          }
-          .doc-title {
-            font-size: 19px;
-            font-weight: 800;
-            color: #0066ff;
-            text-align: right;
-          }
-          hr {
-            border: none;
-            border-top: 2px solid #0066ff;
-            margin: 18px 0;
-          }
-          .client-box {
-            background: #f4f8ff;
-            border-left: 4px solid #0066ff;
-            padding: 14px 18px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 20px;
-          }
-          .client-box h3 {
-            font-size: 15px;
-            font-weight: 800;
-            margin-bottom: 3px;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 14px 0;
-          }
-          th {
-            background: #0066ff;
-            color: #fff;
-            padding: 9px 13px;
-            text-align: left;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-          }
-          td {
-            padding: 9px 13px;
-            border-bottom: 1px solid #eee;
-          }
-          tr:nth-child(even) td {
-            background: #fafafa;
-          }
-          .totals {
-            text-align: right;
-            padding: 12px 16px;
-            background: #eef5ff;
-            border-radius: 8px;
-            margin-top: 10px;
-          }
-          .totals .line {
-            display: flex;
-            justify-content: flex-end;
-            gap: 20px;
-            margin-bottom: 5px;
-          }
-          .totals .label {
-            font-size: 12px;
-            color: #666;
-          }
-          .totals .amount {
-            font-weight: 700;
-            min-width: 100px;
-            text-align: right;
-          }
-          .totals .grand-total {
-            font-size: 18px;
-            font-weight: 900;
-            color: #0066ff;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #ccc;
-          }
-          .footer {
-            margin-top: 36px;
-            padding-top: 14px;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            color: #aaa;
-            font-size: 11px;
-          }
-          @media print {
-            body { padding: 20px; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div>
-            <div class="brand">NEXORA ERP<span>${esc(negocio.name || 'Mi Negocio')}</span></div>
-          </div>
-          <div>
-            <div class="doc-title">FACTURA ${esc(factura.numero || '—')}</div>
-            <div style="color:#666; text-align:right; margin-top:4px">
-              Fecha: <strong>${factura.fecha || '—'}</strong>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="client-box">
-          <h3>${esc(factura.cliente || '—')}</h3>
-          ${factura.email ? `<div style="color:#555">📧 ${esc(factura.email)}</div>` : ''}
-          ${factura.telefono ? `<div style="color:#555">📱 ${esc(factura.telefono)}</div>` : ''}
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Producto / Servicio</th>
-              <th style="text-align:center">Cant.</th>
-              <th style="text-align:right">Precio Unit.</th>
-              <th style="text-align:right">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-        <div class="totals">
-          <div class="line">
-            <span class="label">Subtotal:</span>
-            <span class="amount">$${subtotal.toLocaleString('es-CO')}</span>
-          </div>
-          ${descuento > 0 ? `
-          <div class="line">
-            <span class="label">Descuento (${descuento}%):</span>
-            <span class="amount">-$${descuentoMonto.toLocaleString('es-CO')}</span>
-          </div>
-          ` : ''}
-          <div class="line">
-            <span class="label">IVA (${iva}%):</span>
-            <span class="amount">$${ivaMonto.toLocaleString('es-CO')}</span>
-          </div>
-          <div class="grand-total">
-            <span class="label">TOTAL:</span>
-            <span>$${total.toLocaleString('es-CO')}</span>
-          </div>
-        </div>
-        ${factura.notas ? `<div style="margin-top:18px; padding:12px; background:#fffef0; border:1px solid #ffe08a; border-radius:8px"><strong>📝 Notas:</strong> ${esc(factura.notas)}</div>` : ''}
-        <div class="footer">
-          <span>Nexora ERP - Sistema de Gestión</span>
-          <span>${new Date().toLocaleDateString('es-CO')}</span>
-        </div>
-        <script>setTimeout(() => window.print(), 250);<\/script>
-      </body>
-      </html>
-    `);
-    w.document.close();
-  } catch (e) {
-    toast('Error al imprimir factura', 'error');
-    console.error(e);
-  }
-};
-// ---- COMPRAS ----
+$('cot-form').addEventListener('submit', async e=>{ e.preventDefault(); const clienteId=$('cot-cliente-id').value; if(!clienteId){ toast('Seleccione cliente','error'); return; } const clienteNombre=$('cot-cliente-id').options[$('cot-cliente-id').selectedIndex].text; const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc=parseFloat($('cot-descuento').value); const ivaPorc=parseFloat($('cot-iva').value); const descMonto=subtotal*descuentoPorc/100; const subtotalDesc=subtotal-descMonto; const ivaMonto=subtotalDesc*ivaPorc/100; const total=subtotalDesc+ivaMonto; const data={ numero:$('cot-numero').value, cliente:clienteNombre, clienteId, email:$('cot-email').value, telefono:$('cot-telefono').value, items:cotItems, subtotal, descuento:descuentoPorc, iva:ivaPorc, total, estado:$('cot-estado').value, updatedAt:serverTimestamp() }; if(editingCotId) await updateDoc(tenantDoc('cotizaciones',editingCotId),data); else { data.createdAt=serverTimestamp(); await addDoc(tenantCol('cotizaciones'),data); } if(data.estado==='Aprobada'){ for(const item of cotItems){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()) await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } $('cot-modal').style.display='none'; cargarCotizaciones(); cargarDashboard(); });
+async function cargarCotizaciones(){ const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc'))); const tb=$('cot-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td><span class="badge badge-${c.estado?.toLowerCase()}">${c.estado}</span></td><td><button class="btn-icon" onclick="editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="eliminarCotizacion('${d.id}','${c.numero}')">🗑️</button></td>`; }); }
+window.eliminarCotizacion = async (id, numero)=>{ if(confirm(`¿Mover cotización ${numero} a papelera?`)){ const docSnap=await getDoc(tenantDoc('cotizaciones',id)); if(docSnap.exists()) await moverAPapelera('cotizaciones',id,docSnap.data(),numero); cargarCotizaciones(); cargarDashboard(); } };
+window.facturarCotizacion = async (cotId)=>{ const cotDoc=await getDoc(tenantDoc('cotizaciones',cotId)); if(!cotDoc.exists()) return; const cot=cotDoc.data(); if(cot.facturada){ toast('Ya facturada','error'); return; } const facturaData={ numero:'FAC-'+Date.now(), cotizacionId:cotId, cliente:cot.cliente, clienteId:cot.clienteId, fecha:new Date().toISOString().slice(0,10), items:cot.items, subtotal:cot.subtotal, descuento:cot.descuento||0, iva:cot.iva||0, total:cot.total, createdAt:serverTimestamp() }; await addDoc(tenantCol('facturas'),facturaData); await updateDoc(tenantDoc('cotizaciones',cotId),{facturada:true, estado:'Facturada'}); if(!cot.stockDescontado){ for(const item of cot.items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()) await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } await updateDoc(tenantDoc('cotizaciones',cotId),{stockDescontado:true}); } toast('Factura generada'); cargarCotizaciones(); cargarFacturas(); cargarDashboard(); };
+
+// ==================== FACTURAS (con papelera) ====================
+async function cargarFacturas(){ const snap=await getDocs(query(tenantCol('facturas'),orderBy('createdAt','desc'))); const tb=$('facturas-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const f=d.data(); tb.innerHTML+=`<tr><td>${f.numero}</td><td>${f.cliente}</td><td>${f.fecha}</td><td>$${f.total}</td><td><button class="btn-icon" onclick="imprimirFactura('${d.id}')">🖨️</button><button class="btn-icon danger" onclick="eliminarFactura('${d.id}','${f.numero}')">🗑️</button></td>`; }); }
+window.eliminarFactura = async (id, numero)=>{ if(confirm(`¿Mover factura ${numero} a papelera?`)){ const docSnap=await getDoc(tenantDoc('facturas',id)); if(docSnap.exists()) await moverAPapelera('facturas',id,docSnap.data(),numero); cargarFacturas(); cargarDashboard(); } };
+window.imprimirFactura = async (id) => { if (!currentTenant) return; try { const facturaDoc = await getDoc(tenantDoc('facturas', id)); if (!facturaDoc.exists()) return; const factura = facturaDoc.data(); const bizDoc = await getDoc(doc(db, 'businesses', currentTenant)); const negocio = bizDoc.exists() ? bizDoc.data() : { name: 'Mi Negocio' }; const rows = (factura.items || []).map(item => `<tr><td>${esc(item.nombre)}</td><td style="text-align:center">${item.cantidad}</td><td style="text-align:right">$${(item.precio || 0).toLocaleString('es-CO')}</td><td style="text-align:right"><strong>$${((item.precio || 0) * (item.cantidad || 1)).toLocaleString('es-CO')}</strong></td></tr>`).join(''); const subtotal = factura.subtotal || 0; const descuento = factura.descuento || 0; const iva = factura.iva || 0; const descuentoMonto = subtotal * (descuento / 100); const subtotalConDescuento = subtotal - descuentoMonto; const ivaMonto = subtotalConDescuento * (iva / 100); const total = factura.total || (subtotalConDescuento + ivaMonto); const w = window.open('', '_blank', 'width=820,height=720'); w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Factura ${esc(factura.numero)}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;padding:40px;color:#111;font-size:14px}.header{display:flex;justify-content:space-between;margin-bottom:28px}.brand{font-size:22px;font-weight:900;color:#0066ff}.brand span{display:block;font-size:12px;color:#666}.doc-title{font-size:19px;font-weight:800;color:#0066ff;text-align:right}hr{border:none;border-top:2px solid #0066ff;margin:18px 0}.client-box{background:#f4f8ff;border-left:4px solid #0066ff;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:20px}.client-box h3{font-size:15px;font-weight:800}table{width:100%;border-collapse:collapse;margin:14px 0}th{background:#0066ff;color:#fff;padding:9px 13px;font-size:11px;text-transform:uppercase}td{padding:9px 13px;border-bottom:1px solid #eee}.totals{text-align:right;padding:12px 16px;background:#eef5ff;border-radius:8px;margin-top:10px}.totals .line{display:flex;justify-content:flex-end;gap:20px;margin-bottom:5px}.totals .grand-total{font-size:18px;font-weight:900;color:#0066ff;margin-top:8px;padding-top:8px;border-top:1px solid #ccc}.footer{margin-top:36px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;color:#aaa;font-size:11px}@media print{body{padding:20px}}</style></head><body><div class="header"><div><div class="brand">NEXORA ERP<span>${esc(negocio.name)}</span></div></div><div><div class="doc-title">FACTURA ${esc(factura.numero)}</div><div style="color:#666;text-align:right">Fecha: ${factura.fecha}</div></div></div><hr><div class="client-box"><h3>${esc(factura.cliente)}</h3>${factura.email ? `<div>📧 ${esc(factura.email)}</div>` : ''}${factura.telefono ? `<div>📱 ${esc(factura.telefono)}</div>` : ''}</div><table><thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>${rows}</tbody></table><div class="totals"><div class="line"><span>Subtotal:</span><span>$${subtotal.toLocaleString('es-CO')}</span></div>${descuento > 0 ? `<div class="line"><span>Descuento (${descuento}%):</span><span>-$${descuentoMonto.toLocaleString('es-CO')}</span></div>` : ''}<div class="line"><span>IVA (${iva}%):</span><span>$${ivaMonto.toLocaleString('es-CO')}</span></div><div class="grand-total"><span>TOTAL:</span><span>$${total.toLocaleString('es-CO')}</span></div></div>${factura.notas ? `<div style="margin-top:18px;padding:12px;background:#fffef0;border:1px solid #ffe08a;border-radius:8px"><strong>📝 Notas:</strong> ${esc(factura.notas)}</div>` : ''}<div class="footer"><span>Nexora ERP</span><span>${new Date().toLocaleDateString('es-CO')}</span></div><script>setTimeout(()=>window.print(),250);<\/script></body></html>`); w.document.close(); } catch(e) { toast('Error al imprimir', 'error'); } };
+
+// ==================== COMPRAS (con papelera) ====================
 let compraItems=[];
 function renderCompraItems(){ const container=$('compra-items-container'); container.innerHTML=''; compraItems.forEach((item,i)=>{ container.innerHTML+=`<div><select class="compra-prod-select" data-index="${i}"></select><input type="number" placeholder="Cantidad" value="${item.cantidad}" onchange="compraItems[${i}].cantidad=parseInt(this.value)"><input type="number" placeholder="Precio" value="${item.precio}" onchange="compraItems[${i}].precio=parseFloat(this.value)"><button onclick="compraItems.splice(${i},1);renderCompraItems()">❌</button></div>`; }); (async()=>{ const prods=await getDocs(tenantCol('productos')); prods.forEach(p=>{ document.querySelectorAll('.compra-prod-select').forEach(sel=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=p.data().nombre; if(compraItems[sel.dataset.index]?.prodId===p.id) opt.selected=true; sel.appendChild(opt); }); }); })(); }
 $('btn-add-compra-item').addEventListener('click',()=>{ compraItems.push({prodId:'', cantidad:1, precio:0}); renderCompraItems(); });
 window.openCompraModal=async()=>{ compraItems=[]; const proveedores=await getDocs(tenantCol('proveedores')); const sel=$('compra-proveedor-id'); sel.innerHTML='<option value="">-- Seleccionar --</option>'; proveedores.forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=p.data().nombre; sel.appendChild(opt); }); $('compra-fecha').value=new Date().toISOString().slice(0,10); renderCompraItems(); $('compra-modal').style.display='flex'; };
-$('compra-form').addEventListener('submit', async e=>{ e.preventDefault(); const proveedorId=$('compra-proveedor-id').value; if(!proveedorId) return; const proveedorNombre=$('compra-proveedor-id').options[$('compra-proveedor-id').selectedIndex].text; const total=compraItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const compra={ proveedorId, proveedorNombre, fecha:$('compra-fecha').value, items:compraItems, total, createdAt:serverTimestamp() }; await addDoc(tenantCol('compras'),compra); // aumentar stock
-  for(const item of compraItems){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)+item.cantidad}); } } toast('Compra registrada'); $('compra-modal').style.display='none'; cargarCompras(); cargarInventario(); });
-async function cargarCompras(){ const snap=await getDocs(query(tenantCol('compras'),orderBy('createdAt','desc'))); const tb=$('compras-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.proveedorNombre}</td><td>${c.fecha}</td><td>$${c.total}</td><td><button class="btn-icon danger" onclick="window.deleteCompra('${d.id}')">🗑️</button></td></tr>`; }); }
-window.deleteCompra=async(id)=>{ if(confirm('Eliminar compra? Revierte stock')){ const compra=await getDoc(tenantDoc('compras',id)); if(compra.exists()){ for(const item of compra.data().items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } await deleteDoc(tenantDoc('compras',id)); toast('Eliminada'); cargarCompras(); cargarInventario(); } } };
+$('compra-form').addEventListener('submit', async e=>{ e.preventDefault(); const proveedorId=$('compra-proveedor-id').value; if(!proveedorId) return; const proveedorNombre=$('compra-proveedor-id').options[$('compra-proveedor-id').selectedIndex].text; const total=compraItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const compra={ proveedorId, proveedorNombre, fecha:$('compra-fecha').value, items:compraItems, total, createdAt:serverTimestamp() }; await addDoc(tenantCol('compras'),compra); for(const item of compraItems){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()) await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)+item.cantidad}); } toast('Compra registrada'); $('compra-modal').style.display='none'; cargarCompras(); cargarInventario(); });
+async function cargarCompras(){ const snap=await getDocs(query(tenantCol('compras'),orderBy('createdAt','desc'))); const tb=$('compras-tbody'); tb.innerHTML=''; snap.forEach(d=>{ const c=d.data(); tb.innerHTML+=`<tr><td>${c.proveedorNombre}</td><td>${c.fecha}</td><td>$${c.total}</td><td><button class="btn-icon danger" onclick="eliminarCompra('${d.id}','${c.proveedorNombre}')">🗑️</button></td>`; }); }
+window.eliminarCompra = async (id, proveedor)=>{ if(confirm(`¿Mover compra de ${proveedor} a papelera?`)){ const docSnap=await getDoc(tenantDoc('compras',id)); if(docSnap.exists()) await moverAPapelera('compras',id,docSnap.data(),`Compra a ${proveedor}`); cargarCompras(); cargarInventario(); } };
 
-// ---- DASHBOARD Y REPORTES ----
+// ==================== DASHBOARD Y REPORTES ====================
 async function cargarDashboard(){ const productos=(await getDocs(tenantCol('productos'))).size; const cotizaciones=(await getDocs(tenantCol('cotizaciones'))).size; const facturas=(await getDocs(tenantCol('facturas'))).size; const clientes=(await getDocs(tenantCol('clientes'))).size; $('dash-productos').textContent=productos; $('dash-cotizaciones').textContent=cotizaciones; $('dash-facturas').textContent=facturas; $('dash-clientes').textContent=clientes; await generarSugerencias(); await generarTopClientes(); await generarTopProductos(); }
 async function generarSugerencias(){ const productosSnap=await getDocs(tenantCol('productos')); const ventasUltimos30Dias={}; const cotizacionesSnap=await getDocs(tenantCol('cotizaciones')); const hace30Dias=new Date(); hace30Dias.setDate(hace30Dias.getDate()-30); cotizacionesSnap.forEach(doc=>{ const c=doc.data(); if(c.createdAt && c.createdAt.toDate()>hace30Dias){ (c.items||[]).forEach(item=>{ ventasUltimos30Dias[item.prodId]=(ventasUltimos30Dias[item.prodId]||0)+item.cantidad; }); } }); const sugerencias=[]; for(const prodDoc of productosSnap.docs){ const p=prodDoc.data(); const ventas=ventasUltimos30Dias[prodDoc.id]||0; const promedioDiario=ventas/30; const stockRecomendado=(p.stockMin||5)+(promedioDiario*14); if((p.stock||0)<stockRecomendado){ sugerencias.push({nombre:p.nombre, stock:p.stock, sugerido:Math.ceil(stockRecomendado-p.stock)}); } } const container=$('sugerencias-container'); if(sugerencias.length===0) container.innerHTML='<div class="sugerencia-item">✅ Sin sugerencias de compra por ahora</div>'; else container.innerHTML=sugerencias.map(s=>`<div class="sugerencia-item"><span>📦 ${esc(s.nombre)} (stock: ${s.stock})</span><span>🛒 Sugerencia: comprar ${s.sugerido} unidades</span></div>`).join(''); }
 async function generarTopClientes(){ const facturasSnap=await getDocs(tenantCol('facturas')); const clientesMap=new Map(); facturasSnap.forEach(d=>{ const f=d.data(); const nombre=f.cliente; const total=f.total||0; clientesMap.set(nombre, (clientesMap.get(nombre)||0)+total); }); const top=Array.from(clientesMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,5); const container=$('top-clientes'); if(top.length===0) container.innerHTML='<div>Sin datos aún</div>'; else container.innerHTML=`<ul class="report-list">${top.map(([nombre,total])=>`<li><span>${esc(nombre)}</span><span>$${total.toFixed(2)}</span></li>`).join('')}</ul>`; }
