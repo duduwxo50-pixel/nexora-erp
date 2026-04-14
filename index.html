@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexora ERP</title>
+<title>Nexora ERP - Clientes y Proveedores</title>
 
 <style>
 :root{
@@ -166,6 +166,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     <div class="nav-section">Módulos</div>
     <div class="nav-item" data-module="inventario"><span class="icon">📦</span><span>Inventario</span></div>
     <div class="nav-item" data-module="cotizaciones"><span class="icon">📄</span><span>Cotizaciones</span></div>
+    <div class="nav-item" data-module="clientes"><span class="icon">👥</span><span>Clientes</span></div>
+    <div class="nav-item" data-module="proveedores"><span class="icon">🚚</span><span>Proveedores</span></div>
     <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar" id="user-avatar">U</div>
@@ -187,8 +189,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <div class="dash-grid">
           <div class="dash-card"><div class="dash-card-label">📦 Productos</div><div class="dash-card-val" id="dash-productos">—</div><div class="dash-card-sub">en inventario</div></div>
           <div class="dash-card"><div class="dash-card-label">📄 Cotizaciones</div><div class="dash-card-val" id="dash-cotizaciones">—</div><div class="dash-card-sub">registradas</div></div>
-          <div class="dash-card"><div class="dash-card-label">⚠️ Stock Bajo</div><div class="dash-card-val" id="dash-lowstock">—</div><div class="dash-card-sub">por reabastecer</div></div>
-          <div class="dash-card"><div class="dash-card-label">💰 Valor Inventario</div><div class="dash-card-val" id="dash-valor">—</div><div class="dash-card-sub">valor en stock</div></div>
+          <div class="dash-card"><div class="dash-card-label">👥 Clientes</div><div class="dash-card-val" id="dash-clientes">—</div><div class="dash-card-sub">registrados</div></div>
+          <div class="dash-card"><div class="dash-card-label">🚚 Proveedores</div><div class="dash-card-val" id="dash-proveedores">—</div><div class="dash-card-sub">activos</div></div>
         </div>
         <div class="section-header">
           <h3>Cotizaciones recientes</h3>
@@ -229,11 +231,39 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         </div>
       </div>
 
+      <!-- CLIENTES -->
+      <div id="mod-clientes">
+        <div class="toolbar">
+          <input class="toolbar-search" id="cliente-search" placeholder="🔍 Buscar por nombre, email o teléfono...">
+          <button class="btn-action" onclick="openClienteModal()">+ Nuevo cliente</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>NIT</th><th>Acciones</th></tr></thead>
+            <tbody id="cliente-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROVEEDORES -->
+      <div id="mod-proveedores">
+        <div class="toolbar">
+          <input class="toolbar-search" id="proveedor-search" placeholder="🔍 Buscar por nombre, contacto o teléfono...">
+          <button class="btn-action" onclick="openProveedorModal()">+ Nuevo proveedor</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th>Acciones</th></tr></thead>
+            <tbody id="proveedor-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- MODAL PRODUCTO -->
+<!-- MODAL PRODUCTO (igual que antes) -->
 <div class="modal-backdrop" id="prod-modal">
   <div class="modal">
     <div class="modal-header"><h3 id="prod-modal-title">Nuevo Producto</h3><button class="modal-close">✕</button></div>
@@ -266,7 +296,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
-<!-- MODAL COTIZACIÓN -->
+<!-- MODAL COTIZACIÓN (igual que antes) -->
 <div class="modal-backdrop" id="cot-modal">
   <div class="modal modal-wide">
     <div class="modal-header"><h3 id="cot-modal-title">Nueva Cotización</h3><button class="modal-close">✕</button></div>
@@ -290,10 +320,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
           <div class="form-group"><label>Válida por (días)</label><input id="cot-validez" type="number" value="30" min="1"></div>
           <div class="form-group"><label>Notas / condiciones</label><input id="cot-notas" placeholder="Ej: precio sin IVA, incluye envío…"></div>
         </div>
-
         <hr class="divider">
         <p style="font-size:13px;font-weight:800;margin-bottom:12px">📦 Agregar productos</p>
-
         <div class="add-item-row">
           <div class="form-group" style="margin:0">
             <label>Producto del inventario</label>
@@ -303,7 +331,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
           <div class="form-group" style="margin:0"><label>Precio unit. ($)</label><input id="cot-item-precio" type="number" min="0" step="0.01" placeholder="0"></div>
           <div style="padding-top:20px"><button type="button" id="btn-add-item" class="btn-action">+ Agregar</button></div>
         </div>
-
         <div class="table-wrap" style="margin-bottom:10px">
           <table>
             <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th><th></th></tr></thead>
@@ -320,6 +347,53 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
+<!-- MODAL CLIENTE -->
+<div class="modal-backdrop" id="cliente-modal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="cliente-modal-title">Nuevo Cliente</h3><button class="modal-close">✕</button></div>
+    <form id="cliente-form">
+      <div class="modal-body">
+        <div class="form-group"><label>Nombre / Razón social *</label><input id="cliente-nombre" placeholder="Ej: Juan Pérez S.A."></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input id="cliente-email" type="email" placeholder="cliente@email.com"></div>
+          <div class="form-group"><label>Teléfono</label><input id="cliente-telefono" placeholder="+57 300 000 0000"></div>
+        </div>
+        <div class="form-group"><label>Dirección</label><input id="cliente-direccion" placeholder="Calle 123, Ciudad"></div>
+        <div class="form-group"><label>NIT / Identificación</label><input id="cliente-nit" placeholder="NIT: 900.000.000-1"></div>
+        <div class="form-group"><label>Notas adicionales</label><textarea id="cliente-notas" rows="2" placeholder="Información extra..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel modal-close">Cancelar</button>
+        <button type="submit" id="cliente-save" class="btn-save">Guardar cliente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL PROVEEDOR -->
+<div class="modal-backdrop" id="proveedor-modal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="proveedor-modal-title">Nuevo Proveedor</h3><button class="modal-close">✕</button></div>
+    <form id="proveedor-form">
+      <div class="modal-body">
+        <div class="form-group"><label>Nombre / Empresa *</label><input id="proveedor-nombre" placeholder="Ej: Distribuidora XYZ"></div>
+        <div class="form-group"><label>Persona de contacto</label><input id="proveedor-contacto" placeholder="Nombre del contacto"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Teléfono</label><input id="proveedor-telefono" placeholder="+57 300 000 0000"></div>
+          <div class="form-group"><label>Email</label><input id="proveedor-email" type="email" placeholder="proveedor@email.com"></div>
+        </div>
+        <div class="form-group"><label>Dirección</label><input id="proveedor-direccion" placeholder="Calle 123, Ciudad"></div>
+        <div class="form-group"><label>Productos / servicios que ofrece</label><textarea id="proveedor-productos" rows="2" placeholder="Ej: Tornillos, herramientas eléctricas..."></textarea></div>
+        <div class="form-group"><label>Notas</label><textarea id="proveedor-notas" rows="2" placeholder="Condiciones de pago, plazos de entrega..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel modal-close">Cancelar</button>
+        <button type="submit" id="proveedor-save" class="btn-save">Guardar proveedor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile }
@@ -327,7 +401,6 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔥 CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",
   authDomain: "nexora-erp-2b417.firebaseapp.com",
@@ -372,27 +445,42 @@ function esc(str){
   return d.innerHTML; 
 }
 
-// ══ AUTH ══
-onAuthStateChanged(auth, async user=>{
-  if(user){
-    currentUser=user;
-    const ud=await getDoc(doc(db,'users',user.uid));
-    if(ud.exists()){
-      currentTenant=ud.data().businessId;
-      const biz=await getDoc(doc(db,'businesses',currentTenant));
-      const bn=biz.exists()?biz.data().name:'Mi Negocio';
-      document.querySelectorAll('.biz-el').forEach(el=>el.textContent=bn);
+// ══ AUTH (con autofix para usuarios sin businessId) ══
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    let udSnap = await getDoc(doc(db, 'users', user.uid));
+    // Auto-crear negocio si no existe
+    if (!udSnap.exists() || !udSnap.data().businessId) {
+      console.log("Usuario sin negocio. Creando automáticamente...");
+      const bizRef = doc(collection(db, 'businesses'));
+      await setDoc(bizRef, {
+        name: "Mi Negocio",
+        ownerUid: user.uid,
+        createdAt: serverTimestamp()
+      });
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        name: user.displayName || user.email.split('@')[0],
+        businessId: bizRef.id
+      }, { merge: true });
+      udSnap = await getDoc(doc(db, 'users', user.uid));
+      toast("Negocio creado automáticamente. ¡Bienvenido!");
     }
-    const dn=user.displayName||user.email.split('@')[0];
-    $('user-name').textContent=dn;
-    $('user-avatar').textContent=dn[0].toUpperCase();
-    $('auth-screen').style.display='none';
-    $('app-screen').style.display='flex';
+    currentTenant = udSnap.data().businessId;
+    const biz = await getDoc(doc(db, 'businesses', currentTenant));
+    const bn = biz.exists() ? biz.data().name : 'Mi Negocio';
+    document.querySelectorAll('.biz-el').forEach(el => el.textContent = bn);
+    const dn = user.displayName || user.email.split('@')[0];
+    $('user-name').textContent = dn;
+    $('user-avatar').textContent = dn[0].toUpperCase();
+    $('auth-screen').style.display = 'none';
+    $('app-screen').style.display = 'flex';
     loadModule('dashboard');
   } else {
-    currentUser=null; currentTenant=null;
-    $('auth-screen').style.display='flex';
-    $('app-screen').style.display='none';
+    currentUser = null; currentTenant = null;
+    $('auth-screen').style.display = 'flex';
+    $('app-screen').style.display = 'none';
   }
 });
 
@@ -434,40 +522,43 @@ window.loadModule = function(mod){
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.module===mod));
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
   $('mod-'+mod).style.display='block';
-  const titles = {dashboard:'Dashboard',inventario:'Inventario / Productos',cotizaciones:'Cotizaciones'};
+  const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',clientes:'Clientes',proveedores:'Proveedores'};
   $('mod-title').textContent=titles[mod]||mod;
   if(mod==='dashboard')    loadDashboard();
   if(mod==='inventario')   loadInventario();
   if(mod==='cotizaciones') loadCotizaciones();
+  if(mod==='clientes')     loadClientes();
+  if(mod==='proveedores')  loadProveedores();
 };
 
 document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',()=>window.loadModule(i.dataset.module)));
 
-// ══ DASHBOARD ══
+// ══ DASHBOARD (actualizado con clientes y proveedores) ══
 async function loadDashboard(){
   if(!currentTenant) return;
   try{
-    const psSnap = await getDocs(tenantCol('productos'));
-    const csSnap = await getDocs(tenantCol('cotizaciones'));
-    $('dash-productos').textContent=psSnap.size;
-    $('dash-cotizaciones').textContent=csSnap.size;
+    const [ps, cs, cls, prs] = await Promise.all([
+      getDocs(tenantCol('productos')),
+      getDocs(tenantCol('cotizaciones')),
+      getDocs(tenantCol('clientes')),
+      getDocs(tenantCol('proveedores'))
+    ]);
+    $('dash-productos').textContent=ps.size;
+    $('dash-cotizaciones').textContent=cs.size;
+    $('dash-clientes').textContent=cls.size;
+    $('dash-proveedores').textContent=prs.size;
+    
     let low=0,val=0;
-    psSnap.forEach(d=>{ 
-      const p=d.data(); 
-      if((p.stock||0)<=(p.stockMin||5)) low++; 
-      val+=(p.precio||0)*(p.stock||0); 
-    });
+    ps.forEach(d=>{ const p=d.data(); if((p.stock||0)<=(p.stockMin||5)) low++; val+=(p.precio||0)*(p.stock||0); });
     $('dash-lowstock').textContent=low;
     $('dash-valor').textContent='$'+val.toLocaleString('es-CO');
     
-    const tbody=$('dash-recent'); 
-    tbody.innerHTML='';
-    const cots=[]; 
-    csSnap.forEach(d=>cots.push({id:d.id,...d.data()}));
+    const tbody=$('dash-recent'); tbody.innerHTML='';
+    const cots=[]; cs.forEach(d=>cots.push({id:d.id,...d.data()}));
     cots.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     if(!cots.length){
       tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">Sin cotizaciones aún</td></tr>';
-      return; 
+      return;
     }
     cots.slice(0,5).forEach(c=>{
       const tr=document.createElement('tr');
@@ -477,7 +568,7 @@ async function loadDashboard(){
   }catch(e){ console.error(e); toast('Error cargando dashboard','error'); }
 }
 
-// ══ INVENTARIO ══
+// ══ INVENTARIO (sin cambios, pero se incluye) ══
 async function loadInventario(){
   if(!currentTenant) return;
   try{
@@ -485,7 +576,6 @@ async function loadInventario(){
     renderProductos(snap.docs);
   }catch(e){ toast('Error cargando inventario','error'); console.error(e);}
 }
-
 function renderProductos(docs){
   const tb=$('prod-tbody'); tb.innerHTML='';
   if(!docs.length){
@@ -503,14 +593,10 @@ function renderProductos(docs){
       <td><span class="badge ${low?'badge-peligro':'badge-ok'}">${p.stock||0} ${esc(p.unidad||'und')}</span></td>
       <td>${p.stockMin||5}</td>
       <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.descripcion||'—')}</td>
-      <td>
-        <button class="btn-icon" onclick="window.editProducto('${p.id}')">✏️</button>
-        <button class="btn-icon danger" onclick="window.deleteProducto('${p.id}')">🗑️</button>
-      </td>`;
+      <td><button class="btn-icon" onclick="window.editProducto('${p.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProducto('${p.id}')">🗑️</button></td>`;
     tb.appendChild(tr);
   });
 }
-
 $('prod-search')?.addEventListener('input', async e=>{
   if(!currentTenant) return;
   const q=e.target.value.toLowerCase();
@@ -520,7 +606,6 @@ $('prod-search')?.addEventListener('input', async e=>{
     return (p.nombre||'').toLowerCase().includes(q)||(p.referencia||'').toLowerCase().includes(q)||(p.categoria||'').toLowerCase().includes(q);
   }));
 });
-
 window.openProductoModal = function(){
   editingId=null;
   $('prod-form').reset();
@@ -529,7 +614,6 @@ window.openProductoModal = function(){
   $('prod-modal').style.display='flex';
   setTimeout(()=>$('prod-nombre').focus(),80);
 };
-
 window.editProducto = async function(id){
   if(!currentTenant) return;
   try{
@@ -543,14 +627,12 @@ window.editProducto = async function(id){
     $('prod-modal').style.display='flex';
   }catch(e){ toast('Error al cargar','error'); console.error(e);}
 };
-
 window.deleteProducto = async function(id){
   if(!currentTenant) return;
   if(!confirm('¿Eliminar este producto?')) return;
   try{ await deleteDoc(tenantDoc('productos',id)); toast('Producto eliminado'); loadInventario(); }
   catch(e){ toast('Error al eliminar','error'); console.error(e);}
 };
-
 $('prod-form').addEventListener('submit', async e=>{
   e.preventDefault();
   if(!currentTenant) { toast('No hay sesión activa','error'); return; }
@@ -572,7 +654,7 @@ $('prod-form').addEventListener('submit', async e=>{
   finally{ setLoading('prod-save',false); }
 });
 
-// ══ COTIZACIONES ══
+// ══ COTIZACIONES (sin cambios) ══
 async function loadCotizaciones(){
   if(!currentTenant) return;
   try{
@@ -592,44 +674,30 @@ async function loadCotizaciones(){
         <td>${c.fecha||'—'}</td>
         <td><strong>$${(c.total||0).toLocaleString('es-CO')}</strong></td>
         <td><span class="badge badge-${ec}">${c.estado||'Borrador'}</span></td>
-        <td>
-          <button class="btn-icon" onclick="window.viewCotizacion('${c.id}')" title="Imprimir">🖨️</button>
-          <button class="btn-icon" onclick="window.editCotizacion('${c.id}')" title="Editar">✏️</button>
-          <button class="btn-icon danger" onclick="window.deleteCotizacion('${c.id}')" title="Eliminar">🗑️</button>
-        </td>`;
+        <td><button class="btn-icon" onclick="window.viewCotizacion('${c.id}')" title="Imprimir">🖨️</button><button class="btn-icon" onclick="window.editCotizacion('${c.id}')" title="Editar">✏️</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${c.id}')" title="Eliminar">🗑️</button></td>`;
       tb.appendChild(tr);
     });
   }catch(e){ toast('Error cargando cotizaciones','error'); console.error(e);}
 }
-
 async function fetchProductosFresh(){
   if(!currentTenant) return [];
   const snap=await getDocs(tenantCol('productos'));
-  const prods=[];
-  snap.forEach(d=>prods.push({id:d.id,...d.data()}));
-  return prods;
+  const prods=[]; snap.forEach(d=>prods.push({id:d.id,...d.data()})); return prods;
 }
-
 async function populateProdSelect(){
   const prods=await fetchProductosFresh();
   const sel=$('cot-item-prod');
   sel.innerHTML='<option value="">— Elige un producto del inventario —</option>';
-  if(!prods.length){
-    sel.innerHTML+='<option disabled value="">⚠ Sin productos. Ve a Inventario y crea productos primero.</option>';
-    return prods;
-  }
+  if(!prods.length){ sel.innerHTML+='<option disabled value="">⚠ Sin productos. Ve a Inventario y crea productos primero.</option>'; return prods; }
   prods.sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''));
   prods.forEach(p=>{
     const o=document.createElement('option');
-    o.value=p.id;
-    o.dataset.precio=p.precio||0;
-    o.dataset.nombre=p.nombre;
+    o.value=p.id; o.dataset.precio=p.precio||0; o.dataset.nombre=p.nombre;
     o.textContent=`${p.nombre}  ·  $${(p.precio||0).toLocaleString('es-CO')} / ${p.unidad||'und'}`;
     sel.appendChild(o);
   });
   return prods;
 }
-
 window.openCotizacionModal = async function(){
   if(!currentTenant) { toast('No hay sesión activa','error'); return; }
   editingId=null; cotItems=[];
@@ -642,16 +710,11 @@ window.openCotizacionModal = async function(){
   $('cot-item-precio').value='';
   $('cot-modal').style.display='flex';
   renderCotItems();
-
-  try{
-    const snap=await getDocs(tenantCol('cotizaciones'));
-    $('cot-numero').value='COT-'+(snap.size+1).toString().padStart(4,'0');
-  }catch(e){ $('cot-numero').value='COT-0001'; }
-
+  try{ const snap=await getDocs(tenantCol('cotizaciones')); $('cot-numero').value='COT-'+(snap.size+1).toString().padStart(4,'0'); }
+  catch(e){ $('cot-numero').value='COT-0001'; }
   await populateProdSelect();
   setTimeout(()=>$('cot-cliente').focus(),80);
 };
-
 window.editCotizacion = async function(id){
   if(!currentTenant) return;
   try{
@@ -668,20 +731,17 @@ window.editCotizacion = async function(id){
     await populateProdSelect();
   }catch(e){ toast('Error al cargar cotización','error'); console.error(e);}
 };
-
 window.deleteCotizacion = async function(id){
   if(!currentTenant) return;
   if(!confirm('¿Eliminar esta cotización?')) return;
   try{ await deleteDoc(tenantDoc('cotizaciones',id)); toast('Cotización eliminada'); loadCotizaciones(); }
   catch(e){ toast('Error al eliminar','error'); console.error(e);}
 };
-
 $('cot-item-prod')?.addEventListener('change',e=>{
   const opt=e.target.options[e.target.selectedIndex];
   $('cot-item-precio').value=opt?.dataset.precio||'';
   if(opt?.value) $('cot-item-qty').focus();
 });
-
 $('btn-add-item')?.addEventListener('click',()=>{
   const sel=$('cot-item-prod');
   const qty=parseInt($('cot-item-qty').value)||1;
@@ -695,7 +755,6 @@ $('btn-add-item')?.addEventListener('click',()=>{
   sel.value=''; $('cot-item-qty').value='1'; $('cot-item-precio').value='';
   sel.focus();
 });
-
 function renderCotItems(){
   const tb=$('cot-items-tbody'); tb.innerHTML='';
   if(!cotItems.length){
@@ -708,11 +767,7 @@ function renderCotItems(){
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td>${esc(item.nombre)}</td>
-      <td>
-        <input type="number" min="1" value="${item.cantidad}"
-          style="width:60px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px"
-          onchange="window.updateQty(${i},this.value)">
-      </td>
+      <td><input type="number" min="1" value="${item.cantidad}" style="width:60px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text);font-size:13px" onchange="window.updateQty(${i},this.value)"></td>
       <td>$${(item.precio||0).toLocaleString('es-CO')}</td>
       <td><strong>$${sub.toLocaleString('es-CO')}</strong></td>
       <td><button class="btn-icon danger" onclick="window.removeItem(${i})" title="Quitar">✕</button></td>`;
@@ -720,10 +775,8 @@ function renderCotItems(){
   });
   $('cot-total').textContent='$'+total.toLocaleString('es-CO');
 }
-
 window.updateQty = function(i,v){ cotItems[i].cantidad=parseInt(v)||1; renderCotItems(); };
 window.removeItem = function(i){ cotItems.splice(i,1); renderCotItems(); };
-
 $('cot-form').addEventListener('submit', async e=>{
   e.preventDefault();
   if(!currentTenant){ toast('No hay sesión activa','error'); return; }
@@ -746,8 +799,6 @@ $('cot-form').addEventListener('submit', async e=>{
   }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
   finally{ setLoading('cot-save',false); }
 });
-
-// ══ IMPRIMIR ══
 window.viewCotizacion = async function(id){
   if(!currentTenant) return;
   try{
@@ -756,7 +807,6 @@ window.viewCotizacion = async function(id){
     printCot({id,...cd.data()},bd.data()||{});
   }catch(e){ toast('Error al abrir','error'); console.error(e);}
 };
-
 function printCot(c,biz){
   const rows=(c.items||[]).map(i=>`<tr><td>${esc(i.nombre)}</td><td style="text-align:center">${i.cantidad}</td><td style="text-align:right">$${(i.precio||0).toLocaleString('es-CO')}</td><td style="text-align:right"><strong>$${((i.precio||0)*(i.cantidad||1)).toLocaleString('es-CO')}</strong></td></tr>`).join('');
   const w=window.open('','_blank','width=820,height=720');
@@ -778,12 +828,8 @@ function printCot(c,biz){
   .badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:#e8f0ff;color:#0066ff}
   @media print{body{padding:20px}}</style>
   </head><body>
-  <div class="hdr">
-    <div><div class="brand">NEXORA ERP<span>${esc(biz.name||'Mi Negocio')}</span></div></div>
-    <div><div class="cnum">${esc(c.numero||'—')}</div><div style="color:#666;text-align:right;margin-top:4px">Fecha: <strong>${c.fecha||'—'}</strong><br>Válida: <strong>${c.validez||30} días</strong></div><div style="margin-top:6px;text-align:right"><span class="badge">${c.estado||'Borrador'}</span></div></div>
-  </div>
-  <hr>
-  <div class="cbox"><h3>${esc(c.cliente||'—')}</h3>${c.email?`<div style="color:#555">📧 ${esc(c.email)}</div>`:''}${c.telefono?`<div style="color:#555">📱 ${esc(c.telefono)}</div>`:''}</div>
+  <div class="hdr"><div><div class="brand">NEXORA ERP<span>${esc(biz.name||'Mi Negocio')}</span></div></div><div><div class="cnum">${esc(c.numero||'—')}</div><div style="color:#666;text-align:right;margin-top:4px">Fecha: <strong>${c.fecha||'—'}</strong><br>Válida: <strong>${c.validez||30} días</strong></div><div style="margin-top:6px;text-align:right"><span class="badge">${c.estado||'Borrador'}</span></div></div></div>
+  <hr><div class="cbox"><h3>${esc(c.cliente||'—')}</h3>${c.email?`<div style="color:#555">📧 ${esc(c.email)}</div>`:''}${c.telefono?`<div style="color:#555">📱 ${esc(c.telefono)}</div>`:''}</div>
   <table><thead><tr><th>Producto / Servicio</th><th style="text-align:center">Cant.</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>${rows}</tbody></table>
   <div class="tot"><div class="lbl">Total cotización</div><div class="amt">$${(c.total||0).toLocaleString('es-CO')}</div></div>
   ${c.notas?`<div style="margin-top:18px;padding:12px;background:#fffef0;border:1px solid #ffe08a;border-radius:8px"><strong>📝 Notas:</strong> ${esc(c.notas)}</div>`:''}
@@ -792,7 +838,179 @@ function printCot(c,biz){
   w.document.close();
 }
 
-// Cerrar modales
+// ══ CLIENTES ══
+let editingClienteId = null;
+async function loadClientes(){
+  if(!currentTenant) return;
+  try{
+    const snap=await getDocs(query(tenantCol('clientes'),orderBy('nombre')));
+    renderClientes(snap.docs);
+  }catch(e){ toast('Error cargando clientes','error'); console.error(e);}
+}
+function renderClientes(docs){
+  const tb=$('cliente-tbody'); tb.innerHTML='';
+  if(!docs.length){
+    tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:48px">Sin clientes — haz clic en <strong>+ Nuevo cliente</strong></td></tr>';
+    return;
+  }
+  docs.forEach(d=>{
+    const c={id:d.id,...d.data()};
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><strong>${esc(c.nombre)}</strong></td>
+      <td>${esc(c.email||'—')}</td>
+      <td>${esc(c.telefono||'—')}</td>
+      <td>${esc(c.direccion||'—')}</td>
+      <td>${esc(c.nit||'—')}</td>
+      <td><button class="btn-icon" onclick="window.editCliente('${c.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteCliente('${c.id}')">🗑️</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+$('cliente-search')?.addEventListener('input', async e=>{
+  if(!currentTenant) return;
+  const q=e.target.value.toLowerCase();
+  const snap=await getDocs(tenantCol('clientes'));
+  renderClientes(snap.docs.filter(d=>{
+    const c=d.data();
+    return (c.nombre||'').toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)||(c.telefono||'').includes(q);
+  }));
+});
+window.openClienteModal = function(){
+  editingClienteId=null;
+  $('cliente-form').reset();
+  $('cliente-modal-title').textContent='Nuevo Cliente';
+  $('cliente-modal').style.display='flex';
+  setTimeout(()=>$('cliente-nombre').focus(),80);
+};
+window.editCliente = async function(id){
+  if(!currentTenant) return;
+  try{
+    const d=await getDoc(tenantDoc('clientes',id)); if(!d.exists()) return;
+    const c=d.data(); editingClienteId=id;
+    $('cliente-nombre').value=c.nombre||'';
+    $('cliente-email').value=c.email||'';
+    $('cliente-telefono').value=c.telefono||'';
+    $('cliente-direccion').value=c.direccion||'';
+    $('cliente-nit').value=c.nit||'';
+    $('cliente-notas').value=c.notas||'';
+    $('cliente-modal-title').textContent='Editar Cliente';
+    $('cliente-modal').style.display='flex';
+  }catch(e){ toast('Error al cargar','error'); console.error(e);}
+};
+window.deleteCliente = async function(id){
+  if(!currentTenant) return;
+  if(!confirm('¿Eliminar este cliente?')) return;
+  try{ await deleteDoc(tenantDoc('clientes',id)); toast('Cliente eliminado'); loadClientes(); }
+  catch(e){ toast('Error al eliminar','error'); console.error(e);}
+};
+$('cliente-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
+  const nombre=$('cliente-nombre').value.trim();
+  if(!nombre){ toast('El nombre es requerido','error'); return; }
+  const data={
+    nombre, email:$('cliente-email').value.trim(), telefono:$('cliente-telefono').value.trim(),
+    direccion:$('cliente-direccion').value.trim(), nit:$('cliente-nit').value.trim(),
+    notas:$('cliente-notas').value.trim(), updatedAt:serverTimestamp()
+  };
+  try{
+    setLoading('cliente-save',true);
+    if(editingClienteId){ await updateDoc(tenantDoc('clientes',editingClienteId),data); toast('Cliente actualizado ✓'); }
+    else{ data.createdAt=serverTimestamp(); await addDoc(tenantCol('clientes'),data); toast('Cliente creado ✓'); }
+    $('cliente-modal').style.display='none';
+    loadClientes();
+  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
+  finally{ setLoading('cliente-save',false); }
+});
+
+// ══ PROVEEDORES ══
+let editingProveedorId = null;
+async function loadProveedores(){
+  if(!currentTenant) return;
+  try{
+    const snap=await getDocs(query(tenantCol('proveedores'),orderBy('nombre')));
+    renderProveedores(snap.docs);
+  }catch(e){ toast('Error cargando proveedores','error'); console.error(e);}
+}
+function renderProveedores(docs){
+  const tb=$('proveedor-tbody'); tb.innerHTML='';
+  if(!docs.length){
+    tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:48px">Sin proveedores — haz clic en <strong>+ Nuevo proveedor</strong></td></tr>';
+    return;
+  }
+  docs.forEach(d=>{
+    const p={id:d.id,...d.data()};
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><strong>${esc(p.nombre)}</strong></td>
+      <td>${esc(p.contacto||'—')}</td>
+      <td>${esc(p.telefono||'—')}</td>
+      <td>${esc(p.email||'—')}</td>
+      <td>${esc(p.direccion||'—')}</td>
+      <td><button class="btn-icon" onclick="window.editProveedor('${p.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteProveedor('${p.id}')">🗑️</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+$('proveedor-search')?.addEventListener('input', async e=>{
+  if(!currentTenant) return;
+  const q=e.target.value.toLowerCase();
+  const snap=await getDocs(tenantCol('proveedores'));
+  renderProveedores(snap.docs.filter(d=>{
+    const p=d.data();
+    return (p.nombre||'').toLowerCase().includes(q)||(p.contacto||'').toLowerCase().includes(q)||(p.telefono||'').includes(q);
+  }));
+});
+window.openProveedorModal = function(){
+  editingProveedorId=null;
+  $('proveedor-form').reset();
+  $('proveedor-modal-title').textContent='Nuevo Proveedor';
+  $('proveedor-modal').style.display='flex';
+  setTimeout(()=>$('proveedor-nombre').focus(),80);
+};
+window.editProveedor = async function(id){
+  if(!currentTenant) return;
+  try{
+    const d=await getDoc(tenantDoc('proveedores',id)); if(!d.exists()) return;
+    const p=d.data(); editingProveedorId=id;
+    $('proveedor-nombre').value=p.nombre||'';
+    $('proveedor-contacto').value=p.contacto||'';
+    $('proveedor-telefono').value=p.telefono||'';
+    $('proveedor-email').value=p.email||'';
+    $('proveedor-direccion').value=p.direccion||'';
+    $('proveedor-productos').value=p.productos||'';
+    $('proveedor-notas').value=p.notas||'';
+    $('proveedor-modal-title').textContent='Editar Proveedor';
+    $('proveedor-modal').style.display='flex';
+  }catch(e){ toast('Error al cargar','error'); console.error(e);}
+};
+window.deleteProveedor = async function(id){
+  if(!currentTenant) return;
+  if(!confirm('¿Eliminar este proveedor?')) return;
+  try{ await deleteDoc(tenantDoc('proveedores',id)); toast('Proveedor eliminado'); loadProveedores(); }
+  catch(e){ toast('Error al eliminar','error'); console.error(e);}
+};
+$('proveedor-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!currentTenant){ toast('No hay sesión activa','error'); return; }
+  const nombre=$('proveedor-nombre').value.trim();
+  if(!nombre){ toast('El nombre es requerido','error'); return; }
+  const data={
+    nombre, contacto:$('proveedor-contacto').value.trim(), telefono:$('proveedor-telefono').value.trim(),
+    email:$('proveedor-email').value.trim(), direccion:$('proveedor-direccion').value.trim(),
+    productos:$('proveedor-productos').value.trim(), notas:$('proveedor-notas').value.trim(),
+    updatedAt:serverTimestamp()
+  };
+  try{
+    setLoading('proveedor-save',true);
+    if(editingProveedorId){ await updateDoc(tenantDoc('proveedores',editingProveedorId),data); toast('Proveedor actualizado ✓'); }
+    else{ data.createdAt=serverTimestamp(); await addDoc(tenantCol('proveedores'),data); toast('Proveedor creado ✓'); }
+    $('proveedor-modal').style.display='none';
+    loadProveedores();
+  }catch(e){ toast('Error: '+e.message,'error'); console.error(e);}
+  finally{ setLoading('proveedor-save',false); }
+});
+
+// Cerrar modales (común)
 document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.style.display='none'; }));
 document.querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click',()=>b.closest('.modal-backdrop').style.display='none'));
 </script>
