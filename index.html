@@ -56,7 +56,6 @@
     .toolbar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
     .btn-action { background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; padding:10px 18px; border-radius:9px; cursor:pointer; font-weight:700; }
     .btn-icon { background:rgba(255,255,255,0.05); border:1px solid var(--border); padding:5px 9px; border-radius:7px; cursor:pointer; margin-right:3px; }
-    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
     .toast { position:fixed; bottom:20px; right:20px; background:#141928; border:1px solid var(--border); padding:12px 18px; border-radius:10px; z-index:9999; opacity:0; transition:all .3s; }
     .toast.show { opacity:1; }
     @media (max-width:800px) { .sidebar { width:60px; } .sidebar span:not(.icon) { display:none; } .main { margin-left:60px; } }
@@ -164,18 +163,24 @@ window.loadModule = async (mod) => {
   if (!hasPermission(mod)) { toast('Sin permiso','error'); return; }
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.module===mod));
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
-  if (!$(`mod-${mod}`)) { const div=document.createElement('div'); div.id=`mod-${mod}`; $('#main-content').appendChild(div); }
-  $(`mod-${mod}`).style.display='block';
-  $('#mod-title').textContent=mod.charAt(0).toUpperCase()+mod.slice(1);
-  if (mod==='dashboard') await cargarDashboard();
-  if (mod==='inventario') await cargarInventario();
-  if (mod==='cotizaciones') await cargarCotizaciones();
-  if (mod==='facturas') await cargarFacturas();
-  if (mod==='compras') await cargarCompras();
-  if (mod==='clientes') await cargarClientes();
-  if (mod==='proveedores') await cargarProveedores();
-  if (mod==='papelera') await cargarPapelera();
-  if (mod==='admin' && currentUserRole==='admin') await cargarAdmin();
+  if (!$(`mod-${mod}`)) {
+    const div = document.createElement('div');
+    div.id = `mod-${mod}`;
+    const mainContent = $('#main-content');
+    if (mainContent) mainContent.appendChild(div);
+    else { console.error("main-content no encontrado"); return; }
+  }
+  $(`mod-${mod}`).style.display = 'block';
+  $('#mod-title').textContent = mod.charAt(0).toUpperCase() + mod.slice(1);
+  if (mod === 'dashboard') await cargarDashboard();
+  if (mod === 'inventario') await cargarInventario();
+  if (mod === 'cotizaciones') await cargarCotizaciones();
+  if (mod === 'facturas') await cargarFacturas();
+  if (mod === 'compras') await cargarCompras();
+  if (mod === 'clientes') await cargarClientes();
+  if (mod === 'proveedores') await cargarProveedores();
+  if (mod === 'papelera') await cargarPapelera();
+  if (mod === 'admin' && currentUserRole === 'admin') await cargarAdmin();
 };
 
 onAuthStateChanged(auth, async (user) => {
@@ -226,7 +231,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Esperar a que el DOM esté listo antes de asignar eventos
 document.addEventListener('DOMContentLoaded', () => {
   const btnLogin = $('#btn-login');
   if (btnLogin) btnLogin.addEventListener('click', async () => {
@@ -265,9 +269,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (linkLogin) linkLogin.addEventListener('click', (e) => { e.preventDefault(); $('#register-form').style.display='none'; $('#login-form').style.display='block'; });
   const btnLogout = $('#btn-logout');
   if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+
+  // Crear contenedores de módulos solo si main-content existe
+  const mainContent = $('#main-content');
+  if (mainContent) {
+    const modules = ['dashboard','inventario','cotizaciones','facturas','compras','clientes','proveedores','papelera','admin'];
+    modules.forEach(mod => {
+      if (!$(`mod-${mod}`)) {
+        const div = document.createElement('div');
+        div.id = `mod-${mod}`;
+        mainContent.appendChild(div);
+      }
+    });
+  } else {
+    console.error("No se encontró el elemento #main-content");
+  }
 });
 
-// Funciones de módulos (simplificadas pero funcionales)
 async function cargarDashboard() {
   if (!currentTenant) return;
   const productos = (await getDocs(tenantCol('productos'))).size;
@@ -279,12 +297,12 @@ async function cargarDashboard() {
 async function cargarInventario() {
   if (!currentTenant) return;
   const snap = await getDocs(query(tenantCol('productos'), orderBy('nombre')));
-  let html = `<div class="toolbar"><button class="btn-action" onclick="alert('Abrir modal producto')">+ Nuevo producto</button><input class="toolbar-search" placeholder="Buscar..."></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead><tbody>`;
+  let html = `<div class="toolbar"><button class="btn-action" onclick="alert('Abrir modal producto')">+ Nuevo producto</button><input class="toolbar-search" placeholder="Buscar..."></div><div class="table-wrap"><tr><thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead><tbody>`;
   snap.forEach(doc => { const p=doc.data(); html += `<tr><td>${esc(p.nombre)}</td><td>$${p.precio}</td><td>${p.stock}</td><td><button class="btn-icon" onclick="alert('Editar ${doc.id}')">✏️</button><button class="btn-icon danger" onclick="alert('Eliminar ${doc.id}')">🗑️</button></td></tr>`; });
   html += `</tbody></table></div>`;
   $('#mod-inventario').innerHTML = html;
 }
-async function cargarCotizaciones() { $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="alert('Nueva cotización')">+ Nueva cotización</button></div><div class="table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th></tr></thead><tbody><tr><td colspan="3">Sin cotizaciones</td></tr></tbody></table></div>`; }
+async function cargarCotizaciones() { $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="alert('Nueva cotización')">+ Nueva cotización</button></div><div class="table-wrap"><tr><thead><tr><th>Número</th><th>Cliente</th><th>Total</th></tr></thead><tbody><tr><td colspan="3">Sin cotizaciones</td></tr></tbody></table></div>`; }
 async function cargarFacturas() { 
   if (!currentTenant) return;
   const snap = await getDocs(query(tenantCol('facturas'), orderBy('createdAt','desc')));
@@ -326,7 +344,7 @@ async function cargarProveedores() { $('#mod-proveedores').innerHTML = '<div>Mó
 async function cargarPapelera() {
   if (!currentTenant) return;
   const snap = await getDocs(query(collection(db, 'businesses', currentTenant, 'papelera'), orderBy('eliminadoEn', 'desc')));
-  let html = `<div class="table-wrap"><table><thead><tr><th>Colección</th><th>ID Original</th><th>Acciones</th></tr></thead><tbody>`;
+  let html = `<div class="table-wrap"></td><thead><tr><th>Colección</th><th>ID Original</th><th>Acciones</th></tr></thead><tbody>`;
   snap.forEach(doc => { const item=doc.data(); html += `<tr><td>${item.coleccionOriginal}</td><td>${item.documentoId}</td><td><button class="btn-icon" onclick="window.recuperarItem('${doc.id}')">↩️ Recuperar</button></td></tr>`; });
   html += `</tbody></table></div>`;
   $('#mod-papelera').innerHTML = html;
@@ -343,18 +361,6 @@ async function cargarAdmin() {
 window.cambiarRol = async (userId, newRole) => { if(currentUserRole!=='admin') return; await updateDoc(doc(db,'users',userId),{role:newRole}); toast('Rol actualizado'); cargarAdmin(); };
 window.cambiarPin = async (userId) => { const newPin=prompt('Nuevo PIN de 4 dígitos'); if(newPin && newPin.length===4) { await updateDoc(doc(db,'users',userId),{pin:newPin}); toast('PIN actualizado'); } else toast('PIN inválido','error'); };
 window.eliminarUsuario = async (userId) => { if(confirm("¿Eliminar usuario?")) { await deleteDoc(doc(db,'users',userId)); toast("Usuario eliminado"); cargarAdmin(); } };
-
-// Crear contenedores de módulos
-document.addEventListener('DOMContentLoaded', () => {
-  const modules = ['dashboard','inventario','cotizaciones','facturas','compras','clientes','proveedores','papelera','admin'];
-  modules.forEach(mod => {
-    if (!$(`mod-${mod}`)) {
-      const div = document.createElement('div');
-      div.id = `mod-${mod}`;
-      $('#main-content').appendChild(div);
-    }
-  });
-});
 </script>
 </body>
 </html>
