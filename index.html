@@ -261,20 +261,7 @@ $('btn-register').addEventListener('click', async()=>{ try{ const cred=await cre
 $('btn-logout').addEventListener('click',()=>signOut(auth));
 $('link-to-register').addEventListener('click',e=>{ e.preventDefault(); $('login-form').style.display='none'; $('register-form').style.display='block'; });
 $('link-to-login').addEventListener('click',e=>{ e.preventDefault(); $('register-form').style.display='none'; $('login-form').style.display='block'; });
-
 window.loadModule = async function(mod){
-  // Asignar eventos a los items del menú después de que el DOM esté listo
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const modulo = item.getAttribute('data-module');
-    if (modulo && typeof window.loadModule === 'function') {
-      window.loadModule(modulo);
-    } else {
-      console.error("No se pudo cambiar al módulo:", modulo);
-    }
-  });
-});
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
   $(`mod-${mod}`).style.display='block';
   const titles = {dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',reportes:'Reportes'};
@@ -288,6 +275,20 @@ document.querySelectorAll('.nav-item').forEach(item => {
   if(mod==='proveedores') await cargarProveedores();
   if(mod==='reportes') await cargarReportes();
 };
+
+// Asignar eventos a los items del menú (esto va FUERA de loadModule)
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    const modulo = item.getAttribute('data-module');
+    if (modulo && typeof window.loadModule === 'function') {
+      window.loadModule(modulo);
+    } else {
+      console.error("No se pudo cambiar al módulo:", modulo);
+    }
+  });
+});
+
 
 // ---- INVENTARIO ----
 async function cargarInventario(){ const snap=await getDocs(query(tenantCol('productos'),orderBy('nombre'))); renderProductos(snap.docs); }
