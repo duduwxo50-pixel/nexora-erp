@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexora ERP Pro - Definitivo</title>
+  <title>Nexora ERP Pro - Estable</title>
   <style>
     :root {
       --bg: #0b0f1a;
@@ -12,6 +12,7 @@
       --accent2: #00d4ff;
       --green: #00c896;
       --red: #ff4d6a;
+      --orange: #ff9f43;
       --text: #e2e8f2;
       --muted: #6b7a90;
       --card: rgba(255,255,255,0.04);
@@ -20,17 +21,17 @@
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-    input, button { font-family:inherit; }
+    input, select, textarea, button { font-family:inherit; }
     #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse 80% 60% at 55% 30%,rgba(26,127,255,0.1),transparent 70%),linear-gradient(180deg,#08101f,#0b0f1a); }
     .auth-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:22px; padding:44px 40px; width:100%; max-width:420px; backdrop-filter:blur(24px); }
     .auth-logo { font-size:22px; font-weight:900; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:4px; }
     .form-group { margin-bottom:14px; }
     .form-group label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
-    .form-group input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:9px; padding:11px 14px; color:var(--text); }
+    .form-group input, .form-group select { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:9px; padding:11px 14px; color:var(--text); }
     .btn-primary { width:100%; background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; padding:13px; border-radius:9px; cursor:pointer; font-weight:700; }
     .btn-primary:hover { opacity:.88; }
     .auth-link { text-align:center; margin-top:18px; font-size:13px; color:var(--muted); }
-    .auth-link a { color:var(--accent2); text-decoration:none; cursor:pointer; }
+    .auth-link a { color:var(--accent2); text-decoration:none; }
     #app-screen { display:flex; min-height:100vh; }
     .sidebar { width:240px; background:var(--sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; }
     .sidebar-logo { padding:20px; font-size:18px; font-weight:900; background:linear-gradient(90deg,var(--accent2),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; border-bottom:1px solid var(--border); }
@@ -54,8 +55,20 @@
     th, td { padding:11px 14px; text-align:left; border-bottom:1px solid var(--border); }
     th { font-size:11px; text-transform:uppercase; color:var(--muted); }
     .toolbar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .toolbar-search { flex:1; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:10px 14px; color:var(--text); }
     .btn-action { background:linear-gradient(135deg,var(--accent),#0050cc); border:none; color:#fff; padding:10px 18px; border-radius:9px; cursor:pointer; font-weight:700; }
     .btn-icon { background:rgba(255,255,255,0.05); border:1px solid var(--border); padding:5px 9px; border-radius:7px; cursor:pointer; margin-right:3px; }
+    .btn-icon.danger:hover { background:rgba(255,77,106,0.2); }
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .badge-admin { background:#1a7fff20; color:#1a7fff; }
+    .badge-comercial { background:#00c89620; color:#00c896; }
+    .badge-compras { background:#ff9f4320; color:#ff9f43; }
+    .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:1000; padding:32px; }
+    .modal { background:#0d1220; border:1px solid var(--border); border-radius:18px; max-width:640px; margin:0 auto; }
+    .modal-header, .modal-footer { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; }
+    .modal-footer { border-bottom:none; border-top:1px solid var(--border); justify-content:flex-end; gap:10px; }
+    .modal-body { padding:22px 24px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .toast { position:fixed; bottom:20px; right:20px; background:#141928; border:1px solid var(--border); padding:12px 18px; border-radius:10px; z-index:9999; opacity:0; transition:all .3s; }
     .toast.show { opacity:1; }
     @media (max-width:800px) { .sidebar { width:60px; } .sidebar span:not(.icon) { display:none; } .main { margin-left:60px; } }
@@ -96,10 +109,7 @@
     <div class="nav-item" data-module="proveedores"><span class="icon">🚚</span><span>Proveedores</span></div>
     <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span></div>
     <div class="nav-item admin-only" data-module="admin" style="display:none"><span class="icon">⚙️</span><span>Admin</span></div>
-    <div class="sidebar-footer">
-      <div class="user-info"><div class="user-avatar" id="user-avatar">U</div><div><div id="user-name">—</div><div id="user-role" class="user-biz"></div></div></div>
-      <button id="btn-logout" class="btn-logout">Salir</button>
-    </div>
+    <div class="sidebar-footer"><div class="user-info"><div class="user-avatar" id="user-avatar">U</div><div><div id="user-name">—</div><div id="user-role" class="user-biz"></div></div></div><button id="btn-logout" class="btn-logout">Salir</button></div>
   </aside>
   <div class="main"><div class="topbar"><div id="mod-title">Dashboard</div><span id="topbar-biz" class="topbar-biz"></span></div><div class="content" id="main-content"></div></div>
 </div>
@@ -124,11 +134,10 @@ const db = getFirestore(app);
 
 let currentUser = null, currentTenant = null, currentUserRole = null, currentUserPin = null;
 const $ = id => document.getElementById(id);
-const toast = (msg, type='success') => { const t=document.createElement('div'); t.className=`toast toast-${type}`; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>t.remove(),3200); };
-const esc = str => { const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; };
-
 const tenantCol = (col) => collection(db, 'businesses', currentTenant, col);
 const tenantDoc = (col, id) => doc(db, 'businesses', currentTenant, col, id);
+const toast = (msg, type='success') => { const t=document.createElement('div'); t.className=`toast toast-${type}`; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>t.remove(),3200); };
+const esc = str => { const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; };
 
 function hasPermission(module) {
   if (!currentUserRole) return false;
@@ -138,13 +147,11 @@ function hasPermission(module) {
   return false;
 }
 function applyRolePermissions() {
-  const adminOnly = document.querySelectorAll('.admin-only');
-  adminOnly.forEach(el => el.style.display = currentUserRole === 'admin' ? 'flex' : 'none');
+  document.querySelectorAll('.admin-only').forEach(el => el.style.display = currentUserRole === 'admin' ? 'flex' : 'none');
   document.querySelectorAll('.nav-item[data-module]').forEach(item => {
     item.style.display = hasPermission(item.dataset.module) ? 'flex' : 'none';
   });
 }
-
 async function moverAPapelera(coleccion, id, datos) {
   await addDoc(collection(db, 'businesses', currentTenant, 'papelera'), { coleccionOriginal: coleccion, documentoId: id, datos, eliminadoPor: currentUser.uid, eliminadoEn: serverTimestamp() });
   await deleteDoc(tenantDoc(coleccion, id));
@@ -163,24 +170,18 @@ window.loadModule = async (mod) => {
   if (!hasPermission(mod)) { toast('Sin permiso','error'); return; }
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.module===mod));
   document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
-  if (!$(`mod-${mod}`)) {
-    const div = document.createElement('div');
-    div.id = `mod-${mod}`;
-    const mainContent = $('#main-content');
-    if (mainContent) mainContent.appendChild(div);
-    else { console.error("main-content no encontrado"); return; }
-  }
-  $(`mod-${mod}`).style.display = 'block';
-  $('#mod-title').textContent = mod.charAt(0).toUpperCase() + mod.slice(1);
-  if (mod === 'dashboard') await cargarDashboard();
-  if (mod === 'inventario') await cargarInventario();
-  if (mod === 'cotizaciones') await cargarCotizaciones();
-  if (mod === 'facturas') await cargarFacturas();
-  if (mod === 'compras') await cargarCompras();
-  if (mod === 'clientes') await cargarClientes();
-  if (mod === 'proveedores') await cargarProveedores();
-  if (mod === 'papelera') await cargarPapelera();
-  if (mod === 'admin' && currentUserRole === 'admin') await cargarAdmin();
+  if (!$(`mod-${mod}`)) { const div=document.createElement('div'); div.id=`mod-${mod}`; $('#main-content').appendChild(div); }
+  $(`mod-${mod}`).style.display='block';
+  $('#mod-title').textContent=mod.charAt(0).toUpperCase()+mod.slice(1);
+  if (mod==='dashboard') await cargarDashboard();
+  if (mod==='inventario') await cargarInventario();
+  if (mod==='cotizaciones') await cargarCotizaciones();
+  if (mod==='facturas') await cargarFacturas();
+  if (mod==='compras') await cargarCompras();
+  if (mod==='clientes') await cargarClientes();
+  if (mod==='proveedores') await cargarProveedores();
+  if (mod==='papelera') await cargarPapelera();
+  if (mod==='admin' && currentUserRole==='admin') await cargarAdmin();
 };
 
 onAuthStateChanged(auth, async (user) => {
@@ -188,106 +189,59 @@ onAuthStateChanged(auth, async (user) => {
     const userDocRef = doc(db, 'users', user.uid);
     let userSnap = await getDoc(userDocRef);
     if (!userSnap.exists()) {
-      await setDoc(userDocRef, {
-        email: user.email,
-        name: user.displayName || user.email.split('@')[0],
-        role: 'admin',
-        pin: '1234',
-        businessId: null
-      });
+      const pinRegistro = sessionStorage.getItem('tempPin');
+      await setDoc(userDocRef, { email: user.email, name: user.displayName || user.email.split('@')[0], role: 'admin', pin: pinRegistro || '1234', businessId: null });
       userSnap = await getDoc(userDocRef);
     }
     const userData = userSnap.data();
     currentUserRole = userData.role;
     currentUserPin = userData.pin;
-    if (!userData.businessId) {
-      const bizRef = doc(collection(db, 'businesses'));
-      await setDoc(bizRef, { name: "Mi Negocio", ownerUid: user.uid, createdAt: serverTimestamp() });
-      await updateDoc(userDocRef, { businessId: bizRef.id });
-      currentTenant = bizRef.id;
-    } else {
-      currentTenant = userData.businessId;
+    if (!currentTenant) {
+      if (userData.businessId) currentTenant = userData.businessId;
+      else { const bizRef = doc(collection(db, 'businesses')); await setDoc(bizRef, { name: "Mi Negocio", ownerUid: user.uid, createdAt: serverTimestamp() }); await updateDoc(userDocRef, { businessId: bizRef.id }); currentTenant = bizRef.id; }
     }
     const biz = await getDoc(doc(db, 'businesses', currentTenant));
-    const topbarBiz = $('#topbar-biz');
-    if (topbarBiz) topbarBiz.textContent = biz.exists() ? biz.data().name : 'Mi Negocio';
-    const userName = $('#user-name');
-    if (userName) userName.textContent = userData.name;
-    const userAvatar = $('#user-avatar');
-    if (userAvatar) userAvatar.textContent = userData.name[0].toUpperCase();
-    const userRole = $('#user-role');
-    if (userRole) userRole.textContent = userData.role;
-    const authScreen = $('#auth-screen');
-    if (authScreen) authScreen.style.display = 'none';
-    const appScreen = $('#app-screen');
-    if (appScreen) appScreen.style.display = 'flex';
+    $('#topbar-biz').textContent = biz.exists() ? biz.data().name : 'Mi Negocio';
+    $('#user-name').textContent = userData.name;
+    $('#user-avatar').textContent = userData.name[0].toUpperCase();
+    $('#user-role').textContent = userData.role;
+    $('#auth-screen').style.display = 'none';
+    $('#app-screen').style.display = 'flex';
     applyRolePermissions();
     loadModule('dashboard');
   } else {
-    const authScreen = $('#auth-screen');
-    if (authScreen) authScreen.style.display = 'flex';
-    const appScreen = $('#app-screen');
-    if (appScreen) appScreen.style.display = 'none';
+    $('#auth-screen').style.display = 'flex';
+    $('#app-screen').style.display = 'none';
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const btnLogin = $('#btn-login');
-  if (btnLogin) btnLogin.addEventListener('click', async () => {
-    const email = $('#login-email').value.trim();
-    const pass = $('#login-pass').value;
-    if (!email || !pass) { toast('Complete todos los campos', 'error'); return; }
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch(e) { toast('Error: ' + e.message, 'error'); }
-  });
-
-  const btnRegister = $('#btn-register');
-  if (btnRegister) btnRegister.addEventListener('click', async () => {
-    const name = $('#reg-name').value.trim();
-    const bizName = $('#reg-biz').value.trim();
-    const email = $('#reg-email').value.trim();
-    const pass = $('#reg-pass').value;
-    if (!name || !bizName || !email || !pass) { toast('Complete todos los campos', 'error'); return; }
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      await updateProfile(cred.user, { displayName: name });
-      const bizRef = doc(collection(db, 'businesses'));
-      await setDoc(bizRef, { name: bizName, ownerUid: cred.user.uid, createdAt: serverTimestamp() });
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        email, name, role: 'admin', pin: '1234', businessId: bizRef.id
-      });
-      toast('Empresa registrada. Inicia sesión');
-      const linkToLogin = $('#link-to-login');
-      if (linkToLogin) linkToLogin.click();
-    } catch(e) { toast(e.message, 'error'); }
-  });
-
-  const linkRegister = $('#link-to-register');
-  if (linkRegister) linkRegister.addEventListener('click', (e) => { e.preventDefault(); $('#login-form').style.display='none'; $('#register-form').style.display='block'; });
-  const linkLogin = $('#link-to-login');
-  if (linkLogin) linkLogin.addEventListener('click', (e) => { e.preventDefault(); $('#register-form').style.display='none'; $('#login-form').style.display='block'; });
-  const btnLogout = $('#btn-logout');
-  if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
-
-  // Crear contenedores de módulos solo si main-content existe
-  const mainContent = $('#main-content');
-  if (mainContent) {
-    const modules = ['dashboard','inventario','cotizaciones','facturas','compras','clientes','proveedores','papelera','admin'];
-    modules.forEach(mod => {
-      if (!$(`mod-${mod}`)) {
-        const div = document.createElement('div');
-        div.id = `mod-${mod}`;
-        mainContent.appendChild(div);
-      }
-    });
-  } else {
-    console.error("No se encontró el elemento #main-content");
-  }
+$('#btn-login').addEventListener('click', async () => {
+  const email=$('#login-email').value.trim(), pass=$('#login-pass').value;
+  if (!email||!pass) { toast('Complete todos los campos','error'); return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    toast('Bienvenido');
+  } catch(e) { toast('Credenciales inválidas','error'); }
 });
+$('#btn-register').addEventListener('click', async () => {
+  const name=$('#reg-name').value.trim(), bizName=$('#reg-biz').value.trim(), email=$('#reg-email').value.trim(), pass=$('#reg-pass').value, pin=$('#reg-pin').value;
+  if (!name||!bizName||!email||!pass||!pin||pin.length!==4) { toast('Complete todos los campos y PIN de 4 dígitos','error'); return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+    const bizRef = doc(collection(db, 'businesses'));
+    await setDoc(bizRef, { name: bizName, ownerUid: cred.user.uid, createdAt: serverTimestamp() });
+    await setDoc(doc(db, 'users', cred.user.uid), { email, name, role: 'admin', pin, businessId: bizRef.id });
+    sessionStorage.setItem('tempPin', pin);
+    toast('Empresa registrada. Inicia sesión');
+    $('#link-to-login').click();
+  } catch(e) { toast(e.message, 'error'); }
+});
+$('#link-to-register').addEventListener('click', e=>{ e.preventDefault(); $('#login-form').style.display='none'; $('#register-form').style.display='block'; });
+$('#link-to-login').addEventListener('click', e=>{ e.preventDefault(); $('#register-form').style.display='none'; $('#login-form').style.display='block'; });
+$('#btn-logout').addEventListener('click',()=>signOut(auth));
 
 async function cargarDashboard() {
-  if (!currentTenant) return;
   const productos = (await getDocs(tenantCol('productos'))).size;
   const cotizaciones = (await getDocs(tenantCol('cotizaciones'))).size;
   const facturas = (await getDocs(tenantCol('facturas'))).size;
@@ -295,24 +249,57 @@ async function cargarDashboard() {
   $('#mod-dashboard').innerHTML = `<div class="dash-grid"><div class="dash-card"><div class="dash-card-label">📦 Productos</div><div class="dash-card-val">${productos}</div></div><div class="dash-card"><div class="dash-card-label">📄 Cotizaciones</div><div class="dash-card-val">${cotizaciones}</div></div><div class="dash-card"><div class="dash-card-label">🧾 Facturas</div><div class="dash-card-val">${facturas}</div></div><div class="dash-card"><div class="dash-card-label">👥 Clientes</div><div class="dash-card-val">${clientes}</div></div></div>`;
 }
 async function cargarInventario() {
-  if (!currentTenant) return;
   const snap = await getDocs(query(tenantCol('productos'), orderBy('nombre')));
-  let html = `<div class="toolbar"><button class="btn-action" onclick="alert('Abrir modal producto')">+ Nuevo producto</button><input class="toolbar-search" placeholder="Buscar..."></div><div class="table-wrap"><tr><thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead><tbody>`;
-  snap.forEach(doc => { const p=doc.data(); html += `<tr><td>${esc(p.nombre)}</td><td>$${p.precio}</td><td>${p.stock}</td><td><button class="btn-icon" onclick="alert('Editar ${doc.id}')">✏️</button><button class="btn-icon danger" onclick="alert('Eliminar ${doc.id}')">🗑️</button></td></tr>`; });
-  html += `</tbody></table></div>`;
-  $('#mod-inventario').innerHTML = html;
+  $('#mod-inventario').innerHTML = `<div class="toolbar"><input class="toolbar-search" id="prod-search" placeholder="Buscar..."><button class="btn-action" onclick="window.openProductoModal()">+ Nuevo producto</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Mín</th><th>Acciones</th></tr></thead><tbody id="prod-tbody"></tbody></table></div>`;
+  const tbody = $('#prod-tbody');
+  snap.forEach(doc => { const p=doc.data(); tbody.innerHTML += `<tr><td>${esc(p.nombre)}</td><td>$${p.precio}</td><td>${p.stock}</td><td>${p.stockMin}</td><td><button class="btn-icon" onclick="window.editProducto('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarProducto('${doc.id}','${p.nombre}')">🗑️</button></td>`; });
 }
-async function cargarCotizaciones() { $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="alert('Nueva cotización')">+ Nueva cotización</button></div><div class="table-wrap"><tr><thead><tr><th>Número</th><th>Cliente</th><th>Total</th></tr></thead><tbody><tr><td colspan="3">Sin cotizaciones</td></tr></tbody></table></div>`; }
-async function cargarFacturas() { 
-  if (!currentTenant) return;
+window.openProductoModal = () => { alert("Abrir modal para nuevo producto"); };
+window.editProducto = (id) => { alert("Editar producto "+id); };
+window.eliminarProducto = async (id,nombre) => { if(confirm(`¿Mover "${nombre}" a papelera?`)){ const docSnap=await getDoc(tenantDoc('productos',id)); if(docSnap.exists()) await moverAPapelera('productos',id,docSnap.data()); cargarInventario(); } };
+async function cargarClientes() {
+  const snap = await getDocs(query(tenantCol('clientes'), orderBy('nombre')));
+  $('#mod-clientes').innerHTML = `<div class="toolbar"><input class="toolbar-search" id="cliente-search" placeholder="Buscar..."><button class="btn-action" onclick="window.openClienteModal()">+ Nuevo cliente</button></div><div class="table-wrap"></table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="cliente-tbody"></tbody></table></div>`;
+  const tbody = $('#cliente-tbody');
+  snap.forEach(doc => { const c=doc.data(); tbody.innerHTML += `<tr><td>${esc(c.nombre)}</td><td>${esc(c.email||'')}</td><td>${esc(c.telefono||'')}</td><td><button class="btn-icon" onclick="window.editCliente('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarCliente('${doc.id}','${c.nombre}')">🗑️</button></td>`; });
+}
+window.openClienteModal = () => { alert("Abrir modal para nuevo cliente"); };
+window.editCliente = (id) => { alert("Editar cliente "+id); };
+window.eliminarCliente = async (id,nombre) => { if(confirm(`Mover "${nombre}" a papelera?`)){ const docSnap=await getDoc(tenantDoc('clientes',id)); if(docSnap.exists()) await moverAPapelera('clientes',id,docSnap.data()); cargarClientes(); } };
+async function cargarProveedores() {
+  const snap = await getDocs(query(tenantCol('proveedores'), orderBy('nombre')));
+  $('#mod-proveedores').innerHTML = `<div class="toolbar"><input class="toolbar-search" id="proveedor-search" placeholder="Buscar..."><button class="btn-action" onclick="window.openProveedorModal()">+ Nuevo proveedor</button></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="proveedor-tbody"></tbody></td></div>`;
+  const tbody = $('#proveedor-tbody');
+  snap.forEach(doc => { const p=doc.data(); tbody.innerHTML += `<tr><td>${esc(p.nombre)}</td><td>${esc(p.contacto||'')}</td><td>${esc(p.telefono||'')}</td><td><button class="btn-icon" onclick="window.editProveedor('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarProveedor('${doc.id}','${p.nombre}')">🗑️</button></td>`; });
+}
+window.openProveedorModal = () => { alert("Abrir modal para nuevo proveedor"); };
+window.editProveedor = (id) => { alert("Editar proveedor "+id); };
+window.eliminarProveedor = async (id,nombre) => { if(confirm(`Mover "${nombre}" a papelera?`)){ const docSnap=await getDoc(tenantDoc('proveedores',id)); if(docSnap.exists()) await moverAPapelera('proveedores',id,docSnap.data()); cargarProveedores(); } };
+async function cargarCotizaciones() {
+  const snap = await getDocs(query(tenantCol('cotizaciones'), orderBy('createdAt','desc')));
+  $('#mod-cotizaciones').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="window.openCotizacionModal()">+ Nueva cotización</button></div><div class="table-wrap"></td><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="cot-tbody"></tbody></table></div>`;
+  const tbody = $('#cot-tbody');
+  snap.forEach(doc => { const c=doc.data(); tbody.innerHTML += `<tr><td>${c.numero}</td>.html${c.cliente}</td>.html$${c.total}</td>.html${c.estado}</td>.html<button class="btn-icon" onclick="window.editCotizacion('${doc.id}')">✏️</button><button class="btn-icon danger" onclick="window.eliminarCotizacion('${doc.id}','${c.numero}')">🗑️</button></td>`; });
+}
+window.openCotizacionModal = () => { alert("Abrir modal para cotización"); };
+window.editCotizacion = (id) => { alert("Editar cotización "+id); };
+window.eliminarCotizacion = async (id,numero) => { if(confirm(`Mover cotización ${numero} a papelera?`)){ const docSnap=await getDoc(tenantDoc('cotizaciones',id)); if(docSnap.exists()) await moverAPapelera('cotizaciones',id,docSnap.data()); cargarCotizaciones(); } };
+async function cargarCompras() {
+  const snap = await getDocs(query(tenantCol('compras'), orderBy('createdAt','desc')));
+  $('#mod-compras').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="window.openCompraModal()">+ Registrar compra</button></div><div class="table-wrap"><tr><thead><tr><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="compras-tbody"></tbody></table></div>`;
+  const tbody = $('#compras-tbody');
+  snap.forEach(doc => { const c=doc.data(); tbody.innerHTML += `<tr>.html${c.proveedorNombre}</td>.html${c.fecha}</td>.html$${c.total}</td>.html<button class="btn-icon danger" onclick="window.eliminarCompra('${doc.id}')">🗑️</button></td>`; });
+}
+window.openCompraModal = () => { alert("Abrir modal para compra"); };
+window.eliminarCompra = async (id) => { if(confirm("Mover compra a papelera?")){ const docSnap=await getDoc(tenantDoc('compras',id)); if(docSnap.exists()) await moverAPapelera('compras',id,docSnap.data()); cargarCompras(); } };
+async function cargarFacturas() {
   const snap = await getDocs(query(tenantCol('facturas'), orderBy('createdAt','desc')));
-  let html = `<div class="table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Acciones</th></tr></thead><tbody>`;
-  snap.forEach(doc => { const f=doc.data(); html += `<tr><td>${f.numero}</td><td>${f.cliente}</td><td>$${f.total}</td><td><button class="btn-icon" onclick="window.editarFactura('${doc.id}')">✏️ Editar</button><button class="btn-icon" onclick="window.imprimirFactura('${doc.id}')">🖨️</button></td></tr>`; });
-  html += `</tbody></table></div>`;
-  $('#mod-facturas').innerHTML = html;
+  $('#mod-facturas').innerHTML = `<div class="table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Acciones</th></tr></thead><tbody id="facturas-tbody"></tbody></table></div>`;
+  const tbody = $('#facturas-tbody');
+  snap.forEach(doc => { const f=doc.data(); tbody.innerHTML += `<tr>.html${f.numero}</td>.html${f.cliente}</td>.html$${f.total}</td>.html<button class="btn-icon" onclick="window.editarFactura('${doc.id}')">✏️ Editar</button><button class="btn-icon" onclick="window.imprimirFactura('${doc.id}')">🖨️</button><button class="btn-icon danger" onclick="window.eliminarFactura('${doc.id}')">🗑️</button></td>`; });
 }
 window.editarFactura = async (id) => {
-  const pin = prompt("Ingrese PIN (por defecto 1234):");
+  const pin = prompt("Ingrese PIN de 4 dígitos para editar esta factura:");
   if (pin !== currentUserPin) { toast("PIN incorrecto", "error"); return; }
   const facturaDoc = await getDoc(tenantDoc('facturas', id));
   if (!facturaDoc.exists()) return;
@@ -331,36 +318,35 @@ window.editarFactura = async (id) => {
     cargarFacturas();
   }
 };
+window.eliminarFactura = async (id) => { if (confirm("Mover factura a papelera?")) { const docSnap=await getDoc(tenantDoc('facturas',id)); if(docSnap.exists()) await moverAPapelera('facturas',id,docSnap.data()); cargarFacturas(); } };
 window.imprimirFactura = async (id) => {
-  const f = (await getDoc(tenantDoc('facturas', id))).data();
-  if (!f) return;
+  const facturaDoc = await getDoc(tenantDoc('facturas', id));
+  if (!facturaDoc.exists()) return;
+  const f = facturaDoc.data();
   const w = window.open('', '_blank');
   w.document.write(`<html><body><pre>FACTURA ${f.numero}\nCliente: ${f.cliente}\nTotal: $${f.total}</pre></body></html>`);
   w.print();
 };
-async function cargarCompras() { $('#mod-compras').innerHTML = '<div>Módulo Compras (en construcción)</div>'; }
-async function cargarClientes() { $('#mod-clientes').innerHTML = '<div>Módulo Clientes (en construcción)</div>'; }
-async function cargarProveedores() { $('#mod-proveedores').innerHTML = '<div>Módulo Proveedores (en construcción)</div>'; }
 async function cargarPapelera() {
-  if (!currentTenant) return;
   const snap = await getDocs(query(collection(db, 'businesses', currentTenant, 'papelera'), orderBy('eliminadoEn', 'desc')));
-  let html = `<div class="table-wrap"></td><thead><tr><th>Colección</th><th>ID Original</th><th>Acciones</th></tr></thead><tbody>`;
-  snap.forEach(doc => { const item=doc.data(); html += `<tr><td>${item.coleccionOriginal}</td><td>${item.documentoId}</td><td><button class="btn-icon" onclick="window.recuperarItem('${doc.id}')">↩️ Recuperar</button></td></tr>`; });
-  html += `</tbody></table></div>`;
-  $('#mod-papelera').innerHTML = html;
+  $('#mod-papelera').innerHTML = `<div class="table-wrap"><table><thead><tr><th>Colección</th><th>ID Original</th><th>Datos</th><th>Acciones</th></tr></thead><tbody id="papelera-tbody"></tbody></table></div>`;
+  const tbody = $('#papelera-tbody');
+  snap.forEach(doc => { const item=doc.data(); tbody.innerHTML += `<tr>.html${item.coleccionOriginal}</td>.html${item.documentoId}</td>.html<pre>${JSON.stringify(item.datos).substring(0,50)}...</pre></td>.html<button class="btn-icon" onclick="window.recuperarItem('${doc.id}')">↩️ Recuperar</button><button class="btn-icon danger" onclick="window.eliminarDefinitivo('${doc.id}')">❌ Eliminar</button></td>`; });
 }
 window.recuperarItem = async (id) => { await recuperarDePapelera(id); cargarPapelera(); };
+window.eliminarDefinitivo = async (id) => { if (confirm('Eliminar definitivamente?')) { await deleteDoc(doc(db, 'businesses', currentTenant, 'papelera', id)); cargarPapelera(); } };
 async function cargarAdmin() {
-  if (!currentTenant) return;
   const usersSnap = await getDocs(collection(db, 'users'));
-  let html = `<div class="table-wrap"></table><thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>PIN</th><th>Acciones</th></tr></thead><tbody>`;
-  usersSnap.forEach(doc => { const u=doc.data(); if(u.businessId===currentTenant) { html += `<tr><td>${u.name}</td><td>${u.email}</td><td><select onchange="window.cambiarRol('${doc.id}', this.value)"><option ${u.role==='admin'?'selected':''}>admin</option><option ${u.role==='comercial'?'selected':''}>comercial</option><option ${u.role==='compras'?'selected':''}>compras</option></select></td><td><button class="btn-icon" onclick="window.cambiarPin('${doc.id}')">Cambiar PIN</button></td><td><button class="btn-icon danger" onclick="window.eliminarUsuario('${doc.id}')">🗑️</button></td></tr>`; } });
-  html += `</tbody></table></div>`;
-  $('#mod-admin').innerHTML = html;
+  $('#mod-admin').innerHTML = `<div class="toolbar"><button class="btn-action" onclick="window.crearUsuarioModal()">+ Nuevo usuario</button></div><div class="table-wrap"></table><thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>PIN</th><th>Acciones</th></tr></thead><tbody id="admin-users-tbody"></tbody></table></div>`;
+  const tbody = $('#admin-users-tbody');
+  usersSnap.forEach(doc => { const u=doc.data(); if(u.businessId===currentTenant) { tbody.innerHTML += `<tr>.html${u.name}</td>.html${u.email}</td>.html<select onchange="window.cambiarRol('${doc.id}', this.value)"><option ${u.role==='admin'?'selected':''}>admin</option><option ${u.role==='comercial'?'selected':''}>comercial</option><option ${u.role==='compras'?'selected':''}>compras</option></select></td>.html<button class="btn-icon" onclick="window.cambiarPin('${doc.id}')">Cambiar PIN</button></td>.html<button class="btn-icon danger" onclick="window.eliminarUsuario('${doc.id}')">🗑️</button></td>`; } });
 }
 window.cambiarRol = async (userId, newRole) => { if(currentUserRole!=='admin') return; await updateDoc(doc(db,'users',userId),{role:newRole}); toast('Rol actualizado'); cargarAdmin(); };
 window.cambiarPin = async (userId) => { const newPin=prompt('Nuevo PIN de 4 dígitos'); if(newPin && newPin.length===4) { await updateDoc(doc(db,'users',userId),{pin:newPin}); toast('PIN actualizado'); } else toast('PIN inválido','error'); };
-window.eliminarUsuario = async (userId) => { if(confirm("¿Eliminar usuario?")) { await deleteDoc(doc(db,'users',userId)); toast("Usuario eliminado"); cargarAdmin(); } };
+window.crearUsuarioModal = () => { alert("Para crear usuarios, regístrelos primero en Firebase Authentication y luego asígneles rol y PIN aquí"); };
+window.eliminarUsuario = async (userId) => { if(confirm("¿Eliminar usuario? Solo se eliminará de Firestore")) { await deleteDoc(doc(db,'users',userId)); toast("Usuario eliminado"); cargarAdmin(); } };
+
+['dashboard','inventario','cotizaciones','facturas','compras','clientes','proveedores','papelera','admin'].forEach(mod => { const div=document.createElement('div'); div.id=`mod-${mod}`; $('#main-content').appendChild(div); });
 </script>
 </body>
 </html>
