@@ -277,6 +277,24 @@ function toast(msg, type='success'){ const t=document.createElement('div'); t.cl
 function esc(str){ const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; }
 function fmtDate(ts){ if(!ts) return '—'; if(ts.toDate) return ts.toDate().toLocaleDateString('es-CO'); return ts; }
 
+  // ==================== PRECIOS HISTÓRICOS ====================
+// Precios históricos para autocompletar (mejora de UX)
+let preciosHistoricos = new Map();
+
+// Cargar precios históricos de localStorage
+try {
+  const saved = localStorage.getItem('nexora_precios_historicos');
+  if (saved) preciosHistoricos = new Map(JSON.parse(saved));
+} catch(e) {}
+
+// Función para guardar precio histórico
+function guardarPrecioHistorico(prodId, precio) {
+  preciosHistoricos.set(prodId, precio);
+  localStorage.setItem('nexora_precios_historicos', 
+    JSON.stringify(Array.from(preciosHistoricos.entries())));
+}
+  
+
 // ===================== AUTH =====================
 onAuthStateChanged(auth, async user => {
   if(user){
@@ -575,12 +593,197 @@ $('proveedor-form').addEventListener('submit', async e=>{ e.preventDefault(); co
 // ===================== COTIZACIONES =====================
 async function cargarSelectClientes(){ const snap=await getDocs(tenantCol('clientes')); const sel=$('cot-cliente-id'); sel.innerHTML='<option value="">-- Seleccionar --</option>'; snap.forEach(d=>{ if(d.data().eliminado) return; const opt=document.createElement('option'); opt.value=d.id; opt.textContent=d.data().nombre; opt.dataset.email=d.data().email||''; opt.dataset.telefono=d.data().telefono||''; sel.appendChild(opt); }); }
 function actualizarTotalesCot(){ const subtotal = cotItems.reduce((s,i)=>s+(i.precio*i.cantidad),0); const descuentoPorc = parseFloat($('cot-descuento').value)||0; const ivaPorc = parseFloat($('cot-iva').value)||0; const descMonto = subtotal * descuentoPorc / 100; const subtotalDesc = subtotal - descMonto; const ivaMonto = subtotalDesc * ivaPorc / 100; const total = subtotalDesc + ivaMonto; $('cot-subtotal').textContent=subtotal.toFixed(2); $('cot-desc-monto').textContent=descMonto.toFixed(2); $('cot-iva-monto').textContent=ivaMonto.toFixed(2); $('cot-total').textContent=total.toFixed(2); }
-function renderCotItems(){ const tb=$('cot-items-tbody'); tb.innerHTML=''; cotItems.forEach((item,i)=>{ tb.innerHTML+=`<tr><td>${esc(item.nombre)}</td><td><input type="number" value="${item.cantidad}" onchange="window.updateQty(${i},this.value)" style="width:60px;"></td><td>$${item.precio}</td><td>$${item.precio*item.cantidad}</td><td><button class="btn-icon danger" onclick="window.removeItem(${i})">✕</button></td></tr>`; }); actualizarTotalesCot(); }
+
+  function renderCotItems() {
+  const tb = $('#cot-items-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  
+  if (cotItems.length === 0) {
+    tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px">✨ Agrega productos usando el selector de arriba</td</tr>';
+    actualizarTotalesCot();
+    return;
+  }
+  
+  cotItems.forEach((item, i) => {
+    const subtotal = (item.precio || 0) * (item.cantidad || 1);
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><strong>${esc(item.nombre)}</strong></td>
+      <td><input type="number" min="1" value="${item.cantidad}" style="width:70px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px;color:var(--text);text-align:center" onchange="window.updateQty(${i}, this.value)"></td>
+      <td>$${(item.precio || 0).toLocaleString('es-CO')}</td>
+      <td><strong>$${subtotal.toLocaleString('es-CO')}</strong></td>
+      <td><button class="btn-icon danger" onclick="window.removeItem(${i})" title="Eliminar">✕</button></td>
+    `;
+    tb.appendChild(row);
+  });
+  
+  actualizarTotalesCot();
+}
+  
 window.updateQty = (i,v)=>{ cotItems[i].cantidad=parseInt(v); renderCotItems(); };
 window.removeItem = (i)=>{ cotItems.splice(i,1); renderCotItems(); };
 async function populateProdSelect(){ const snap=await getDocs(tenantCol('productos')); const sel=$('cot-item-prod'); sel.innerHTML='<option value="">-- Producto --</option>'; snap.forEach(d=>{ if(d.data().eliminado) return; const p=d.data(); const opt=document.createElement('option'); opt.value=d.id; opt.dataset.precio=p.precio; opt.textContent=`${p.nombre} - $${p.precio}`; sel.appendChild(opt); }); }
-$('cot-item-prod').addEventListener('change',e=>{ const opt=e.target.options[e.target.selectedIndex]; $('cot-item-precio').value=opt.dataset.precio||0; });
-$('btn-add-item').addEventListener('click',()=>{ const sel=$('cot-item-prod'); if(!sel.value) return; const prodId=sel.value; const nombre=sel.options[sel.selectedIndex].text.split(' -')[0]; const cantidad=parseInt($('cot-item-qty').value); const precio=parseFloat($('cot-item-precio').value); cotItems.push({prodId,nombre,cantidad,precio}); renderCotItems(); sel.value=''; $('cot-item-qty').value='1'; $('cot-item-precio').value=''; });
+
+  // Evento mejorado para auto-completar último precio usado
+$('cot-item-prod').addEventListener('change', (e) => {
+  const opt = e.target.options[e.target.selectedIndex];
+  const prodId = e.target.value;
+  const precioOriginal = opt?.dataset?.precio || 0;
+  
+  $('#cot-item-precio').value = precioOriginal;
+  
+  // Si hay precio histórico, preguntar si usarlo
+  if (prodId && preciosHistoricos && preciosHistoricos.has(prodId)) {
+    const ultimoPrecio = preciosHistoricos.get(prodId);
+    if (ultimoPrecio !== parseFloat(precioOriginal)) {
+      const usarHistorico = confirm(`¿Usar el último precio ($${ultimoPrecio.toLocaleString('es-CO')}) en lugar de $${parseFloat(precioOriginal).toLocaleString('es-CO')}?`);
+      if (usarHistorico) $('#cot-item-precio').value = ultimoPrecio;
+    }
+  }
+  
+  // Efecto visual
+  const precioInput = $('#cot-item-precio');
+  precioInput.style.backgroundColor = 'rgba(0,200,150,0.1)';
+  setTimeout(() => precioInput.style.backgroundColor = '', 500);
+  if (prodId) $('#cot-item-qty').focus();
+});
+
+  // Función mejorada para agregar items a la cotización
+$('btn-add-item').addEventListener('click', async () => {
+  const sel = $('#cot-item-prod');
+  const qtyInput = $('#cot-item-qty');
+  const precioInput = $('#cot-item-precio');
+  
+  // Validación: producto seleccionado
+  if (!sel.value) {
+    toast('⚠️ Selecciona un producto', 'error');
+    sel.focus();
+    return;
+  }
+  
+  // Validación: cantidad
+  let cantidad = parseInt(qtyInput.value);
+  if (isNaN(cantidad) || cantidad < 1) {
+    toast('⚠️ Cantidad inválida', 'error');
+    qtyInput.value = 1;
+    qtyInput.focus();
+    return;
+  }
+  
+  // Validación: precio
+  let precio = parseFloat(precioInput.value);
+  if (isNaN(precio) || precio <= 0) {
+    toast('⚠️ Precio inválido', 'error');
+    precioInput.focus();
+    return;
+  }
+  
+  // Obtener datos del producto
+  const selectedOption = sel.options[sel.selectedIndex];
+  const prodId = sel.value;
+  const nombre = selectedOption.text.split(' -')[0];
+  const precioOriginal = parseFloat(selectedOption.dataset.precio) || precio;
+  
+  // Advertencia si el precio es muy diferente al original (más del 20%)
+  if (precioOriginal > 0) {
+    const diferenciaPorcentaje = Math.abs((precio - precioOriginal) / precioOriginal * 100);
+    if (diferenciaPorcentaje > 20) {
+      const confirmar = confirm(`⚠️ El precio ingresado ($${precio.toLocaleString('es-CO')}) es ${diferenciaPorcentaje.toFixed(0)}% diferente al precio de lista ($${precioOriginal.toLocaleString('es-CO')}). ¿Continuar?`);
+      if (!confirmar) {
+        precioInput.focus();
+        return;
+      }
+    }
+  }
+  
+  // Verificar stock disponible
+  if (currentTenant) {
+    try {
+      const prodRef = tenantDoc('productos', prodId);
+      const prodSnap = await getDoc(prodRef);
+      if (prodSnap.exists()) {
+        const stockDisponible = prodSnap.data().stock || 0;
+        if (cantidad > stockDisponible) {
+          toast(`⚠️ Stock insuficiente. Solo hay ${stockDisponible} unidades`, 'error');
+          return;
+        }
+        if (stockDisponible < 10 && stockDisponible > 0) {
+          toast(`📦 Stock bajo: solo ${stockDisponible} unidades`, 'warning');
+        }
+      }
+    } catch(e) { console.warn('No se pudo verificar stock', e); }
+  }
+  
+  // Guardar precio para futuras cotizaciones
+  if (typeof guardarPrecioHistorico === 'function') {
+    guardarPrecioHistorico(prodId, precio);
+  }
+  
+  // Verificar si el producto ya existe en la cotización
+  const existingIndex = cotItems.findIndex(item => item.prodId === prodId);
+  let mensaje = '';
+  
+  if (existingIndex !== -1) {
+    // Producto ya existe: actualizar cantidad y precio
+    const nuevaCantidad = cotItems[existingIndex].cantidad + cantidad;
+    cotItems[existingIndex].cantidad = nuevaCantidad;
+    cotItems[existingIndex].precio = precio;
+    mensaje = `📦 ${nombre}: ahora ${nuevaCantidad} unidades`;
+  } else {
+    // Producto nuevo
+    cotItems.push({
+      prodId, nombre, cantidad, precio,
+      subtotal: precio * cantidad,
+      agregadoEn: new Date().toISOString()
+    });
+    mensaje = `✨ ${cantidad}x ${nombre} agregado`;
+  }
+  
+  // Efecto visual en el botón
+  const btn = $('#btn-add-item');
+  btn.style.transform = 'scale(0.95)';
+  btn.style.opacity = '0.7';
+  setTimeout(() => { 
+    btn.style.transform = ''; 
+    btn.style.opacity = '';
+  }, 150);
+  
+  // Limpiar campos
+  sel.value = '';
+  qtyInput.value = '1';
+  precioInput.value = '';
+  
+  // Mantener foco en el selector
+  sel.focus();
+  
+  // Actualizar la tabla
+  renderCotItems();
+  
+  // Mostrar mensaje
+  toast(mensaje, 'success');
+  
+  // Hacer scroll al final de la tabla
+  const tb = $('#cot-items-tbody');
+  if (tb && tb.lastChild) {
+    tb.lastChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+});
+
+  // 👇 AQUÍ JUSTO ABAJO, PON ESTO 👇
+const enterInputs = ['cot-item-qty', 'cot-item-precio', 'cot-item-prod'];
+enterInputs.forEach(id => {
+  const input = $(id);
+  if (input) {
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        $('#btn-add-item').click();
+      }
+    });
+  }
+});
+  
 $('cot-descuento').addEventListener('input',actualizarTotalesCot);
 $('cot-iva').addEventListener('input',actualizarTotalesCot);
 $('btn-nuevo-cliente-cot').addEventListener('click',()=>{ window.openClienteModal(); window.cotModalOpen=true; });
