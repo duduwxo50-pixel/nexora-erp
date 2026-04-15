@@ -600,7 +600,14 @@ $('cot-form').addEventListener('submit', async e=>{ e.preventDefault(); const cl
 async function cargarCotizaciones(){
   const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc')));
   const tb=$('cot-tbody'); tb.innerHTML='';
-  snap.forEach(d=>{ if(d.data().eliminado) return; const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>${c.estado}</td><td><button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${d.id}','${esc(c.numero||'')}')">🗑️</button></td></tr>`; });
+  snap.forEach(d=>{ if(d.data().eliminado) return; const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>
+  <select onchange="window.cambiarEstadoCot('${d.id}', this.value)">
+    <option ${c.estado==='Borrador'?'selected':''}>Borrador</option>
+    <option ${c.estado==='En espera'?'selected':''}>En espera</option>
+    <option ${c.estado==='Aprobada'?'selected':''}>Aprobada</option>
+    <option ${c.estado==='Cancelada'?'selected':''}>Cancelada</option>
+  </select>
+</td><td><button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${d.id}','${esc(c.numero||'')}')">🗑️</button></td></tr>`; });
 }
 window.deleteCotizacion = async (id, numero)=>{ if(confirm(`¿Mover cotización "${numero}" a la papelera?`)){ await softDelete('cotizaciones', id, numero); cargarCotizaciones(); cargarDashboard(); } };
 window.facturarCotizacion = async (cotId)=>{ const cotDoc=await getDoc(tenantDoc('cotizaciones',cotId)); if(!cotDoc.exists()) return; const cot=cotDoc.data(); if(cot.facturada){ toast('Ya facturada','error'); return; } const facturaData={ numero:'FAC-'+Date.now(), cotizacionId:cotId, cliente:cot.cliente, clienteId:cot.clienteId, fecha:new Date().toISOString().slice(0,10), items:cot.items, subtotal:cot.subtotal, descuento:cot.descuento||0, iva:cot.iva||0, total:cot.total, eliminado:false, createdAt:serverTimestamp() }; await addDoc(tenantCol('facturas'),facturaData); await updateDoc(tenantDoc('cotizaciones',cotId),{facturada:true, estado:'Facturada'}); if(!cot.stockDescontado){ for(const item of cot.items){ const prodRef=tenantDoc('productos',item.prodId); const prodSnap=await getDoc(prodRef); if(prodSnap.exists()){ await updateDoc(prodRef,{stock:(prodSnap.data().stock||0)-item.cantidad}); } } await updateDoc(tenantDoc('cotizaciones',cotId),{stockDescontado:true}); } toast('Factura generada'); cargarCotizaciones(); cargarFacturas(); cargarDashboard(); };
