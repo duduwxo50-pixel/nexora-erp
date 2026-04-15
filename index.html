@@ -601,7 +601,10 @@ async function cargarCotizaciones(){
   const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc')));
   const tb=$('cot-tbody'); tb.innerHTML='';
   snap.forEach(d=>{ if(d.data().eliminado) return; const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>
-  <select onchange="window.cambiarEstadoCot('${d.id}', this.value)">
+  <select 
+    onchange="window.cambiarEstadoCot('${d.id}', this.value)"
+    ${c.facturada ? 'disabled' : ''}
+  >
     <option ${c.estado==='Borrador'?'selected':''}>Borrador</option>
     <option ${c.estado==='En espera'?'selected':''}>En espera</option>
     <option ${c.estado==='Aprobada'?'selected':''}>Aprobada</option>
