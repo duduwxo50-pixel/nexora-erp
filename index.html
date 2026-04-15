@@ -1092,20 +1092,23 @@ $('proveedor-form').addEventListener('submit',async e=>{
 
 // ============ COTIZACIONES ============
 async function cargarSelectClientes(selectId){
-  const snap=await getDocs(tenantCol('clientes'));
-  const sel = $(selectId) || $('cot-cliente-id');
-  sel.innerHTML='<option value="">-- Seleccionar cliente --</option>';
-  snap.forEach(d=>{
-    if(d.data().eliminado) return;
-    const c=d.data();
-    const opt=document.createElement('option');
-    opt.value=d.id; opt.textContent=c.nombre;
-    opt.dataset.email=c.email||''; opt.dataset.telefono=c.telefono||'';
-    opt.dataset.nit=c.nit||''; opt.dataset.ciudad=c.ciudad||'';
+  const snap = await getDocs(tenantCol('clientes'));
+  const sel = selectId ? document.getElementById(selectId) : document.getElementById('cot-cliente-id');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- Seleccionar cliente --</option>';
+  snap.forEach(d => {
+    if (d.data().eliminado) return;
+    const c = d.data();
+    const opt = document.createElement('option');
+    opt.value = d.id;
+    opt.textContent = c.nombre;
+    opt.dataset.email = c.email || '';
+    opt.dataset.telefono = c.telefono || '';
+    opt.dataset.nit = c.nit || '';
+    opt.dataset.ciudad = c.ciudad || '';
     sel.appendChild(opt);
   });
 }
-
 function actualizarTotalesCot(){
   const subtotal=cotItems.reduce((s,i)=>s+((i.precio-(i.precio*(i.descItem||0)/100))*i.cantidad),0);
   const descPorc=parseFloat($('cot-descuento').value)||0;
