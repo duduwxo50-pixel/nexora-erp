@@ -601,15 +601,16 @@ async function cargarCotizaciones(){
   const snap=await getDocs(query(tenantCol('cotizaciones'),orderBy('createdAt','desc')));
   const tb=$('cot-tbody'); tb.innerHTML='';
   snap.forEach(d=>{ if(d.data().eliminado) return; const c=d.data(); tb.innerHTML+=`<tr><td>${c.numero}</td><td>${c.cliente}</td><td>${c.fecha||''}</td><td>$${c.total}</td><td>
-  <select 
-    onchange="window.cambiarEstadoCot('${d.id}', this.value)"
-    ${c.facturada ? 'disabled' : ''}
-  >
-    <option ${c.estado==='Borrador'?'selected':''}>Borrador</option>
-    <option ${c.estado==='En espera'?'selected':''}>En espera</option>
-    <option ${c.estado==='Aprobada'?'selected':''}>Aprobada</option>
-    <option ${c.estado==='Cancelada'?'selected':''}>Cancelada</option>
-  </select>
+  ${c.facturada 
+    ? '<span class="badge success">Facturado 💲</span>' 
+    : `
+    <select onchange="window.cambiarEstadoCot('${d.id}', this.value)">
+      <option ${c.estado==='Borrador'?'selected':''}>Borrador</option>
+      <option ${c.estado==='En espera'?'selected':''}>En espera</option>
+      <option ${c.estado==='Aprobada'?'selected':''}>Aprobada</option>
+      <option ${c.estado==='Cancelada'?'selected':''}>Cancelada</option>
+    </select>
+  `}
 </td><td><button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button><button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')">🧾 Facturar</button><button class="btn-icon danger" onclick="window.deleteCotizacion('${d.id}','${esc(c.numero||'')}')">🗑️</button></td></tr>`; });
 }
 window.deleteCotizacion = async (id, numero)=>{ if(confirm(`¿Mover cotización "${numero}" a la papelera?`)){ await softDelete('cotizaciones', id, numero); cargarCotizaciones(); cargarDashboard(); } };
