@@ -971,7 +971,7 @@ function aplicarFiltrosInventario(){
   const docs=window._prodDocs.filter(d=>{
     const p=d.data();
     const matchBusq=!busq||(p.nombre||'').toLowerCase().includes(busq)||(p.referencia||'').toLowerCase().includes(busq)||(p.categoria||'').toLowerCase().includes(busq);
-    const matchStock=!stockFilt||(stockFilt==='bajo'?(p.stock||0)<=(p.stockMin||5)):(p.stock||0)>(p.stockMin||5);
+    const matchStock=!stockFilt||(stockFilt==='bajo'?((p.stock||0)<=(p.stockMin||5)):((p.stock||0)>(p.stockMin||5)));
     return matchBusq&&matchStock;
   });
   renderProductos(docs);
@@ -1092,23 +1092,20 @@ $('proveedor-form').addEventListener('submit',async e=>{
 
 // ============ COTIZACIONES ============
 async function cargarSelectClientes(selectId){
-  const snap = await getDocs(tenantCol('clientes'));
-  const sel = selectId ? document.getElementById(selectId) : document.getElementById('cot-cliente-id');
-  if (!sel) return;
-  sel.innerHTML = '<option value="">-- Seleccionar cliente --</option>';
-  snap.forEach(d => {
-    if (d.data().eliminado) return;
-    const c = d.data();
-    const opt = document.createElement('option');
-    opt.value = d.id;
-    opt.textContent = c.nombre;
-    opt.dataset.email = c.email || '';
-    opt.dataset.telefono = c.telefono || '';
-    opt.dataset.nit = c.nit || '';
-    opt.dataset.ciudad = c.ciudad || '';
+  const snap=await getDocs(tenantCol('clientes'));
+  const sel=$(selectId||'cot-cliente-id');
+  sel.innerHTML='<option value="">-- Seleccionar cliente --</option>';
+  snap.forEach(d=>{
+    if(d.data().eliminado) return;
+    const c=d.data();
+    const opt=document.createElement('option');
+    opt.value=d.id; opt.textContent=c.nombre;
+    opt.dataset.email=c.email||''; opt.dataset.telefono=c.telefono||'';
+    opt.dataset.nit=c.nit||''; opt.dataset.ciudad=c.ciudad||'';
     sel.appendChild(opt);
   });
 }
+
 function actualizarTotalesCot(){
   const subtotal=cotItems.reduce((s,i)=>s+((i.precio-(i.precio*(i.descItem||0)/100))*i.cantidad),0);
   const descPorc=parseFloat($('cot-descuento').value)||0;
@@ -1610,19 +1607,8 @@ function aplicarFiltrosCompras(){
 }
 function renderCompras(docs){
   const tb=$('compras-tbody'); tb.innerHTML='';
-  if(docs.length===0){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Sin resultados</td</tr>';return;}
-  docs.forEach(d=>{
-    const c=d.data();
-    tb.innerHTML+=`
-      <tr>
-        <td><strong>${esc(c.proveedorNombre||'—')}</strong><div style="font-size:11px;color:var(--muted)">${esc(c.numero||'')}</div></td>
-        <td>${esc(c.fecha||'—')}</td>
-        <td>${fmtMoney(c.total)}</td
-        <td><span class="badge badge-ok">${(c.items||[]).length} items</span></td>
-        <td><button class="btn-icon danger" onclick="window.deleteCompra('${d.id}','${esc(c.numero||'')}')">🗑️</button></td
-       </tr
-    `;
-  });
+  if(docs.length===0){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Sin resultados</td></tr>';return;}
+  docs.forEach(d=>{const c=d.data();tb.innerHTML+=`<tr><td><strong>${esc(c.proveedorNombre||'—')}</strong><div style="font-size:11px;color:var(--muted)">${esc(c.numero||'')}</div></td><td>${esc(c.fecha||'—')}</td><td>${fmtMoney(c.total)}</td><td><span class="badge badge-ok">${(c.items||[]).length} items</span></td><td><button class="btn-icon danger" onclick="window.deleteCompra('${d.id}','${esc(c.numero||'')}')">🗑️</button></td></tr>`;});
 }
 $('comp-search').addEventListener('input',aplicarFiltrosCompras);
 window.deleteCompra=async(id,num)=>{if(confirm(`¿Mover compra "${num}" a la papelera?`)){await softDelete('compras',id,num);cargarCompras();cargarInventario();}};
