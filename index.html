@@ -584,7 +584,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         </div>
         <div class="table-wrap">
           <table><thead><tr>
-            <th>N° Orden</th><th>Proveedor</th><th>Fecha</th><th>Items</th><th onclick="sortTable('compras-tbody',4)">Total ↕</th><th>Acciones</th>
+            <th>N° Orden</th><th>Proveedor</th><th>Fecha</th><th>Items</th><th onclick="sortTable('compras-tbody',4)">Total ↕</th><th>Estado</th><th>Acciones</th>
           </tr></thead><tbody id="compras-tbody"></tbody></table>
         </div>
       </div>
@@ -1892,6 +1892,7 @@ function renderFacturas(docs){
       <td>
         <button class="qa-btn" onclick="window.quickEstado('facturas','${d.id}','${esc(f.estado||'')}','fact')">🏷️ Estado</button>
         <button class="btn-icon" onclick="window.editFactura('${d.id}')">✏️</button>
+        <button class="btn-icon" onclick="window.imprimirFactura('${d.id}')" title="Descargar PDF">📄 PDF</button>
         <button class="btn-icon danger" onclick="window.deleteFact('${d.id}','${esc(f.numero||'')}')">🗑️</button>
       </td>
     </tr>`;
@@ -1976,7 +1977,23 @@ function aplicarFiltrosCompras(){
   });
   const tb=$('compras-tbody');tb.innerHTML='';
   if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="6">Sin resultados</td></tr>';return;}
-  docs.forEach(d=>{const c=d.data();tb.innerHTML+=`<tr><td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(c.numero||'—')}</strong></td><td>${esc(c.proveedorNombre||'—')}</td><td>${esc(c.fecha||'—')}</td><td>${(c.items||[]).length} items</td><td><strong>${fmtM(c.total)}</strong></td><td><button class="btn-icon" onclick="window.editCompra('${d.id}')">✏️</button><button class="btn-icon danger" onclick="window.deleteComp('${d.id}','${esc(c.numero||'')}')">🗑️</button></td></tr>`;});
+  docs.forEach(d=>{const c=d.data();
+    const estadoOC=c.estadoOC||'Pendiente';
+    const badgeOC=estadoOC==='Recibida'?'badge-aprobado':'badge-espera';
+    tb.innerHTML+=`<tr>
+      <td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(c.numero||'—')}</strong></td>
+      <td>${esc(c.proveedorNombre||'—')}</td>
+      <td>${esc(c.fecha||'—')}</td>
+      <td>${(c.items||[]).length} items</td>
+      <td><strong>${fmtM(c.total)}</strong></td>
+      <td><span class="badge ${badgeOC}">${estadoOC}</span></td>
+      <td>
+        <button class="btn-icon" onclick="window.imprimirOrdenCompra('${d.id}')" title="PDF Orden de Compra">📄 OC</button>
+        ${estadoOC!=='Recibida'?`<button class="btn-icon restore" onclick="window.recibirOrdenCompra('${d.id}','${esc(c.numero||'')}')">✅ Recibir</button>`:'<span style="color:var(--green);font-size:12px">✓ Recibida</span>'}
+        <button class="btn-icon" onclick="window.editCompra('${d.id}')">✏️</button>
+        <button class="btn-icon danger" onclick="window.deleteComp('${d.id}','${esc(c.numero||'')}')">🗑️</button>
+      </td>
+    </tr>`;})
 }
 [$('comp-search'),$('comp-filter-prov'),$('comp-filter-desde'),$('comp-filter-hasta')].forEach(el=>{if(el)el.addEventListener('change',aplicarFiltrosCompras);el?.addEventListener('input',aplicarFiltrosCompras);});
 window.deleteComp=async(id,num)=>{if(confirm(`¿Mover compra "${num}" a la papelera?`)){await softDelete('compras',id,num);cargarCompras();}};
@@ -2283,14 +2300,21 @@ $('compra-form').addEventListener('submit',async e=>{
   const total=compraItems.reduce((s,i)=>s+(i.precio*i.cantidad),0);
   const data={proveedorId:pid,proveedorNombre:pnombre,numero:'OC-'+$('compra-numero').value,fecha:$('compra-fecha').value,notas:$('compra-notas').value,items:compraItems,total,eliminado:false,updatedAt:serverTimestamp()};
   if(window._editingCompraId){
-    // Reverse old stock, apply new
-    for(const item of(window._editingCompraStockOriginal||[])){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:Math.max(0,(ps.data().stock||0)-item.cantidad)});}
+    // Reverse old stock, apply new (only if not soloOrden)
+    const prevDoc=await getDoc(tdoc('compras',window._editingCompraId));
+    const prevData=prevDoc.data()||{};
+    if(!prevData.soloOrden){
+      for(const item of(window._editingCompraStockOriginal||[])){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:Math.max(0,(ps.data().stock||0)-item.cantidad)});}
+    }
     await updateDoc(tdoc('compras',window._editingCompraId),data);
-    for(const item of compraItems){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:(ps.data().stock||0)+item.cantidad});}
+    if(!prevData.soloOrden){
+      for(const item of compraItems){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:(ps.data().stock||0)+item.cantidad});}
+    }
     window._editingCompraId=null;window._editingCompraStockOriginal=null;
-    toast('Compra actualizada y stock recalculado ✅');
+    toast('Compra actualizada ✅');
   } else {
     data.createdAt=serverTimestamp();
+    data.estadoOC='Recibida'; // Compra manual = ya recibida
     await addDoc(col('compras'),data);
     for(const item of compraItems){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:(ps.data().stock||0)+item.cantidad});}
     await addDoc(col('movimientos'),{tipo:'egreso',concepto:`Compra ${data.numero} — ${pnombre}`,monto:total,fecha:data.fecha,categoria:'Compras',auto:true,eliminado:false,createdAt:serverTimestamp()});
@@ -2301,9 +2325,8 @@ $('compra-form').addEventListener('submit',async e=>{
 
 // (compras edit handled by editCompra above)
 
-// ══════════ SUGERENCIA → PEDIDO AUTOMÁTICO ══════════
+// ══════════ SUGERENCIA → PEDIDO AUTOMÁTICO (solo genera OC, NO toca stock) ══════════
 window.crearPedidoDesdesSugerencia=async function(nombre,cantidadSugerida,prodId){
-  // Find best proveedor (from last purchase of this product)
   const comprasSnap=await getDocs(query(col('compras'),orderBy('createdAt','desc')));
   let mejorProveedorId='',mejorProveedorNombre='';
   for(const d of comprasSnap.docs){
@@ -2311,22 +2334,97 @@ window.crearPedidoDesdesSugerencia=async function(nombre,cantidadSugerida,prodId
     const itemMatch=(d.data().items||[]).find(i=>i.prodId===prodId);
     if(itemMatch){mejorProveedorId=d.data().proveedorId;mejorProveedorNombre=d.data().proveedorNombre;break;}
   }
-  // Get product precio costo
   const prodDoc=await getDoc(tdoc('productos',prodId));
   const precioCosto=prodDoc.exists()?prodDoc.data().costo||0:0;
-  // Open compra modal pre-filled
-  const[provSnap,prodSnap]=await Promise.all([getDocs(col('proveedores')),getDocs(col('productos'))]);
-  const ps=$('compra-proveedor-id');ps.innerHTML='<option value="">-- Seleccionar --</option>';
-  provSnap.forEach(doc=>{if(!doc.data().eliminado){const o=document.createElement('option');o.value=doc.id;o.textContent=doc.data().nombre;if(doc.id===mejorProveedorId)o.selected=true;ps.appendChild(o);}});
-  compraProds=[];prodSnap.forEach(doc=>{if(!doc.data().eliminado)compraProds.push({id:doc.id,...doc.data()});});
-  $('compra-fecha').value=new Date().toISOString().slice(0,10);
-  $('compra-numero').value=await getNextConsec('compras');
-  $('compra-notas').value=`Pedido automático generado desde sugerencia inteligente para "${nombre}"`;
-  compraItems=[{prodId,nombre,cantidad:cantidadSugerida,precio:precioCosto,precioSugerido:prodDoc.exists()?prodDoc.data().precio||0:0}];
-  window._editingCompraId=null;
-  renderCompraItems();
-  $('compra-modal').classList.add('show');
-  toast(`🛒 Pedido pre-llenado para ${nombre} — ${cantidadSugerida} uds`,'info');
+  // Mostrar modal de confirmación rápida
+  const existing=document.getElementById('oc-confirm-modal');if(existing)existing.remove();
+  const m=document.createElement('div');
+  m.id='oc-confirm-modal';
+  m.className='modal-backdrop show';
+  m.innerHTML=`<div class="modal" style="max-width:460px">
+    <div class="modal-header"><h3>🛒 Generar Orden de Compra</h3><button class="modal-close" onclick="document.getElementById('oc-confirm-modal').remove()">✕</button></div>
+    <div class="modal-body">
+      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Producto sugerido</div>
+        <div style="font-size:16px;font-weight:800">${esc(nombre)}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">Cantidad sugerida: <strong style="color:var(--accent2)">${cantidadSugerida} uds</strong></div>
+      </div>
+      <div class="form-group"><label>Proveedor</label><select id="oc-prov-sel" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:13.5px"></select></div>
+      <div class="form-row">
+        <div class="form-group"><label>Cantidad</label><input id="oc-cant" type="number" value="${cantidadSugerida}" min="1" style="width:100%;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text)"></div>
+        <div class="form-group"><label>Precio costo unit.</label><input id="oc-precio" type="number" step="0.01" value="${precioCosto}" placeholder="0.00" style="width:100%;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text)"></div>
+      </div>
+      <div class="form-group"><label>Notas</label><input id="oc-notas" value="Pedido generado desde sugerencia inteligente" style="width:100%;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text)"></div>
+      <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px;font-size:12px;color:var(--yellow);margin-top:4px">
+        ⚠️ <strong>El inventario NO se actualiza ahora.</strong> Cuando recibas el pedido, presiona "✅ Recibir" en la lista de Compras para actualizar el stock automáticamente.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" onclick="document.getElementById('oc-confirm-modal').remove()">Cancelar</button>
+      <button type="button" class="btn-action" onclick="window._confirmarOC('${prodId}','${esc(nombre)}')">📋 Generar OC</button>
+      <button type="button" class="btn-action" style="background:linear-gradient(135deg,var(--green),#059669)" onclick="window._confirmarOCyPDF('${prodId}','${esc(nombre)}')">📄 Generar OC + PDF</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+  m.addEventListener('click',e=>{if(e.target===m)m.remove();});
+  // Poblar proveedores
+  const provSnap=await getDocs(col('proveedores'));
+  const sel=document.getElementById('oc-prov-sel');
+  sel.innerHTML='<option value="">-- Seleccionar proveedor --</option>';
+  provSnap.forEach(d=>{if(!d.data().eliminado){const o=document.createElement('option');o.value=d.id;o.textContent=d.data().nombre;if(d.id===mejorProveedorId)o.selected=true;sel.appendChild(o);}});
+};
+
+window._confirmarOC=async function(prodId,nombre,abrirPDF=false){
+  const provSel=document.getElementById('oc-prov-sel');
+  const provId=provSel?.value||'';
+  const provNombre=provSel?.options[provSel.selectedIndex]?.text||'Sin proveedor';
+  const cantidad=parseInt(document.getElementById('oc-cant')?.value)||1;
+  const precio=parseFloat(document.getElementById('oc-precio')?.value)||0;
+  const notas=document.getElementById('oc-notas')?.value||'';
+  const consec=await getNextConsec('compras');
+  const numero='OC-'+consec;
+  const data={
+    proveedorId:provId,proveedorNombre:provNombre,
+    numero,
+    fecha:new Date().toISOString().slice(0,10),
+    notas,
+    items:[{prodId,nombre,cantidad,precio,precioSugerido:0}],
+    total:cantidad*precio,
+    estadoOC:'Pendiente',
+    soloOrden:true,
+    eliminado:false,
+    createdAt:serverTimestamp()
+  };
+  const ref=await addDoc(col('compras'),data);
+  document.getElementById('oc-confirm-modal')?.remove();
+  toast(`Orden de Compra ${numero} generada ✅`,'success');
+  if(abrirPDF)setTimeout(()=>window.imprimirOrdenCompra(ref.id),400);
+  cargarCompras?.();
+};
+window._confirmarOCyPDF=function(prodId,nombre){window._confirmarOC(prodId,nombre,true);};
+
+// ══════════ RECIBIR ORDEN DE COMPRA → actualiza inventario ══════════
+window.recibirOrdenCompra=async function(compraId,numero){
+  if(!confirm(`¿Confirmar recepción de ${numero}? Se actualizará el inventario automáticamente.`))return;
+  const snap=await getDoc(tdoc('compras',compraId));
+  if(!snap.exists())return;
+  const c=snap.data();
+  for(const item of(c.items||[])){
+    const pr=tdoc('productos',item.prodId);
+    const ps=await getDoc(pr);
+    if(ps.exists()){
+      const nuevoStock=(ps.data().stock||0)+item.cantidad;
+      await updateDoc(pr,{stock:nuevoStock,updatedAt:serverTimestamp()});
+      await addDoc(col('ajustes_inventario'),{prodId:item.prodId,stockAntes:ps.data().stock||0,stockDespues:nuevoStock,diferencia:item.cantidad,motivo:`Recepción OC ${numero}`,fecha:new Date().toISOString().slice(0,10),createdAt:serverTimestamp()});
+    }
+  }
+  await updateDoc(tdoc('compras',compraId),{estadoOC:'Recibida',fechaRecepcion:new Date().toISOString().slice(0,10),updatedAt:serverTimestamp()});
+  // Registrar egreso contable si no existe
+  if(c.soloOrden){
+    await addDoc(col('movimientos'),{tipo:'egreso',concepto:`Compra ${numero} — ${c.proveedorNombre}`,monto:c.total||0,fecha:new Date().toISOString().slice(0,10),categoria:'Compras',auto:true,eliminado:false,createdAt:serverTimestamp()});
+  }
+  toast(`✅ ${numero} recibida. Inventario actualizado.`);
+  cargarCompras();cargarInventario?.();
 };
 
 // ══════════ CHART TYPE TOGGLE (Dashboard) ══════════
@@ -2355,4 +2453,177 @@ window.restaurar=async(colName,docId)=>{
 document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
 document.querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click',()=>b.closest('.modal-backdrop').classList.remove('show')));
 $('periodo-ventas').addEventListener('change',()=>window.actualizarResumenVentas());
+
+// ══════════ PDF FACTURAS ══════════
+window.imprimirFactura=async function(factId){
+  const snap=await getDoc(tdoc('facturas',factId));
+  if(!snap.exists())return;
+  const f=snap.data();
+  // Get biz info
+  const biz=await getDoc(doc(db,'businesses',currentTenant));
+  const bizName=biz.exists()?biz.data().name:'Mi Negocio';
+  // Get cliente info
+  let cliInfo={nit:'',email:'',telefono:'',ciudad:'',direccion:''};
+  if(f.clienteId){const cs=await getDoc(tdoc('clientes',f.clienteId));if(cs.exists())cliInfo=cs.data();}
+  const items=f.items||[];
+  const subtotal=f.subtotal||items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  const descMonto=f.descuentoMonto||(subtotal*(f.descuento||0)/100);
+  const base=subtotal-descMonto;
+  const ivaMonto=f.ivaMonto||(base*(f.iva||0)/100);
+  const total=f.total||base+ivaMonto;
+  const estadoColor={Pendiente:'#f59e0b',Pagada:'#10b981',Anulada:'#f43f5e'}[f.estado]||'#64748b';
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Factura ${esc(f.numero||'')}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;font-size:13px;}
+    .page{max-width:780px;margin:0 auto;padding:40px 44px;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid #e2e8f0;}
+    .brand{font-size:26px;font-weight:900;color:#1e40af;letter-spacing:-1px;}
+    .brand-sub{font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+    .doc-title{text-align:right;}
+    .doc-title h1{font-size:28px;font-weight:900;color:#1e293b;letter-spacing:-1px;}
+    .doc-num{font-size:13px;color:#64748b;margin-top:4px;font-family:monospace;}
+    .estado-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-top:8px;color:#fff;background:${estadoColor};}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
+    .info-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;}
+    .info-box h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;}
+    .info-box p{font-size:13px;color:#334155;margin-bottom:3px;}
+    .info-box strong{color:#1e293b;}
+    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+    thead tr{background:#1e40af;}
+    thead th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;}
+    tbody tr:nth-child(even){background:#f8fafc;}
+    td{padding:10px 14px;font-size:13px;border-bottom:1px solid #e2e8f0;}
+    .totales{display:flex;justify-content:flex-end;margin-bottom:28px;}
+    .totales-box{min-width:260px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+    .tot-row{display:flex;justify-content:space-between;padding:9px 16px;border-bottom:1px solid #e2e8f0;}
+    .tot-row:last-child{background:#1e40af;color:#fff;font-size:16px;font-weight:900;border-bottom:none;}
+    .tot-row.disc{color:#ef4444;}
+    .tot-row.tax{color:#10b981;}
+    .notas-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:24px;}
+    .notas-box h4{font-size:11px;font-weight:800;color:#92400e;margin-bottom:6px;text-transform:uppercase;}
+    .footer{text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:18px;margin-top:24px;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body><div class="page">
+  <div class="header">
+    <div><div class="brand">${esc(bizName)}</div><div class="brand-sub">Sistema de Facturación</div></div>
+    <div class="doc-title"><h1>FACTURA</h1><div class="doc-num">${esc(f.numero||'—')}</div><div class="estado-badge">${esc(f.estado||'—')}</div></div>
+  </div>
+  <div class="info-grid">
+    <div class="info-box"><h4>📋 Factura</h4>
+      <p>Fecha: <strong>${esc(f.fecha||'—')}</strong></p>
+      ${f.vencimiento?`<p>Vence: <strong>${esc(f.vencimiento)}</strong></p>`:''}
+      <p>N°: <strong style="font-family:monospace">${esc(f.numero||'—')}</strong></p>
+    </div>
+    <div class="info-box"><h4>👤 Cliente</h4>
+      <p><strong>${esc(f.cliente||'—')}</strong></p>
+      ${cliInfo.nit?`<p>NIT: ${esc(cliInfo.nit)}</p>`:''}
+      ${cliInfo.email?`<p>✉ ${esc(cliInfo.email)}</p>`:''}
+      ${cliInfo.telefono?`<p>📞 ${esc(cliInfo.telefono)}</p>`:''}
+      ${cliInfo.ciudad?`<p>📍 ${esc(cliInfo.ciudad)}</p>`:''}
+    </div>
+  </div>
+  <table><thead><tr><th>#</th><th>Producto</th><th>Cant.</th><th>Precio unit.</th>${f.descuento||items.some(i=>i.descItem)?'<th>Desc.%</th>':''}<th>Subtotal</th></tr></thead><tbody>
+  ${items.map((it,idx)=>{const sub=(it.precio-(it.precio*(it.descItem||0)/100))*it.cantidad;return`<tr><td>${idx+1}</td><td><strong>${esc(it.nombre)}</strong>${it.descripcion?`<br><span style="color:#64748b;font-size:11px">${esc(it.descripcion)}</span>`:''}</td><td>${it.cantidad}</td><td>$${(it.precio||0).toLocaleString('es-CO')}</td>${f.descuento||items.some(i=>i.descItem)?`<td>${it.descItem||0}%</td>`:''}<td><strong>$${sub.toLocaleString('es-CO',{maximumFractionDigits:0})}</strong></td></tr>`;}).join('')}
+  </tbody></table>
+  <div class="totales"><div class="totales-box">
+    <div class="tot-row"><span>Subtotal</span><span>$${subtotal.toLocaleString('es-CO',{maximumFractionDigits:0})}</span></div>
+    ${descMonto>0?`<div class="tot-row disc"><span>Descuento ${f.descuento||0}%</span><span>−$${descMonto.toLocaleString('es-CO',{maximumFractionDigits:0})}</span></div>`:''}
+    ${ivaMonto>0?`<div class="tot-row tax"><span>IVA ${f.iva||0}%</span><span>+$${ivaMonto.toLocaleString('es-CO',{maximumFractionDigits:0})}</span></div>`:''}
+    <div class="tot-row"><span>TOTAL</span><span>$${total.toLocaleString('es-CO',{maximumFractionDigits:0})}</span></div>
+  </div></div>
+  ${f.notas?`<div class="notas-box"><h4>📝 Notas</h4><p>${esc(f.notas)}</p></div>`:''}
+  <div class="footer">Generado por Nexora ERP · ${new Date().toLocaleDateString('es-CO')} · ${esc(bizName)}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+};
+
+// ══════════ PDF ORDEN DE COMPRA ══════════
+window.imprimirOrdenCompra=async function(compraId){
+  const snap=await getDoc(tdoc('compras',compraId));
+  if(!snap.exists())return;
+  const c=snap.data();
+  const biz=await getDoc(doc(db,'businesses',currentTenant));
+  const bizName=biz.exists()?biz.data().name:'Mi Negocio';
+  // Get proveedor info
+  let provInfo={nit:'',email:'',telefono:'',ciudad:'',contacto:''};
+  if(c.proveedorId){const ps=await getDoc(tdoc('proveedores',c.proveedorId));if(ps.exists())provInfo=ps.data();}
+  const items=c.items||[];
+  const total=c.total||items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  const estadoOC=c.estadoOC||'Pendiente';
+  const estadoColor=estadoOC==='Recibida'?'#10b981':'#f59e0b';
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Orden de Compra ${esc(c.numero||'')}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;font-size:13px;}
+    .page{max-width:780px;margin:0 auto;padding:40px 44px;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid #e2e8f0;}
+    .brand{font-size:26px;font-weight:900;color:#1e40af;letter-spacing:-1px;}
+    .brand-sub{font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+    .doc-title{text-align:right;}
+    .doc-title h1{font-size:24px;font-weight:900;color:#1e293b;letter-spacing:-1px;}
+    .doc-num{font-size:13px;color:#64748b;margin-top:4px;font-family:monospace;font-size:15px;font-weight:800;}
+    .estado-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-top:8px;color:#fff;background:${estadoColor};}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
+    .info-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;}
+    .info-box h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;}
+    .info-box p{font-size:13px;color:#334155;margin-bottom:3px;}
+    .info-box strong{color:#1e293b;}
+    .alerta{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:20px;font-size:12px;color:#92400e;}
+    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+    thead tr{background:#1e40af;}
+    thead th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;}
+    tbody tr:nth-child(even){background:#f8fafc;}
+    td{padding:10px 14px;font-size:13px;border-bottom:1px solid #e2e8f0;}
+    .totales{display:flex;justify-content:flex-end;margin-bottom:28px;}
+    .totales-box{min-width:240px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+    .tot-row{display:flex;justify-content:space-between;padding:9px 16px;border-bottom:1px solid #e2e8f0;}
+    .tot-row:last-child{background:#1e40af;color:#fff;font-size:16px;font-weight:900;border-bottom:none;}
+    .firma-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px;}
+    .firma-box{border-top:1px dashed #cbd5e1;padding-top:10px;text-align:center;font-size:11px;color:#94a3b8;}
+    .footer{text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:18px;margin-top:24px;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body><div class="page">
+  <div class="header">
+    <div><div class="brand">${esc(bizName)}</div><div class="brand-sub">Orden de Compra</div></div>
+    <div class="doc-title"><h1>ORDEN DE COMPRA</h1><div class="doc-num">${esc(c.numero||'—')}</div><div class="estado-badge">${estadoOC}</div></div>
+  </div>
+  ${estadoOC==='Pendiente'?`<div class="alerta">⚠️ <strong>Pendiente de recepción.</strong> El inventario se actualizará cuando el pedido sea marcado como recibido en el sistema.</div>`:''}
+  <div class="info-grid">
+    <div class="info-box"><h4>🏢 Empresa compradora</h4>
+      <p><strong>${esc(bizName)}</strong></p>
+      <p>Fecha emisión: <strong>${esc(c.fecha||'—')}</strong></p>
+      <p>OC N°: <strong style="font-family:monospace">${esc(c.numero||'—')}</strong></p>
+      ${c.fechaRecepcion?`<p>Fecha recepción: <strong>${esc(c.fechaRecepcion)}</strong></p>`:''}
+    </div>
+    <div class="info-box"><h4>🚚 Proveedor</h4>
+      <p><strong>${esc(c.proveedorNombre||'—')}</strong></p>
+      ${provInfo.nit?`<p>NIT: ${esc(provInfo.nit)}</p>`:''}
+      ${provInfo.contacto?`<p>Contacto: ${esc(provInfo.contacto)}</p>`:''}
+      ${provInfo.email?`<p>✉ ${esc(provInfo.email)}</p>`:''}
+      ${provInfo.telefono?`<p>📞 ${esc(provInfo.telefono)}</p>`:''}
+      ${provInfo.ciudad?`<p>📍 ${esc(provInfo.ciudad)}</p>`:''}
+    </div>
+  </div>
+  <table><thead><tr><th>#</th><th>Producto</th><th>Cantidad</th><th>Precio unit. (costo)</th><th>Subtotal</th></tr></thead><tbody>
+  ${items.map((it,idx)=>{const sub=it.precio*it.cantidad;return`<tr><td>${idx+1}</td><td><strong>${esc(it.nombre)}</strong></td><td>${it.cantidad} uds</td><td>$${(it.precio||0).toLocaleString('es-CO')}</td><td><strong>$${sub.toLocaleString('es-CO',{maximumFractionDigits:0})}</strong></td></tr>`;}).join('')}
+  </tbody></table>
+  <div class="totales"><div class="totales-box">
+    <div class="tot-row"><span>TOTAL ORDEN</span><span>$${total.toLocaleString('es-CO',{maximumFractionDigits:0})}</span></div>
+  </div></div>
+  ${c.notas?`<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px;margin-bottom:24px"><strong style="font-size:11px;text-transform:uppercase;color:#0369a1">📝 Notas</strong><p style="margin-top:6px">${esc(c.notas)}</p></div>`:''}
+  <div class="firma-grid">
+    <div class="firma-box">Elaborado por<br><br><strong>${esc(currentUser?.displayName||currentUser?.email||'—')}</strong></div>
+    <div class="firma-box">Autorizado por<br><br>&nbsp;</div>
+  </div>
+  <div class="footer">Nexora ERP · Orden generada el ${new Date().toLocaleDateString('es-CO')} · ${esc(bizName)}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+};
 </script>
