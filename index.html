@@ -1272,6 +1272,82 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
+<!-- PORTAL CLIENTE (pantalla pública de pedidos) -->
+<div id="portal-screen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#f8faff,#eff6ff);font-family:'DM Sans',system-ui,sans-serif;">
+  <div class="portal-header">
+    <div>
+      <div class="portal-logo" id="portal-header-logo">🛍️ Portal de Pedidos</div>
+      <div class="portal-biz" id="portal-header-biz">Catálogo de productos</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <input class="portal-search" id="portal-search-input" placeholder="🔍 Buscar producto..." oninput="filtrarPortal(this.value)">
+    </div>
+  </div>
+  <div id="portal-welcome-msg" style="text-align:center;padding:18px 32px 0;font-size:14px;color:#64748b;font-weight:500"></div>
+  <div class="portal-grid" id="portal-grid">
+    <div style="grid-column:1/-1;text-align:center;padding:60px;color:#94a3b8">
+      <div style="font-size:48px;margin-bottom:12px">⏳</div>
+      <div style="font-weight:700">Cargando catálogo...</div>
+    </div>
+  </div>
+  <!-- Botón carrito flotante -->
+  <button class="portal-cart" onclick="toggleCart()" style="position:relative">
+    🛒
+    <span class="portal-cart-badge" id="portal-cart-count">0</span>
+  </button>
+  <!-- Panel carrito -->
+  <div class="portal-cart-panel" id="portal-cart-panel">
+    <div class="portal-cart-header">
+      <div style="font-size:16px;font-weight:800">🛒 Tu pedido</div>
+      <button onclick="toggleCart()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div class="portal-cart-items" id="portal-cart-items">
+      <div style="text-align:center;padding:30px;color:#94a3b8">Tu pedido está vacío</div>
+    </div>
+    <div class="portal-cart-footer">
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;margin-bottom:14px">
+        <span>Total</span><span style="color:#2563eb" id="portal-cart-total">$0</span>
+      </div>
+    </div>
+    <div class="portal-form">
+      <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:12px">📋 Datos para el pedido</div>
+      <input class="portal-input" id="portal-nombre-cliente" placeholder="Tu nombre completo *" required>
+      <input class="portal-input" id="portal-telefono-cliente" placeholder="Teléfono de contacto *" required>
+      <input class="portal-input" id="portal-email-cliente" placeholder="Email (opcional)" type="email">
+      <textarea class="portal-input" id="portal-notas-pedido" placeholder="Notas o instrucciones especiales..." rows="2" style="resize:vertical"></textarea>
+      <button class="portal-submit" onclick="enviarPedido()">✅ Enviar pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- PORTAL CONFIG MODAL (solo admin) -->
+<div class="modal-backdrop" id="portal-config-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header"><h3>⚙️ Configurar Portal de Pedidos</h3><button class="modal-close" onclick="document.getElementById('portal-config-modal').classList.remove('show')">✕</button></div>
+    <div class="modal-body">
+      <div class="info-box">El link del portal permite a tus clientes hacer pedidos directamente sin acceder al ERP.</div>
+      <div class="form-group"><label>Nombre del negocio en el portal</label><input id="portal-biz-name" placeholder="Ej: Ferretería El Campeón"></div>
+      <div class="form-group"><label>Mensaje de bienvenida</label><input id="portal-welcome" placeholder="Bienvenido a nuestro catálogo de productos"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Color principal</label><input id="portal-color" type="color" value="#2563eb" style="height:42px;cursor:pointer"></div>
+        <div class="form-group"><label>Mostrar precios</label>
+          <select id="portal-show-prices">
+            <option value="si">✅ Sí, mostrar precios</option>
+            <option value="no">🚫 No mostrar precios</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Productos activos en el portal</label>
+        <div id="portal-productos-toggle" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:10px"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('portal-config-modal').classList.remove('show')">Cancelar</button>
+      <button class="btn-save" onclick="guardarConfigPortal()">💾 Guardar configuración</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="global-toast" class="toast"></div>
 <script type="module">
@@ -1304,6 +1380,8 @@ window.sortTable=function(tbId,col){const tb=$(tbId);const rows=Array.from(tb.qu
 
 // ── AUTH ──
 onAuthStateChanged(auth,async user=>{
+  // Si la URL tiene ?portal=xxx, este es el link del cliente — no mostrar el ERP
+  if(new URLSearchParams(window.location.search).get('portal')) return;
   if(user){
     currentUser=user;
     let ud=await getDoc(doc(db,'users',user.uid));
@@ -1323,8 +1401,11 @@ onAuthStateChanged(auth,async user=>{
     window.loadModule('dashboard');
     actualizarBadgePapelera();
   } else {
-    $('auth-screen').style.display='flex';
-    $('app-screen').style.display='none';
+    // Solo mostrar login si NO estamos en modo portal del cliente
+    if(!new URLSearchParams(window.location.search).get('portal')){
+      $('auth-screen').style.display='flex';
+      $('app-screen').style.display='none';
+    }
   }
 });
 $('btn-login').addEventListener('click',async()=>{try{await signInWithEmailAndPassword(auth,$('login-email').value,$('login-pass').value);}catch(e){toast('Error: '+e.message,'error');}});
@@ -3221,12 +3302,15 @@ window.abrirPortal=async function(tenantId){
   let cfg={bizName:'Portal de Pedidos',welcome:'Bienvenido a nuestro catálogo',color:'#2563eb',showPrices:'si',activosProdIds:[]};
   try{const cfgDoc=await getDoc(doc(db,'businesses',tenantId,'config','portal'));if(cfgDoc.exists())Object.assign(cfg,cfgDoc.data());}catch(e){}
   Object.assign(portalConfig,cfg);
-  $x('portal-header-logo').textContent='🛍️ '+cfg.bizName;
-  $x('portal-header-biz').textContent='Catálogo de productos';
-  $x('portal-welcome-msg').textContent=cfg.welcome;
-  $x('portal-screen').style.display='block';
-  document.getElementById('auth-screen')&&($('auth-screen').style.display='none');
-  document.getElementById('app-screen')&&($('app-screen').style.display='none');
+  // Actualizar textos del portal
+  const hLogo=$x('portal-header-logo');if(hLogo)hLogo.textContent='🛍️ '+cfg.bizName;
+  const hBiz=$x('portal-header-biz');if(hBiz)hBiz.textContent='Catálogo de productos';
+  const wMsg=$x('portal-welcome-msg');if(wMsg)wMsg.textContent=cfg.welcome;
+  // Ocultar ERP, mostrar solo portal
+  const authEl=document.getElementById('auth-screen');if(authEl)authEl.style.display='none';
+  const appEl=document.getElementById('app-screen');if(appEl)appEl.style.display='none';
+  const portalEl=$x('portal-screen');if(portalEl)portalEl.style.display='block';
+  // Cargar productos
   const snap=await getDocs(collection(db,'businesses',tenantId,'productos'));
   portalProductos=snap.docs.filter(d=>!d.data().eliminado&&(d.data().stock||0)>0).map(d=>({id:d.id,...d.data()}));
   renderPortal(portalProductos);
@@ -3280,7 +3364,15 @@ function renderCarrito(){
 }
 
 window.toggleCart=function(){$x('portal-cart-panel').classList.toggle('open');};
-window.cerrarPortal=function(){$x('portal-screen').style.display='none';document.getElementById('app-screen')&&($x('app-screen').style.display='flex');};
+window.cerrarPortal=function(){
+  // Si estamos en modo portal (link del cliente), no redirigir al ERP — solo recargar la página
+  if(new URLSearchParams(window.location.search).get('portal')){
+    window.location.reload();
+    return;
+  }
+  $x('portal-screen').style.display='none';
+  document.getElementById('app-screen')&&($x('app-screen').style.display='flex');
+};
 
 window.enviarPedido=async function(){
   const nombre=$x('portal-nombre-cliente')?.value.trim();const tel=$x('portal-telefono-cliente')?.value.trim();
@@ -3309,6 +3401,10 @@ window.enviarPedido=async function(){
   const params=new URLSearchParams(window.location.search);
   const portalTid=params.get('portal');
   if(portalTid){
+    // Modo cliente: ocultar todo el ERP desde el inicio
+    window._portalMode=true;
+    document.getElementById('auth-screen')&&(document.getElementById('auth-screen').style.display='none');
+    document.getElementById('app-screen')&&(document.getElementById('app-screen').style.display='none');
     const {initializeApp,getApps}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
     if(!getApps().length)initializeApp({apiKey:"AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",authDomain:"nexora-erp-2b417.firebaseapp.com",projectId:"nexora-erp-2b417",storageBucket:"nexora-erp-2b417.firebasestorage.app",messagingSenderId:"803467842564",appId:"1:803467842564:web:ceee51faad6dbae218d151"});
     await window.abrirPortal(portalTid);
