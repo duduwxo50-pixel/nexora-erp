@@ -349,6 +349,63 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .drill-list li{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .drill-list li:last-child{border-bottom:none;}
 
+
+/* ── IMPORT/EXPORT ── */
+.import-zone{border:2px dashed rgba(37,99,235,.35);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(37,99,235,.04);}
+.import-zone:hover,.import-zone.drag-over{border-color:var(--accent);background:rgba(37,99,235,.09);}
+.import-zone .iz-icon{font-size:36px;margin-bottom:10px;}
+.import-zone h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+.import-zone p{font-size:12px;color:var(--muted);}
+.import-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:14px;}
+.import-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.import-tab{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);transition:all .2s;}
+.import-tab.active{background:rgba(37,99,235,.15);border-color:rgba(37,99,235,.3);color:var(--accent2);}
+.import-preview{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;max-height:280px;overflow-y:auto;}
+.import-row-ok{color:var(--green);font-size:12px;padding:3px 0;border-bottom:1px solid var(--border);}
+.import-row-err{color:var(--red);font-size:12px;padding:3px 0;border-bottom:1px solid var(--border);}
+.progress-import{background:rgba(255,255,255,.07);border-radius:6px;height:10px;overflow:hidden;margin:10px 0;}
+.progress-import-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s;}
+/* ── PEDIDOS CLIENTE ── */
+.pedidos-badge{position:absolute;right:10px;background:var(--orange);color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;display:none;}
+.pedidos-badge.show{display:block;}
+.pedido-card{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.22);border-left:3px solid var(--orange);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.pedido-card.nuevo{animation:pulse-orange 2s ease infinite;}
+@keyframes pulse-orange{0%,100%{border-color:rgba(249,115,22,.22)}50%{border-color:rgba(249,115,22,.6);box-shadow:0 0 12px rgba(249,115,22,.15);}}
+.pedido-card.visto{border-left-color:var(--muted);background:rgba(255,255,255,.02);}
+/* ── PORTAL CLIENTE ── */
+#portal-screen{display:none;min-height:100vh;background:linear-gradient(135deg,#f8faff,#eff6ff);font-family:var(--font);}
+.portal-header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;}
+.portal-logo{font-size:20px;font-weight:900;letter-spacing:-1px;}
+.portal-biz{font-size:13px;opacity:.8;}
+.portal-search{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:9px 16px;color:#fff;font-size:13px;width:240px;}
+.portal-search::placeholder{color:rgba(255,255,255,.6);}
+.portal-search:focus{outline:none;background:rgba(255,255,255,.2);}
+.portal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding:24px 32px;}
+.portal-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;transition:all .2s;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.portal-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(37,99,235,.15);border-color:#93c5fd;}
+.portal-card-img{width:100%;height:140px;object-fit:cover;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:40px;}
+.portal-card-body{padding:14px;}
+.portal-card-name{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;}
+.portal-card-desc{font-size:11px;color:#64748b;margin-bottom:8px;line-height:1.4;}
+.portal-card-price{font-size:18px;font-weight:900;color:#2563eb;}
+.portal-card-stock{font-size:11px;font-weight:600;margin-top:4px;}
+.portal-add-btn{width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;color:#fff;padding:9px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;margin-top:10px;transition:all .2s;}
+.portal-add-btn:hover{opacity:.88;}
+.portal-cart{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(37,99,235,.4);border:none;transition:all .2s;}
+.portal-cart:hover{transform:scale(1.1);}
+.portal-cart-badge{position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;font-size:10px;font-weight:900;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.portal-cart-panel{position:fixed;right:0;top:0;height:100vh;width:380px;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.15);transform:translateX(100%);transition:transform .3s;z-index:300;display:flex;flex-direction:column;}
+.portal-cart-panel.open{transform:translateX(0);}
+.portal-cart-header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:20px 20px 16px;display:flex;justify-content:space-between;align-items:center;}
+.portal-cart-items{flex:1;overflow-y:auto;padding:16px;}
+.portal-cart-item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.portal-cart-footer{padding:16px;border-top:1px solid #e2e8f0;background:#f8faff;}
+.portal-form{padding:20px;background:#f8faff;border-top:1px solid #e2e8f0;}
+.portal-input{width:100%;border:1px solid #e2e8f0;border-radius:9px;padding:10px 13px;font-size:13px;margin-bottom:10px;font-family:inherit;}
+.portal-input:focus{outline:none;border-color:#2563eb;}
+.portal-submit{width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;color:#fff;padding:13px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;}
+.portal-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}
+
 /* ── MOBILE ── */
 @media(max-width:860px){
   .sidebar{width:58px;}
@@ -404,6 +461,9 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     <div class="nav-section">Finanzas</div>
     <div class="nav-item" data-module="contabilidad"><span class="icon">💰</span><span>Contabilidad</span></div>
     <div class="nav-item" data-module="reportes"><span class="icon">📈</span><span>Reportes</span></div>
+    <div class="nav-section">Herramientas</div>
+    <div class="nav-item" data-module="importar"><span class="icon">📥</span><span>Importar / Exportar</span></div>
+    <div class="nav-item" data-module="pedidos"><span class="icon">🛍️</span><span>Pedidos clientes</span><span class="nav-badge pedidos-badge" id="pedidos-badge">0</span></div>
     <div class="nav-section">Sistema</div>
     <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span><span class="nav-badge" id="papelera-badge">0</span></div>
     <div class="sidebar-footer">
@@ -698,6 +758,89 @@ tr:hover td{background:rgba(255,255,255,0.02);}
           <button class="btn-action" style="background:linear-gradient(135deg,var(--red),#be123c)" onclick="vaciarPapeleraTab()">🗑️ Vaciar sección</button>
         </div>
         <div id="papelera-content"></div>
+      </div>
+
+      <!-- IMPORTAR / EXPORTAR -->
+      <div id="mod-importar">
+        <div class="dash-grid-2" style="gap:20px;margin-bottom:24px">
+          <!-- IMPORTAR -->
+          <div class="import-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,.15);display:flex;align-items:center;justify-content:center;font-size:20px">📥</div>
+              <div><div style="font-size:15px;font-weight:800">Importar desde Excel</div><div style="font-size:12px;color:var(--muted)">Cargue datos masivamente desde la plantilla</div></div>
+            </div>
+            <div class="import-tabs">
+              <button class="import-tab active" onclick="setImportTab('productos')">📦 Productos</button>
+              <button class="import-tab" onclick="setImportTab('clientes')">👥 Clientes</button>
+              <button class="import-tab" onclick="setImportTab('proveedores')">🚚 Proveedores</button>
+              <button class="import-tab" onclick="setImportTab('cotizaciones')">📄 Cotizaciones</button>
+            </div>
+            <div id="import-zone-wrap">
+              <div class="import-zone" id="import-drop-zone" onclick="document.getElementById('import-file-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleImportDrop(event)">
+                <div class="iz-icon">📂</div>
+                <h4>Arrastra tu Excel aquí o haz clic</h4>
+                <p>Acepta archivos .xlsx descargados de la plantilla Nexora</p>
+              </div>
+              <input type="file" id="import-file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleImportFile(this.files[0])">
+            </div>
+            <div id="import-preview-wrap" style="display:none">
+              <div class="import-preview" id="import-preview"></div>
+              <div class="progress-import" style="display:none" id="import-progress-bar"><div class="progress-import-fill" id="import-progress-fill" style="width:0%"></div></div>
+              <div style="display:flex;gap:10px;margin-top:12px">
+                <button class="btn-cancel" onclick="resetImport()">↩ Cancelar</button>
+                <button class="btn-save" id="btn-confirmar-import" onclick="confirmarImport()">✅ Confirmar importación</button>
+              </div>
+            </div>
+          </div>
+          <!-- EXPORTAR / RESPALDO -->
+          <div class="import-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:20px">📤</div>
+              <div><div style="font-size:15px;font-weight:800">Exportar y Respaldos</div><div style="font-size:12px;color:var(--muted)">Descarga tus datos en Excel</div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button class="btn-action" style="justify-content:flex-start;gap:10px" onclick="exportarModulo('productos')">📦 Exportar Inventario completo</button>
+              <button class="btn-action" style="justify-content:flex-start;gap:10px;background:linear-gradient(135deg,var(--green),#059669)" onclick="exportarModulo('clientes')">👥 Exportar Clientes</button>
+              <button class="btn-action" style="justify-content:flex-start;gap:10px;background:linear-gradient(135deg,var(--yellow),#d97706);color:#000" onclick="exportarModulo('proveedores')">🚚 Exportar Proveedores</button>
+              <button class="btn-action" style="justify-content:flex-start;gap:10px;background:linear-gradient(135deg,var(--purple),#7c3aed)" onclick="exportarModulo('cotizaciones')">📄 Exportar Cotizaciones</button>
+              <button class="btn-action" style="justify-content:flex-start;gap:10px;background:linear-gradient(135deg,var(--purple),#7c3aed)" onclick="exportarModulo('facturas')">🧾 Exportar Facturas</button>
+              <hr style="border-color:var(--border)">
+              <button class="btn-action" style="justify-content:flex-start;gap:10px;background:linear-gradient(135deg,var(--red),#be123c);font-size:14px;padding:13px 18px" onclick="exportarRespaldoCompleto()">💾 Respaldo completo del sistema</button>
+              <div style="font-size:11px;color:var(--muted);padding:6px 2px">El respaldo incluye: productos, clientes, proveedores, cotizaciones, facturas y compras en un solo archivo Excel con múltiples hojas.</div>
+            </div>
+          </div>
+        </div>
+        <!-- PLANTILLAS -->
+        <div class="report-card">
+          <div class="report-title">📋 Descargar plantillas de importación</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-action" onclick="descargarPlantilla()" style="background:linear-gradient(135deg,#16a34a,#15803d)">📥 Descargar plantilla Excel completa</button>
+            <div style="font-size:12px;color:var(--muted);align-self:center">Contiene hojas para: Productos, Clientes, Proveedores y Cotizaciones con ejemplos y validaciones</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEDIDOS CLIENTES -->
+      <div id="mod-pedidos">
+        <div class="toolbar">
+          <select class="toolbar-select" id="pedidos-filter">
+            <option value="">Todos</option>
+            <option value="nuevo">🔔 Nuevos</option>
+            <option value="visto">✅ Vistos</option>
+            <option value="procesado">📦 Procesados</option>
+          </select>
+          <input class="toolbar-search" id="pedidos-search" placeholder="🔍 Buscar por cliente, producto...">
+          <button class="btn-action" style="background:linear-gradient(135deg,var(--orange),#c2410c)" onclick="abrirConfigPortal()">⚙️ Configurar portal</button>
+          <button class="btn-action" onclick="copiarLinkPortal()">🔗 Copiar link del portal</button>
+        </div>
+        <div id="pedidos-list">
+          <div style="text-align:center;padding:60px;color:var(--muted)">
+            <div style="font-size:48px;margin-bottom:14px">🛍️</div>
+            <div style="font-size:16px;font-weight:700;margin-bottom:8px">Sin pedidos recibidos aún</div>
+            <div style="font-size:13px;margin-bottom:18px">Comparte el link del portal con tus clientes para que puedan hacer pedidos en línea</div>
+            <button class="btn-action" onclick="copiarLinkPortal()">🔗 Copiar link del portal</button>
+          </div>
+        </div>
       </div>
     </div><!-- /content -->
   </div><!-- /main -->
@@ -2626,4 +2769,582 @@ window.imprimirOrdenCompra=async function(compraId){
   </body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();
 };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ════════════════════════════════════════════════════════
+// NEXORA ERP v4 — Import/Export & Portal Module
+// ════════════════════════════════════════════════════════
+
+// ── Helpers ──
+const $x=id=>document.getElementById(id);
+const fmtMx=n=>'$'+(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0});
+function toastX(msg,type='success'){const t=document.getElementById('global-toast');t.textContent=msg;t.className=`toast toast-${type} show`;clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3500);}
+
+// ── NAV TITLES (patch) ──
+const origTitles=window._modTitles||{};
+Object.assign(origTitles,{importar:'📥 Importar / Exportar',pedidos:'🛍️ Pedidos de Clientes'});
+
+// Patch loadModule to handle new modules
+const _origLoad=window.loadModule;
+window.loadModule=async function(mod){
+  if(mod==='importar'){
+    document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
+    document.getElementById('mod-importar').style.display='block';
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    document.querySelector('.nav-item[data-module="importar"]')?.classList.add('active');
+    document.getElementById('mod-title').textContent='📥 Importar / Exportar';
+    return;
+  }
+  if(mod==='pedidos'){
+    document.querySelectorAll('[id^="mod-"]').forEach(m=>m.style.display='none');
+    document.getElementById('mod-pedidos').style.display='block';
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    document.querySelector('.nav-item[data-module="pedidos"]')?.classList.add('active');
+    document.getElementById('mod-title').textContent='🛍️ Pedidos de Clientes';
+    await cargarPedidos();
+    return;
+  }
+  return _origLoad(mod);
+};
+
+// Nav click patch for new items
+document.querySelectorAll('.nav-item[data-module="importar"],.nav-item[data-module="pedidos"]').forEach(item=>{
+  item.addEventListener('click',e=>{e.stopPropagation();window.loadModule(item.getAttribute('data-module'));});
+});
+
+// ════════════════════════════════════════════════════════
+// IMPORT MODULE
+// ════════════════════════════════════════════════════════
+let currentImportTab='productos';
+let importData=[];
+
+window.setImportTab=function(tab){
+  currentImportTab=tab;
+  document.querySelectorAll('.import-tab').forEach(t=>{
+    t.classList.toggle('active',t.getAttribute('onclick')===`setImportTab('${tab}')`);
+  });
+  resetImport();
+};
+
+window.handleImportDrop=function(e){
+  e.preventDefault();
+  document.getElementById('import-drop-zone').classList.remove('drag-over');
+  const file=e.dataTransfer.files[0];
+  if(file)handleImportFile(file);
+};
+
+window.handleImportFile=function(file){
+  if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['xlsx','xls','csv'].includes(ext)){toastX('Solo se aceptan archivos .xlsx, .xls o .csv','error');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let rows=[];
+    if(ext==='csv'){
+      const text=e.target.result;
+      const lines=text.split('\n').filter(l=>l.trim());
+      const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,''));
+      rows=lines.slice(1).map(l=>{const cols=l.split(',').map(c=>c.trim().replace(/"/g,''));const obj={};headers.forEach((h,i)=>obj[h]=cols[i]||'');return obj;});
+    } else {
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      // Try to find the right sheet by tab name
+      const sheetMap={'productos':'📦 Productos','clientes':'👥 Clientes','proveedores':'🚚 Proveedores','cotizaciones':'📄 Cotizaciones'};
+      const targetSheet=sheetMap[currentImportTab];
+      let ws=wb.Sheets[targetSheet];
+      if(!ws){
+        // fallback: first sheet that matches or first sheet
+        const match=wb.SheetNames.find(n=>n.toLowerCase().includes(currentImportTab.slice(0,4)));
+        ws=wb.Sheets[match||wb.SheetNames[0]];
+      }
+      // Skip rows 1-3 (title, subtitle, instruction), row 4=headers, data from row 5
+      const rawRows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      const headers=rawRows[3]; // row index 3 = Excel row 4
+      rows=rawRows.slice(4).filter(r=>r.some(c=>c!=='')).map(r=>{const obj={};headers.forEach((h,i)=>{obj[h]=r[i]??'';});return obj;});
+    }
+    importData=rows;
+    mostrarPreviewImport(rows);
+  };
+  if(ext==='csv')reader.readAsText(file,'UTF-8');
+  else reader.readAsArrayBuffer(file);
+};
+
+function mostrarPreviewImport(rows){
+  const preview=$x('import-preview');
+  const wrap=$x('import-preview-wrap');
+  $x('import-zone-wrap').style.display='none';
+  wrap.style.display='block';
+  if(!rows.length){preview.innerHTML='<div style="color:var(--red);padding:10px">No se encontraron datos en el archivo.</div>';return;}
+  const fieldMap={
+    productos:['NOMBRE*','PRECIO VENTA*','STOCK ACTUAL*'],
+    clientes:['NOMBRE / RAZÓN SOCIAL*'],
+    proveedores:['NOMBRE / RAZÓN SOCIAL*'],
+    cotizaciones:['NOMBRE CLIENTE*','PRODUCTO 1*','CANT. 1*']
+  };
+  const required=fieldMap[currentImportTab]||[];
+  let html=`<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">${rows.length} registros encontrados — Vista previa (máx 5):</div>`;
+  const preview5=rows.slice(0,5);
+  preview5.forEach((row,i)=>{
+    const nombre=row['NOMBRE*']||row['NOMBRE / RAZÓN SOCIAL*']||row['NOMBRE CLIENTE*']||Object.values(row)[0]||'—';
+    const faltantes=required.filter(f=>!row[f]||row[f]==='');
+    const ok=faltantes.length===0;
+    html+=`<div class="${ok?'import-row-ok':'import-row-err'}">
+      ${ok?'✅':'❌'} Fila ${i+5}: <strong>${nombre}</strong>${!ok?' — Faltan: '+faltantes.join(', '):''}
+    </div>`;
+  });
+  if(rows.length>5)html+=`<div style="font-size:11px;color:var(--muted);padding:6px 0">... y ${rows.length-5} registros más</div>`;
+  preview.innerHTML=html;
+}
+
+window.resetImport=function(){
+  $x('import-zone-wrap').style.display='block';
+  $x('import-preview-wrap').style.display='none';
+  $x('import-file-input').value='';
+  importData=[];
+};
+
+window.confirmarImport=async function(){
+  if(!importData.length){toastX('Sin datos para importar','error');return;}
+  if(!window._currentTenantId){toastX('Debes iniciar sesión','error');return;}
+  const bar=$x('import-progress-bar');
+  const fill=$x('import-progress-fill');
+  bar.style.display='block';
+  const btn=$x('btn-confirmar-import');btn.disabled=true;btn.textContent='⏳ Importando...';
+  let ok=0,err=0;
+  for(let i=0;i<importData.length;i++){
+    fill.style.width=Math.round(((i+1)/importData.length)*100)+'%';
+    try{
+      if(currentImportTab==='productos')await importarProducto(importData[i]);
+      else if(currentImportTab==='clientes')await importarCliente(importData[i]);
+      else if(currentImportTab==='proveedores')await importarProveedor(importData[i]);
+      else if(currentImportTab==='cotizaciones')await importarCotizacion(importData[i]);
+      ok++;
+    }catch(e){err++;console.warn('Import row error:',e);}
+    await new Promise(r=>setTimeout(r,30));
+  }
+  btn.disabled=false;btn.textContent='✅ Confirmar importación';
+  bar.style.display='none';
+  toastX(`✅ Importación completa: ${ok} registros OK${err?', '+err+' con errores':''}`);
+  resetImport();
+};
+
+async function importarProducto(row){
+  const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();
+  const tid=window._currentTenantId;
+  const nombre=String(row['NOMBRE*']||'').trim();if(!nombre)return;
+  await addDoc(collection(db,'businesses',tid,'productos'),{
+    nombre,referencia:row['REFERENCIA']||'',categoria:row['CATEGORÍA']||'',
+    descripcion:row['DESCRIPCIÓN']||'',unidad:row['UNIDAD']||'',
+    precio:parseFloat(String(row['PRECIO VENTA*']).replace(/[^0-9.]/g,''))||0,
+    costo:parseFloat(String(row['PRECIO COSTO']||'0').replace(/[^0-9.]/g,''))||0,
+    stock:parseInt(row['STOCK ACTUAL*'])||0,stockMin:parseInt(row['STOCK MÍNIMO'])||5,
+    imagen:row['URL IMAGEN']||'',eliminado:false,createdAt:serverTimestamp()
+  });
+}
+async function importarCliente(row){
+  const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  const nombre=String(row['NOMBRE / RAZÓN SOCIAL*']||'').trim();if(!nombre)return;
+  const asesor=row['ASESOR PREDETERMINADO']?[{nombre:row['ASESOR PREDETERMINADO'],telefono:row['TEL. ASESOR']||'',veces:0}]:[];
+  await addDoc(collection(db,'businesses',tid,'clientes'),{
+    nombre,nit:row['NIT / CÉDULA']||'',email:row['EMAIL']||'',telefono:row['TELÉFONO']||'',
+    ciudad:row['CIUDAD']||'',direccion:row['DIRECCIÓN']||'',sector:row['SECTOR / INDUSTRIA']||'',
+    regimen:row['RÉGIMEN TRIBUTARIO']||'Común',pago:row['CONDICIÓN DE PAGO']||'contado',
+    web:row['SITIO WEB']||'',descripcion:row['DESCRIPCIÓN EMPRESA']||'',asesores:asesor,
+    eliminado:false,createdAt:serverTimestamp()
+  });
+}
+async function importarProveedor(row){
+  const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  const nombre=String(row['NOMBRE / RAZÓN SOCIAL*']||'').trim();if(!nombre)return;
+  await addDoc(collection(db,'businesses',tid,'proveedores'),{
+    nombre,nit:row['NIT']||'',contacto:row['CONTACTO PRINCIPAL']||'',cargo:row['CARGO']||'',
+    telefono:row['TELÉFONO']||'',email:row['EMAIL']||'',ciudad:row['CIUDAD']||'',
+    direccion:row['DIRECCIÓN']||'',sector:row['SECTOR / CATEGORÍA']||'',
+    plazo:row['PLAZO DE ENTREGA']||'',condpago:row['CONDICIÓN PAGO']||'',
+    web:row['SITIO WEB']||'',descripcion:row['DESCRIPCIÓN']||'',
+    eliminado:false,createdAt:serverTimestamp()
+  });
+}
+async function importarCotizacion(row){
+  const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  const cliente=String(row['NOMBRE CLIENTE*']||'').trim();if(!cliente)return;
+  const items=[];
+  for(let n=1;n<=3;n++){
+    const prod=row[n===1?'PRODUCTO 1*':`PRODUCTO ${n}`];const cant=row[n===1?'CANT. 1*':`CANT. ${n}`];
+    if(prod&&cant)items.push({nombre:String(prod).trim(),cantidad:parseInt(cant)||1,precio:parseFloat(String(row[`PRECIO UNIT. ${n}`]||'0').replace(/[^0-9.]/g,''))||0,descItem:0,imagen:''});
+  }
+  if(!items.length)return;
+  const subtotal=items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  const descP=parseFloat(row['DESCUENTO GLOBAL%'])||0;const ivaP=parseFloat(row['IVA%'])||19;
+  const base=subtotal*(1-descP/100);const total=base*(1+ivaP/100);
+  const next=await getNextConsecFromDB(tid,db,'cotizaciones');
+  await addDoc(collection(db,'businesses',tid,'cotizaciones'),{
+    numero:row['N° COTIZACIÓN']||'COT-'+next,cliente,clienteId:'',
+    fecha:row['FECHA']||new Date().toISOString().slice(0,10),vencimiento:row['VÁLIDA HASTA']||'',
+    asesorNombre:row['ASESOR']||'',items,subtotal,descuento:descP,iva:ivaP,total,
+    estado:row['ESTADO']||'Borrador',notas:row['NOTAS']||'',
+    eliminado:false,createdAt:serverTimestamp()
+  });
+}
+async function getNextConsecFromDB(tid,db,colName){
+  const {collection,getDocs}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const snap=await getDocs(collection(db,'businesses',tid,colName));
+  let mx=0;snap.forEach(d=>{const n=parseInt(String(d.data().numero||'').replace(/\D/g,''));if(n>mx)mx=n;});
+  return String(mx+1).padStart(4,'0');
+}
+
+// ════════════════════════════════════════════════════════
+// EXPORT MODULE
+// ════════════════════════════════════════════════════════
+window.exportarModulo=async function(modulo){
+  toastX(`⏳ Preparando exportación de ${modulo}...`,'info');
+  const {getFirestore,collection,getDocs}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  if(!tid){toastX('Inicia sesión primero','error');return;}
+  const snap=await getDocs(collection(db,'businesses',tid,modulo));
+  const docs=snap.docs.filter(d=>!d.data().eliminado).map(d=>({id:d.id,...d.data()}));
+  const wb=XLSX.utils.book_new();
+  const mapas={
+    productos:d=>({'REFERENCIA':d.referencia,'NOMBRE':d.nombre,'CATEGORÍA':d.categoria,'DESCRIPCIÓN':d.descripcion,'UNIDAD':d.unidad,'PRECIO VENTA':d.precio,'PRECIO COSTO':d.costo,'STOCK':d.stock,'STOCK MÍNIMO':d.stockMin}),
+    clientes:d=>({'NOMBRE':d.nombre,'NIT':d.nit,'EMAIL':d.email,'TELÉFONO':d.telefono,'CIUDAD':d.ciudad,'DIRECCIÓN':d.direccion,'SECTOR':d.sector,'RÉGIMEN':d.regimen,'PAGO':d.pago,'WEB':d.web}),
+    proveedores:d=>({'NOMBRE':d.nombre,'NIT':d.nit,'CONTACTO':d.contacto,'CARGO':d.cargo,'TELÉFONO':d.telefono,'EMAIL':d.email,'CIUDAD':d.ciudad,'SECTOR':d.sector,'PLAZO':d.plazo,'COND.PAGO':d.condpago}),
+    cotizaciones:d=>({'N°':d.numero,'CLIENTE':d.cliente,'FECHA':d.fecha,'VENCE':d.vencimiento,'ESTADO':d.estado,'ASESOR':d.asesorNombre,'ITEMS':d.items?.length,'TOTAL':d.total}),
+    facturas:d=>({'N°':d.numero,'CLIENTE':d.cliente,'FECHA':d.fecha,'TOTAL':d.total,'ESTADO':d.estado})
+  };
+  const rows=docs.map(mapas[modulo]||mapas.productos);
+  const ws=XLSX.utils.json_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb,ws,modulo.charAt(0).toUpperCase()+modulo.slice(1));
+  XLSX.writeFile(wb,`nexora_${modulo}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toastX(`✅ ${modulo} exportado correctamente`);
+};
+
+window.exportarRespaldoCompleto=async function(){
+  toastX('⏳ Generando respaldo completo...','info');
+  const {getFirestore,collection,getDocs}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  if(!tid){toastX('Inicia sesión primero','error');return;}
+  const modulos=['productos','clientes','proveedores','cotizaciones','facturas','compras'];
+  const wb=XLSX.utils.book_new();
+  for(const mod of modulos){
+    const snap=await getDocs(collection(db,'businesses',tid,mod));
+    const docs=snap.docs.filter(d=>!d.data().eliminado).map(d=>{
+      const data=d.data();
+      // Flatten items array for cotizaciones/facturas
+      if(data.items)data.items_json=JSON.stringify(data.items);
+      delete data.items;delete data.eliminado;delete data.eliminadoEn;
+      // Convert timestamps
+      if(data.createdAt?.toDate)data.createdAt=data.createdAt.toDate().toISOString().slice(0,10);
+      if(data.updatedAt?.toDate)data.updatedAt=data.updatedAt.toDate().toISOString().slice(0,10);
+      return data;
+    });
+    if(docs.length){const ws=XLSX.utils.json_to_sheet(docs);XLSX.utils.book_append_sheet(wb,ws,mod);}
+  }
+  const fecha=new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb,`nexora_respaldo_${fecha}.xlsx`);
+  toastX('💾 Respaldo completo generado');
+};
+
+window.descargarPlantilla=function(){
+  // Build plantilla in-browser using SheetJS
+  const wb=XLSX.utils.book_new();
+  // Productos sheet
+  const headProd=[['REFERENCIA*','NOMBRE*','CATEGORÍA','DESCRIPCIÓN','UNIDAD','PRECIO VENTA*','PRECIO COSTO','STOCK ACTUAL*','STOCK MÍNIMO','URL IMAGEN']];
+  const ejProd=[['PROD-0001','Tornillo hexagonal 3/8','Tornillería','Tornillo hex cabeza plana','unidad',2500,1200,100,10,'']];
+  const wsProd=XLSX.utils.aoa_to_sheet([...headProd,...ejProd]);
+  wsProd['!cols']=[{wch:16},{wch:32},{wch:18},{wch:30},{wch:12},{wch:16},{wch:16},{wch:14},{wch:14},{wch:28}];
+  XLSX.utils.book_append_sheet(wb,wsProd,'Productos');
+  // Clientes sheet
+  const headCli=[['NOMBRE / RAZÓN SOCIAL*','NIT / CÉDULA','EMAIL','TELÉFONO','CIUDAD','DIRECCIÓN','SECTOR / INDUSTRIA','RÉGIMEN TRIBUTARIO','CONDICIÓN DE PAGO','ASESOR PREDETERMINADO','TEL. ASESOR','SITIO WEB','DESCRIPCIÓN EMPRESA']];
+  const ejCli=[['Ferretería El Tornillo S.A.S','900.123.456-7','contacto@eltornillo.com','+57 300 123 4567','Bogotá','Calle 13 #45-67','Construcción','Común','30','Carlos Pérez','+57 315 987 6543','https://eltornillo.com','Distribuidor de materiales de construcción']];
+  const wsCli=XLSX.utils.aoa_to_sheet([...headCli,...ejCli]);
+  XLSX.utils.book_append_sheet(wb,wsCli,'Clientes');
+  // Proveedores sheet
+  const headProv=[['NOMBRE / RAZÓN SOCIAL*','NIT','CONTACTO PRINCIPAL','CARGO','TELÉFONO','EMAIL','CIUDAD','DIRECCIÓN','SECTOR / CATEGORÍA','PLAZO DE ENTREGA','CONDICIÓN PAGO','SITIO WEB','DESCRIPCIÓN']];
+  const ejProv=[['Distribuidora Metales del Sur','800.456.789-1','Juan Ramírez','Gerente Comercial','+57 4 333 4567','ventas@metalesur.com','Medellín','Autopista Sur #12-34','Ferretería / Metalmecánica','3-5 días hábiles','15 días','https://metalesur.com','Distribución mayorista de perfiles metálicos']];
+  const wsProv=XLSX.utils.aoa_to_sheet([...headProv,...ejProv]);
+  XLSX.utils.book_append_sheet(wb,wsProv,'Proveedores');
+  // Cotizaciones sheet
+  const headCot=[['N° COTIZACIÓN','ESTADO','FECHA','VÁLIDA HASTA','NOMBRE CLIENTE*','ASESOR','PRODUCTO 1*','CANT. 1*','PRECIO UNIT. 1','DESCUENTO ITEM 1%','PRODUCTO 2','CANT. 2','PRECIO UNIT. 2','PRODUCTO 3','CANT. 3','PRECIO UNIT. 3','DESCUENTO GLOBAL%','IVA%','NOTAS']];
+  const ejCot=[['COT-0001','Aprobado','2025-01-15','2025-02-15','Ferretería El Tornillo S.A.S','Carlos Pérez','Tornillo hexagonal 3/8',50,2500,0,'Lámina galvanizada 1mm',10,85000,'','','',5,19,'Entrega en bodega del cliente']];
+  const wsCot=XLSX.utils.aoa_to_sheet([...headCot,...ejCot]);
+  XLSX.utils.book_append_sheet(wb,wsCot,'Cotizaciones');
+  XLSX.writeFile(wb,'nexora_plantilla_importacion.xlsx');
+  toastX('📥 Plantilla descargada');
+};
+
+// Store tenant id for export/import access
+document.addEventListener('tenantReady',e=>{window._currentTenantId=e.detail;});
+
+// ════════════════════════════════════════════════════════
+// PEDIDOS DE CLIENTES MODULE
+// ════════════════════════════════════════════════════════
+let portalCarrito=[];
+let portalProductos=[];
+let portalConfig={bizName:'Mi Negocio',welcome:'Bienvenido a nuestro catálogo de productos',color:'#2563eb',showPrices:'si',activosProdIds:[]};
+
+async function cargarPedidos(){
+  const {getFirestore,collection,getDocs,orderBy,query}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  if(!tid)return;
+  const snap=await getDocs(query(collection(db,'businesses',tid,'pedidos'),orderBy('createdAt','desc')));
+  const pedidos=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderPedidos(pedidos);
+  // Badge
+  const nuevos=pedidos.filter(p=>p.estado==='nuevo').length;
+  const badge=document.getElementById('pedidos-badge');
+  if(badge){badge.textContent=nuevos;badge.classList.toggle('show',nuevos>0);}
+}
+
+function renderPedidos(pedidos){
+  const list=document.getElementById('pedidos-list');
+  if(!list)return;
+  const filt=document.getElementById('pedidos-filter')?.value||'';
+  const busq=document.getElementById('pedidos-search')?.value.toLowerCase()||'';
+  const filtrados=pedidos.filter(p=>
+    (!filt||p.estado===filt)&&(!busq||(p.clienteNombre||'').toLowerCase().includes(busq)||(p.items||[]).some(i=>(i.nombre||'').toLowerCase().includes(busq)))
+  );
+  if(!filtrados.length){
+    list.innerHTML='<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">📭</div><div style="font-weight:700">Sin pedidos con ese filtro</div></div>';
+    return;
+  }
+  list.innerHTML=filtrados.map(p=>{
+    const fecha=p.createdAt?.toDate?.()?.toLocaleDateString('es-CO')||p.fecha||'—';
+    const total=(p.items||[]).reduce((s,i)=>s+(i.precio*i.cantidad),0);
+    return `<div class="pedido-card ${p.estado==='nuevo'?'nuevo':'visto'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:15px;font-weight:800">${p.estado==='nuevo'?'🔔':'📦'} ${p.clienteNombre||'—'}</span>
+            <span class="badge ${p.estado==='nuevo'?'badge-espera':p.estado==='procesado'?'badge-aprobado':'badge-borrador'}">${p.estado||'nuevo'}</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted)">📞 ${p.clienteTel||'—'} · 📧 ${p.clienteEmail||'—'} · 📅 ${fecha}</div>
+          ${p.notas?`<div style="font-size:12px;color:var(--muted);margin-top:4px">📝 ${p.notas}</div>`:''}
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:900;color:var(--orange)">${fmtMx(total)}</div>
+          <div style="font-size:11px;color:var(--muted)">${(p.items||[]).length} productos</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+        ${(p.items||[]).map(i=>`<span style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:7px;padding:4px 10px;font-size:12px"><strong>${i.cantidad}x</strong> ${i.nombre}</span>`).join('')}
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        ${p.estado==='nuevo'?`<button class="btn-action-sm" onclick="marcarPedidoVisto('${p.id}')">✅ Marcar visto</button>`:''}
+        <button class="btn-action-sm" onclick="convertirPedidoACotizacion('${p.id}')" style="background:linear-gradient(135deg,var(--purple),#7c3aed)">📄 Convertir a cotización</button>
+        <button class="btn-action-sm" style="background:linear-gradient(135deg,var(--green),#059669)" onclick="marcarPedidoProcesado('${p.id}')">📦 Procesado</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.marcarPedidoVisto=async function(id){
+  const {getFirestore,doc,updateDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();
+  await updateDoc(doc(db,'businesses',window._currentTenantId,'pedidos',id),{estado:'visto',updatedAt:serverTimestamp()});
+  toastX('✅ Pedido marcado como visto');cargarPedidos();
+};
+window.marcarPedidoProcesado=async function(id){
+  const {getFirestore,doc,updateDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();
+  await updateDoc(doc(db,'businesses',window._currentTenantId,'pedidos',id),{estado:'procesado',updatedAt:serverTimestamp()});
+  toastX('📦 Pedido marcado como procesado');cargarPedidos();
+};
+window.convertirPedidoACotizacion=async function(pedidoId){
+  const {getFirestore,doc,getDoc,addDoc,collection,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  const pedDoc=await getDoc(doc(db,'businesses',tid,'pedidos',pedidoId));
+  if(!pedDoc.exists())return;
+  const p=pedDoc.data();
+  const next=await getNextConsecFromDB(tid,db,'cotizaciones');
+  const subtotal=(p.items||[]).reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  await addDoc(collection(db,'businesses',tid,'cotizaciones'),{
+    numero:'COT-'+next,cliente:p.clienteNombre||'',clienteId:'',
+    fecha:new Date().toISOString().slice(0,10),
+    items:p.items||[],subtotal,descuento:0,iva:19,
+    total:subtotal*1.19,estado:'En Espera',
+    notas:`Convertido de pedido portal — ${p.clienteNombre} — Tel: ${p.clienteTel||'—'}`,
+    eliminado:false,createdAt:serverTimestamp()
+  });
+  toastX('📄 Cotización creada desde el pedido ✅');
+  if(window.cargarCotizaciones)window.cargarCotizaciones();
+};
+
+$x('pedidos-filter')?.addEventListener('change',()=>cargarPedidos());
+$x('pedidos-search')?.addEventListener('input',()=>cargarPedidos());
+
+// ─── PORTAL CONFIG ───
+window.abrirConfigPortal=async function(){
+  const {getFirestore,collection,getDocs,doc,getDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  if(!tid)return;
+  // Load saved config
+  const cfgDoc=await getDoc(doc(db,'businesses',tid,'config','portal'));
+  if(cfgDoc.exists())Object.assign(portalConfig,cfgDoc.data());
+  $x('portal-biz-name').value=portalConfig.bizName||'';
+  $x('portal-welcome').value=portalConfig.welcome||'';
+  $x('portal-color').value=portalConfig.color||'#2563eb';
+  $x('portal-show-prices').value=portalConfig.showPrices||'si';
+  // Load products toggle
+  const snap=await getDocs(collection(db,'businesses',tid,'productos'));
+  const prods=snap.docs.filter(d=>!d.data().eliminado&&(d.data().stock||0)>0);
+  const tog=$x('portal-productos-toggle');
+  tog.innerHTML=prods.map(d=>{const p=d.data();const checked=(portalConfig.activosProdIds||[]).includes(d.id)||true;return`<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer"><input type="checkbox" value="${d.id}" ${checked?'checked':''} style="width:16px;height:16px"><span style="font-size:13px">${p.nombre}</span><span style="color:var(--muted);font-size:11px;margin-left:auto">${p.stock} uds</span></label>`;}).join('');
+  $x('portal-config-modal').classList.add('show');
+};
+
+window.guardarConfigPortal=async function(){
+  const {getFirestore,doc,setDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();const tid=window._currentTenantId;
+  const activos=Array.from(document.querySelectorAll('#portal-productos-toggle input[type=checkbox]:checked')).map(cb=>cb.value);
+  const cfg={bizName:$x('portal-biz-name').value,welcome:$x('portal-welcome').value,color:$x('portal-color').value,showPrices:$x('portal-show-prices').value,activosProdIds:activos};
+  await setDoc(doc(db,'businesses',tid,'config','portal'),cfg);
+  Object.assign(portalConfig,cfg);
+  $x('portal-config-modal').classList.remove('show');
+  toastX('✅ Portal configurado');
+};
+
+window.copiarLinkPortal=function(){
+  const tid=window._currentTenantId;
+  if(!tid){toastX('Debes iniciar sesión','error');return;}
+  const link=`${window.location.href.split('?')[0]}?portal=${tid}`;
+  navigator.clipboard.writeText(link).then(()=>toastX('🔗 Link copiado al portapapeles')).catch(()=>toastX('Link: '+link,'info'));
+};
+
+// ─── PORTAL PÚBLICO ───
+window.abrirPortal=async function(tenantId){
+  const {getFirestore,collection,getDocs,doc,getDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();
+  let cfg={bizName:'Portal de Pedidos',welcome:'Bienvenido a nuestro catálogo',color:'#2563eb',showPrices:'si',activosProdIds:[]};
+  try{const cfgDoc=await getDoc(doc(db,'businesses',tenantId,'config','portal'));if(cfgDoc.exists())Object.assign(cfg,cfgDoc.data());}catch(e){}
+  Object.assign(portalConfig,cfg);
+  $x('portal-header-logo').textContent='🛍️ '+cfg.bizName;
+  $x('portal-header-biz').textContent='Catálogo de productos';
+  $x('portal-welcome-msg').textContent=cfg.welcome;
+  $x('portal-screen').style.display='block';
+  document.getElementById('auth-screen')&&($('auth-screen').style.display='none');
+  document.getElementById('app-screen')&&($('app-screen').style.display='none');
+  const snap=await getDocs(collection(db,'businesses',tenantId,'productos'));
+  portalProductos=snap.docs.filter(d=>!d.data().eliminado&&(d.data().stock||0)>0).map(d=>({id:d.id,...d.data()}));
+  renderPortal(portalProductos);
+  portalCarrito=[];renderCarrito();
+};
+
+function renderPortal(prods){
+  const grid=$x('portal-grid');
+  if(!grid)return;
+  grid.innerHTML=prods.map(p=>{
+    const img=p.imagen?`<img src="${p.imagen}" style="width:100%;height:140px;object-fit:cover">`:'<div style="width:100%;height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:40px">📦</div>';
+    const precio=portalConfig.showPrices==='si'?`<div style="font-size:18px;font-weight:900;color:${portalConfig.color||'#2563eb'};margin-bottom:6px">${fmtMx(p.precio)}</div>`:'';
+    return `<div class="portal-card">
+      ${img}
+      <div class="portal-card-body">
+        <div class="portal-card-name">${p.nombre}</div>
+        ${p.descripcion?`<div class="portal-card-desc">${p.descripcion}</div>`:''}
+        ${precio}
+        <div style="font-size:11px;font-weight:600;color:${(p.stock||0)>10?'#10b981':'#f59e0b'}">● ${p.stock} disponibles</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <input type="number" value="1" min="1" max="${p.stock}" id="qty-${p.id}" style="width:60px;border:1px solid #e2e8f0;border-radius:7px;padding:6px;text-align:center;font-size:13px">
+          <button class="portal-add-btn" style="background:linear-gradient(135deg,${portalConfig.color||'#2563eb'},#1d4ed8)" onclick="agregarAlCarrito('${p.id}','${p.nombre.replace(/'/g,"\\'")}',${p.precio})">+ Pedir</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.filtrarPortal=function(q){
+  const filtered=portalProductos.filter(p=>(p.nombre||'').toLowerCase().includes(q.toLowerCase())||(p.descripcion||'').toLowerCase().includes(q.toLowerCase()));
+  renderPortal(filtered);
+};
+
+window.agregarAlCarrito=function(prodId,nombre,precio){
+  const qty=parseInt($x('qty-'+prodId)?.value)||1;
+  const existing=portalCarrito.find(i=>i.prodId===prodId);
+  if(existing)existing.cantidad+=qty;
+  else portalCarrito.push({prodId,nombre,precio,cantidad:qty});
+  renderCarrito();
+  $x('portal-cart-panel').classList.add('open');
+};
+
+function renderCarrito(){
+  const items=$x('portal-cart-items');const total=$x('portal-cart-total');const count=$x('portal-cart-count');
+  if(!items)return;
+  if(!portalCarrito.length){items.innerHTML='<div style="text-align:center;padding:30px;color:#94a3b8">Tu pedido está vacío</div>';if(total)total.textContent='$0';if(count)count.textContent='0';return;}
+  let t=0;
+  items.innerHTML=portalCarrito.map((item,i)=>{const sub=item.precio*item.cantidad;t+=sub;return`<div class="portal-cart-item"><div style="flex:1"><div style="font-size:13px;font-weight:700">${item.nombre}</div><div style="font-size:12px;color:#64748b">${item.cantidad} × ${fmtMx(item.precio)}</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#2563eb">${fmtMx(sub)}</div><button onclick="portalCarrito.splice(${i},1);renderCarrito()" style="border:none;background:none;color:#f43f5e;cursor:pointer;font-size:11px">Quitar</button></div></div>`;}).join('');
+  if(total)total.textContent=fmtMx(t);
+  if(count)count.textContent=portalCarrito.reduce((s,i)=>s+i.cantidad,0);
+}
+
+window.toggleCart=function(){$x('portal-cart-panel').classList.toggle('open');};
+window.cerrarPortal=function(){$x('portal-screen').style.display='none';document.getElementById('app-screen')&&($x('app-screen').style.display='flex');};
+
+window.enviarPedido=async function(){
+  const nombre=$x('portal-nombre-cliente')?.value.trim();const tel=$x('portal-telefono-cliente')?.value.trim();
+  if(!nombre||!tel){alert('Por favor completa tu nombre y teléfono');return;}
+  if(!portalCarrito.length){alert('Agrega al menos un producto');return;}
+  const tid=new URLSearchParams(window.location.search).get('portal')||window._currentTenantId;
+  if(!tid){alert('Error: negocio no encontrado');return;}
+  const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const db=getFirestore();
+  await addDoc(collection(db,'businesses',tid,'pedidos'),{
+    clienteNombre:nombre,clienteTel:tel,clienteEmail:$x('portal-email-cliente')?.value||'',
+    notas:$x('portal-notas-pedido')?.value||'',
+    items:portalCarrito.map(i=>({...i})),
+    estado:'nuevo',fecha:new Date().toISOString().slice(0,10),
+    createdAt:serverTimestamp()
+  });
+  $x('portal-cart-panel').classList.remove('open');
+  portalCarrito=[];renderCarrito();
+  $x('portal-nombre-cliente').value='';$x('portal-telefono-cliente').value='';
+  $x('portal-email-cliente').value='';$x('portal-notas-pedido').value='';
+  $x('portal-grid').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 20px"><div style="font-size:60px;margin-bottom:16px">✅</div><h2 style="color:#1e293b;margin-bottom:8px">¡Pedido enviado con éxito!</h2><p style="color:#64748b;font-size:15px">Hemos recibido tu pedido. Nos comunicaremos contigo pronto al número ${tel}</p></div>`;
+};
+
+// ─── AUTO-OPEN PORTAL if URL has ?portal=xxx ───
+(async()=>{
+  const params=new URLSearchParams(window.location.search);
+  const portalTid=params.get('portal');
+  if(portalTid){
+    const {initializeApp,getApps}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    if(!getApps().length)initializeApp({apiKey:"AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",authDomain:"nexora-erp-2b417.firebaseapp.com",projectId:"nexora-erp-2b417",storageBucket:"nexora-erp-2b417.firebasestorage.app",messagingSenderId:"803467842564",appId:"1:803467842564:web:ceee51faad6dbae218d151"});
+    await window.abrirPortal(portalTid);
+  }
+})();
+
+// ─── Expose tenantId after auth ───
+const _authObserver=()=>{
+  const authEl=document.getElementById('user-name');
+  if(authEl&&authEl.textContent!=='—'){
+    // Tenant is set, dispatch event
+    if(window._currentTenantId)document.dispatchEvent(new CustomEvent('tenantReady',{detail:window._currentTenantId}));
+  }
+};
+setInterval(()=>{if(window._currentTenantId)clearInterval(window._authInterval);},500);
+
+// Poll for tenant (set by main ERP script)
+window._authInterval=setInterval(async()=>{
+  const {getAuth}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+  const {getFirestore,doc,getDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const auth=getAuth();const user=auth.currentUser;
+  if(user&&!window._currentTenantId){
+    const db=getFirestore();
+    const ud=await getDoc(doc(db,'users',user.uid));
+    if(ud.exists()&&ud.data().businessId){
+      window._currentTenantId=ud.data().businessId;
+      clearInterval(window._authInterval);
+      // Update pedidos badge
+      setTimeout(async()=>{
+        const {collection,getDocs,query,where}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+        const snap=await getDocs(collection(db,'businesses',window._currentTenantId,'pedidos'));
+        const nuevos=snap.docs.filter(d=>d.data().estado==='nuevo').length;
+        const badge=document.getElementById('pedidos-badge');
+        if(badge&&nuevos>0){badge.textContent=nuevos;badge.classList.add('show');}
+      },1000);
+    }
+  }
+},2000);
 </script>
