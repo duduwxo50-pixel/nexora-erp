@@ -2938,10 +2938,17 @@ window.handleImportFile=function(file){
         const match=wb.SheetNames.find(n=>n.toLowerCase().includes(currentImportTab.slice(0,4)));
         ws=wb.Sheets[match||wb.SheetNames[0]];
       }
-      // Skip rows 1-3 (title, subtitle, instruction), row 4=headers, data from row 5
+      // Auto-detectar fila de encabezados (funciona con plantillas con título o sin él)
       const rawRows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      const headers=rawRows[3]; // row index 3 = Excel row 4
-      rows=rawRows.slice(4).filter(r=>r.some(c=>c!=='')).map(r=>{const obj={};headers.forEach((h,i)=>{obj[h]=r[i]??'';});return obj;});
+      const keyFields2={productos:'NOMBRE',clientes:'NOMBRE',proveedores:'NOMBRE',cotizaciones:'NOMBRE CLIENTE'};
+      const kf=keyFields2[currentImportTab]||'NOMBRE';
+      let headerIdx=rawRows.findIndex(r=>r.some(c=>String(c).toUpperCase().includes(kf)));
+      if(headerIdx===-1)headerIdx=0;
+      const rawHeaders=rawRows[headerIdx];
+      // Normalizar: agregar asterisco a campos obligatorios si no lo tienen
+      const mustMap={'NOMBRE':'NOMBRE*','NOMBRE / RAZÓN SOCIAL':'NOMBRE / RAZÓN SOCIAL*','NOMBRE CLIENTE':'NOMBRE CLIENTE*','PRECIO VENTA':'PRECIO VENTA*','STOCK ACTUAL':'STOCK ACTUAL*','PRODUCTO 1':'PRODUCTO 1*','CANT. 1':'CANT. 1*'};
+      const headerNorm=rawHeaders.map(h=>{const s=String(h||'').trim();return mustMap[s]||s;});
+      rows=rawRows.slice(headerIdx+1).filter(r=>r.some(c=>c!=='')).map(r=>{const obj={};headerNorm.forEach((h,i)=>{obj[h]=r[i]??'';});return obj;});
     }
     importData=rows;
     mostrarPreviewImport(rows);
@@ -3322,7 +3329,8 @@ function renderPortal(prods){
   if(!grid)return;
   grid.innerHTML=prods.map(p=>{
     const img=p.imagen?`<img src="${p.imagen}" style="width:100%;height:140px;object-fit:cover">`:'<div style="width:100%;height:140px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:40px">📦</div>';
-    const precio=portalConfig.showPrices==='si'?`<div style="font-size:18px;font-weight:900;color:${portalConfig.color||'#2563eb'};margin-bottom:6px">${fmtMx(p.precio)}</div>`:'';
+    const precioIva=Math.round((p.precio||0)*1.19);
+    const precio=portalConfig.showPrices==='si'?`<div style="font-size:18px;font-weight:900;color:${portalConfig.color||'#2563eb'};margin-bottom:2px">${fmtMx(precioIva)}<span style="font-size:11px;font-weight:600;color:#64748b;margin-left:4px">IVA inc.</span></div><div style="font-size:11px;color:#94a3b8;margin-bottom:4px">Base: ${fmtMx(p.precio)}</div>`:'';
     return `<div class="portal-card">
       ${img}
       <div class="portal-card-body">
@@ -3357,9 +3365,14 @@ function renderCarrito(){
   const items=$x('portal-cart-items');const total=$x('portal-cart-total');const count=$x('portal-cart-count');
   if(!items)return;
   if(!portalCarrito.length){items.innerHTML='<div style="text-align:center;padding:30px;color:#94a3b8">Tu pedido está vacío</div>';if(total)total.textContent='$0';if(count)count.textContent='0';return;}
-  let t=0;
-  items.innerHTML=portalCarrito.map((item,i)=>{const sub=item.precio*item.cantidad;t+=sub;return`<div class="portal-cart-item"><div style="flex:1"><div style="font-size:13px;font-weight:700">${item.nombre}</div><div style="font-size:12px;color:#64748b">${item.cantidad} × ${fmtMx(item.precio)}</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#2563eb">${fmtMx(sub)}</div><button onclick="portalCarrito.splice(${i},1);renderCarrito()" style="border:none;background:none;color:#f43f5e;cursor:pointer;font-size:11px">Quitar</button></div></div>`;}).join('');
-  if(total)total.textContent=fmtMx(t);
+  let subtotalBase=0;
+  items.innerHTML=portalCarrito.map((item,i)=>{const sub=item.precio*item.cantidad;subtotalBase+=sub;const subIva=Math.round(sub*1.19);return`<div class="portal-cart-item"><div style="flex:1"><div style="font-size:13px;font-weight:700">${item.nombre}</div><div style="font-size:12px;color:#64748b">${item.cantidad} × ${fmtMx(Math.round(item.precio*1.19))} <span style="color:#94a3b8">(c/IVA)</span></div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#2563eb">${fmtMx(subIva)}</div><button onclick="portalCarrito.splice(${i},1);renderCarrito()" style="border:none;background:none;color:#f43f5e;cursor:pointer;font-size:11px">Quitar</button></div></div>`;}).join('');
+  const ivaVal=Math.round(subtotalBase*0.19);
+  const totalConIva=Math.round(subtotalBase*1.19);
+  // Mostrar desglose subtotal + IVA + total en el footer
+  const footerEl=$x('portal-cart-total')?.closest('.portal-cart-footer');
+  if(footerEl){footerEl.innerHTML=`<div style="font-size:12px;color:#64748b;display:flex;justify-content:space-between;margin-bottom:4px"><span>Subtotal (sin IVA)</span><span>${fmtMx(subtotalBase)}</span></div><div style="font-size:12px;color:#64748b;display:flex;justify-content:space-between;margin-bottom:8px"><span>IVA 19%</span><span>+${fmtMx(ivaVal)}</span></div><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;border-top:1px solid #e2e8f0;padding-top:10px;margin-bottom:14px"><span>Total con IVA</span><span id="portal-cart-total" style="color:#2563eb">${fmtMx(totalConIva)}</span></div>`;}
+  else if(total)total.textContent=fmtMx(totalConIva);
   if(count)count.textContent=portalCarrito.reduce((s,i)=>s+i.cantidad,0);
 }
 
@@ -3386,6 +3399,9 @@ window.enviarPedido=async function(){
     clienteNombre:nombre,clienteTel:tel,clienteEmail:$x('portal-email-cliente')?.value||'',
     notas:$x('portal-notas-pedido')?.value||'',
     items:portalCarrito.map(i=>({...i})),
+    subtotalBase:portalCarrito.reduce((s,i)=>s+(i.precio*i.cantidad),0),
+    totalConIva:Math.round(portalCarrito.reduce((s,i)=>s+(i.precio*i.cantidad),0)*1.19),
+    iva:19,
     estado:'nuevo',fecha:new Date().toISOString().slice(0,10),
     createdAt:serverTimestamp()
   });
