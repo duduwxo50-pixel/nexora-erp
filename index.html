@@ -2963,26 +2963,30 @@ function mostrarPreviewImport(rows){
   $x('import-zone-wrap').style.display='none';
   wrap.style.display='block';
   if(!rows.length){preview.innerHTML='<div style="color:var(--red);padding:10px">No se encontraron datos en el archivo.</div>';return;}
+  // Campos obligatorios con variantes (con y sin asterisco, con y sin tildes)
   const fieldMap={
-    productos:['NOMBRE*','PRECIO VENTA*','STOCK ACTUAL*'],
-    clientes:['NOMBRE / RAZÓN SOCIAL*'],
-    proveedores:['NOMBRE / RAZÓN SOCIAL*'],
-    cotizaciones:['NOMBRE CLIENTE*','PRODUCTO 1*','CANT. 1*']
+    productos:[['NOMBRE*','NOMBRE'],'PRECIO VENTA*|PRECIO VENTA|PRECIO','STOCK ACTUAL*|STOCK ACTUAL|STOCK'].map(f=>Array.isArray(f)?f:f.split('|')),
+    clientes:[['NOMBRE / RAZÓN SOCIAL*','NOMBRE / RAZÓN SOCIAL','NOMBRE / RAZON SOCIAL*','NOMBRE / RAZON SOCIAL','NOMBRE']],
+    proveedores:[['NOMBRE / RAZÓN SOCIAL*','NOMBRE / RAZÓN SOCIAL','NOMBRE / RAZON SOCIAL*','NOMBRE / RAZON SOCIAL','NOMBRE']],
+    cotizaciones:[['NOMBRE CLIENTE*','NOMBRE CLIENTE','CLIENTE'],['PRODUCTO 1*','PRODUCTO 1'],['CANT. 1*','CANT. 1','CANTIDAD 1']]
   };
   const required=fieldMap[currentImportTab]||[];
+  // Chequear si una fila tiene el campo (cualquiera de sus variantes)
+  const tienecampo=(row,variantes)=>variantes.some(v=>row[v]!==undefined&&row[v]!==null&&String(row[v]).trim()!=='');
+  let ok2=0,err2=0;
   let html=`<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">${rows.length} registros encontrados — Vista previa (máx 5):</div>`;
-  const preview5=rows.slice(0,5);
-  preview5.forEach((row,i)=>{
-    const nombre=row['NOMBRE*']||row['NOMBRE / RAZÓN SOCIAL*']||row['NOMBRE CLIENTE*']||Object.values(row)[0]||'—';
-    const faltantes=required.filter(f=>!row[f]||row[f]==='');
+  rows.slice(0,5).forEach((row,i)=>{
+    const nombre=Object.values(row).find(v=>v&&String(v).trim()&&isNaN(v))||Object.values(row)[0]||'—';
+    const faltantes=required.filter(variantes=>!tienecamp(row,variantes)).map(v=>v[0].replace('*',''));
     const ok=faltantes.length===0;
-    html+=`<div class="${ok?'import-row-ok':'import-row-err'}">
-      ${ok?'✅':'❌'} Fila ${i+5}: <strong>${nombre}</strong>${!ok?' — Faltan: '+faltantes.join(', '):''}
-    </div>`;
+    ok?ok2++:err2++;
+    html+=`<div class="${ok?'import-row-ok':'import-row-err'}">${ok?'✅':'❌'} Fila ${i+2}: <strong>${nombre}</strong>${!ok?' — Faltan: '+faltantes.join(', '):''}</div>`;
   });
-  if(rows.length>5)html+=`<div style="font-size:11px;color:var(--muted);padding:6px 0">... y ${rows.length-5} registros más</div>`;
+  if(rows.length>5){const rest=rows.slice(5);const restErr=rest.filter(row=>required.some(variantes=>!tienecamp(row,variantes))).length;html+=`<div style="font-size:11px;color:var(--muted);padding:6px 0">... y ${rows.length-5} registros más${restErr?' ('+restErr+' con posibles errores)':''}</div>`;}
   preview.innerHTML=html;
 }
+// alias typo fix
+function tienecamp(row,variantes){return variantes.some(v=>row[v]!==undefined&&row[v]!==null&&String(row[v]).trim()!=='');}
 
 window.resetImport=function(){
   $x('import-zone-wrap').style.display='block';
@@ -2998,6 +3002,15 @@ window.confirmarImport=async function(){
   const fill=$x('import-progress-fill');
   bar.style.display='block';
   const btn=$x('btn-confirmar-import');btn.disabled=true;btn.textContent='⏳ Importando...';
+  // Inicializar consecutivo de productos desde Firebase
+  if(currentImportTab==='productos'){
+    const {getFirestore,collection,getDocs}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const db=getFirestore();const tid=window._currentTenantId;
+    const snap=await getDocs(collection(db,'businesses',tid,'productos'));
+    let mx=0;
+    snap.forEach(d=>{const ref=String(d.data().referencia||'');const n=parseInt(ref.replace(/\D/g,''));if(!isNaN(n)&&n>mx)mx=n;});
+    _importConsecProductos=mx;
+  }
   let ok=0,err=0;
   for(let i=0;i<importData.length;i++){
     fill.style.width=Math.round(((i+1)/importData.length)*100)+'%';
@@ -3016,65 +3029,107 @@ window.confirmarImport=async function(){
   resetImport();
 };
 
+// Helper: leer campo tolerando con/sin asterisco y variantes
+function getField(row, ...keys){
+  for(const k of keys){
+    const v=row[k]??row[k.replace('*','').trim()]??row[k+'*'];
+    if(v!==undefined&&v!==null&&String(v).trim()!=='')return String(v).trim();
+  }
+  return '';
+}
+function getNum(row,...keys){const v=getField(row,...keys);return parseFloat(String(v).replace(/[^0-9.-]/g,''))||0;}
+function getInt(row,...keys){const v=getField(row,...keys);return parseInt(String(v).replace(/[^0-9]/g,''))||0;}
+
+// Contadores locales para consecutivos durante la importación (se inicializan en confirmarImport)
+let _importConsecProductos=0;
+
 async function importarProducto(row){
   const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-  const db=getFirestore();
-  const tid=window._currentTenantId;
-  const nombre=String(row['NOMBRE*']||'').trim();if(!nombre)return;
+  const db=getFirestore();const tid=window._currentTenantId;
+  const nombre=getField(row,'NOMBRE*','NOMBRE');if(!nombre)return;
+  _importConsecProductos++;
+  const refExcel=getField(row,'REFERENCIA*','REFERENCIA');
+  const referencia=refExcel||('PROD-'+String(_importConsecProductos).padStart(4,'0'));
   await addDoc(collection(db,'businesses',tid,'productos'),{
-    nombre,referencia:row['REFERENCIA']||'',categoria:row['CATEGORÍA']||'',
-    descripcion:row['DESCRIPCIÓN']||'',unidad:row['UNIDAD']||'',
-    precio:parseFloat(String(row['PRECIO VENTA*']).replace(/[^0-9.]/g,''))||0,
-    costo:parseFloat(String(row['PRECIO COSTO']||'0').replace(/[^0-9.]/g,''))||0,
-    stock:parseInt(row['STOCK ACTUAL*'])||0,stockMin:parseInt(row['STOCK MÍNIMO'])||5,
-    imagen:row['URL IMAGEN']||'',eliminado:false,createdAt:serverTimestamp()
+    nombre,referencia,
+    categoria:getField(row,'CATEGORÍA','CATEGORIA'),
+    descripcion:getField(row,'DESCRIPCIÓN','DESCRIPCION'),
+    unidad:getField(row,'UNIDAD'),
+    precio:getNum(row,'PRECIO VENTA*','PRECIO VENTA','PRECIO'),
+    costo:getNum(row,'PRECIO COSTO','COSTO'),
+    stock:getInt(row,'STOCK ACTUAL*','STOCK ACTUAL','STOCK'),
+    stockMin:getInt(row,'STOCK MÍNIMO','STOCK MINIMO','STOCK MIN')||5,
+    imagen:getField(row,'URL IMAGEN','IMAGEN'),
+    eliminado:false,createdAt:serverTimestamp()
   });
 }
 async function importarCliente(row){
   const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
   const db=getFirestore();const tid=window._currentTenantId;
-  const nombre=String(row['NOMBRE / RAZÓN SOCIAL*']||'').trim();if(!nombre)return;
-  const asesor=row['ASESOR PREDETERMINADO']?[{nombre:row['ASESOR PREDETERMINADO'],telefono:row['TEL. ASESOR']||'',veces:0}]:[];
+  const nombre=getField(row,'NOMBRE / RAZÓN SOCIAL*','NOMBRE / RAZÓN SOCIAL','NOMBRE / RAZON SOCIAL*','NOMBRE / RAZON SOCIAL','NOMBRE');if(!nombre)return;
+  const asesorNom=getField(row,'ASESOR PREDETERMINADO','ASESOR');
+  const asesor=asesorNom?[{nombre:asesorNom,telefono:getField(row,'TEL. ASESOR','TEL ASESOR'),veces:0}]:[];
   await addDoc(collection(db,'businesses',tid,'clientes'),{
-    nombre,nit:row['NIT / CÉDULA']||'',email:row['EMAIL']||'',telefono:row['TELÉFONO']||'',
-    ciudad:row['CIUDAD']||'',direccion:row['DIRECCIÓN']||'',sector:row['SECTOR / INDUSTRIA']||'',
-    regimen:row['RÉGIMEN TRIBUTARIO']||'Común',pago:row['CONDICIÓN DE PAGO']||'contado',
-    web:row['SITIO WEB']||'',descripcion:row['DESCRIPCIÓN EMPRESA']||'',asesores:asesor,
-    eliminado:false,createdAt:serverTimestamp()
+    nombre,
+    nit:getField(row,'NIT / CÉDULA','NIT / CEDULA','NIT'),
+    email:getField(row,'EMAIL'),
+    telefono:getField(row,'TELÉFONO','TELEFONO'),
+    ciudad:getField(row,'CIUDAD'),
+    direccion:getField(row,'DIRECCIÓN','DIRECCION'),
+    sector:getField(row,'SECTOR / INDUSTRIA','SECTOR'),
+    regimen:getField(row,'RÉGIMEN TRIBUTARIO','REGIMEN TRIBUTARIO','RÉGIMEN','REGIMEN')||'Común',
+    pago:getField(row,'CONDICIÓN DE PAGO','CONDICION DE PAGO','CONDICIÓN PAGO','CONDICION PAGO','PAGO')||'contado',
+    web:getField(row,'SITIO WEB','WEB'),
+    descripcion:getField(row,'DESCRIPCIÓN EMPRESA','DESCRIPCION EMPRESA','DESCRIPCIÓN','DESCRIPCION'),
+    asesores:asesor,eliminado:false,createdAt:serverTimestamp()
   });
 }
 async function importarProveedor(row){
   const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
   const db=getFirestore();const tid=window._currentTenantId;
-  const nombre=String(row['NOMBRE / RAZÓN SOCIAL*']||'').trim();if(!nombre)return;
+  const nombre=getField(row,'NOMBRE / RAZÓN SOCIAL*','NOMBRE / RAZÓN SOCIAL','NOMBRE / RAZON SOCIAL*','NOMBRE / RAZON SOCIAL','NOMBRE');if(!nombre)return;
   await addDoc(collection(db,'businesses',tid,'proveedores'),{
-    nombre,nit:row['NIT']||'',contacto:row['CONTACTO PRINCIPAL']||'',cargo:row['CARGO']||'',
-    telefono:row['TELÉFONO']||'',email:row['EMAIL']||'',ciudad:row['CIUDAD']||'',
-    direccion:row['DIRECCIÓN']||'',sector:row['SECTOR / CATEGORÍA']||'',
-    plazo:row['PLAZO DE ENTREGA']||'',condpago:row['CONDICIÓN PAGO']||'',
-    web:row['SITIO WEB']||'',descripcion:row['DESCRIPCIÓN']||'',
+    nombre,
+    nit:getField(row,'NIT'),
+    contacto:getField(row,'CONTACTO PRINCIPAL','CONTACTO'),
+    cargo:getField(row,'CARGO'),
+    telefono:getField(row,'TELÉFONO','TELEFONO'),
+    email:getField(row,'EMAIL'),
+    ciudad:getField(row,'CIUDAD'),
+    direccion:getField(row,'DIRECCIÓN','DIRECCION'),
+    sector:getField(row,'SECTOR / CATEGORÍA','SECTOR / CATEGORIA','SECTOR'),
+    plazo:getField(row,'PLAZO DE ENTREGA','PLAZO'),
+    condpago:getField(row,'CONDICIÓN PAGO','CONDICION PAGO','COND.PAGO'),
+    web:getField(row,'SITIO WEB','WEB'),
+    descripcion:getField(row,'DESCRIPCIÓN','DESCRIPCION'),
     eliminado:false,createdAt:serverTimestamp()
   });
 }
 async function importarCotizacion(row){
   const {getFirestore,collection,addDoc,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
   const db=getFirestore();const tid=window._currentTenantId;
-  const cliente=String(row['NOMBRE CLIENTE*']||'').trim();if(!cliente)return;
+  const cliente=getField(row,'NOMBRE CLIENTE*','NOMBRE CLIENTE','CLIENTE');if(!cliente)return;
   const items=[];
-  for(let n=1;n<=3;n++){
-    const prod=row[n===1?'PRODUCTO 1*':`PRODUCTO ${n}`];const cant=row[n===1?'CANT. 1*':`CANT. ${n}`];
-    if(prod&&cant)items.push({nombre:String(prod).trim(),cantidad:parseInt(cant)||1,precio:parseFloat(String(row[`PRECIO UNIT. ${n}`]||'0').replace(/[^0-9.]/g,''))||0,descItem:0,imagen:''});
+  for(let n=1;n<=5;n++){
+    const prod=getField(row,`PRODUCTO ${n}*`,`PRODUCTO ${n}`);
+    const cant=getField(row,`CANT. ${n}*`,`CANT. ${n}`,`CANTIDAD ${n}`);
+    if(prod&&cant)items.push({nombre:prod,cantidad:parseInt(cant)||1,precio:getNum(row,`PRECIO UNIT. ${n}`,`PRECIO UNITARIO ${n}`,`PRECIO ${n}`),descItem:0,imagen:''});
   }
   if(!items.length)return;
   const subtotal=items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-  const descP=parseFloat(row['DESCUENTO GLOBAL%'])||0;const ivaP=parseFloat(row['IVA%'])||19;
+  const descP=getNum(row,'DESCUENTO GLOBAL%','DESCUENTO%','DESCUENTO');
+  const ivaP=getNum(row,'IVA%','IVA')||19;
   const base=subtotal*(1-descP/100);const total=base*(1+ivaP/100);
   const next=await getNextConsecFromDB(tid,db,'cotizaciones');
   await addDoc(collection(db,'businesses',tid,'cotizaciones'),{
-    numero:row['N° COTIZACIÓN']||'COT-'+next,cliente,clienteId:'',
-    fecha:row['FECHA']||new Date().toISOString().slice(0,10),vencimiento:row['VÁLIDA HASTA']||'',
-    asesorNombre:row['ASESOR']||'',items,subtotal,descuento:descP,iva:ivaP,total,
-    estado:row['ESTADO']||'Borrador',notas:row['NOTAS']||'',
+    numero:getField(row,'N° COTIZACIÓN','N° COTIZACION','NUMERO','N°')||'COT-'+next,
+    cliente,clienteId:'',
+    fecha:getField(row,'FECHA')||new Date().toISOString().slice(0,10),
+    vencimiento:getField(row,'VÁLIDA HASTA','VALIDA HASTA','VENCE'),
+    asesorNombre:getField(row,'ASESOR'),
+    items,subtotal,descuento:descP,iva:ivaP,total,
+    estado:getField(row,'ESTADO')||'Borrador',
+    notas:getField(row,'NOTAS'),
     eliminado:false,createdAt:serverTimestamp()
   });
 }
