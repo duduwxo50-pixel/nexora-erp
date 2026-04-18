@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+// Detectar modo portal INMEDIATAMENTE antes de que cargue nada
+window._IS_PORTAL = new URLSearchParams(window.location.search).has('portal');
+window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
+</script>
 <title>Nexora ERP v3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -418,9 +423,16 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   .quick-actions{display:none;}
   .content{padding:18px;}
 }
+/* Portal mode: ocultar todo el ERP completamente */
+body.portal-mode #auth-screen,
+body.portal-mode #app-screen { display: none !important; }
+body.portal-mode #portal-screen { display: block !important; }
 </style>
 </head>
 <body>
+<script>
+if(window._IS_PORTAL) document.body.classList.add('portal-mode');
+</script>
 <!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
@@ -1380,8 +1392,8 @@ window.sortTable=function(tbId,col){const tb=$(tbId);const rows=Array.from(tb.qu
 
 // ── AUTH ──
 onAuthStateChanged(auth,async user=>{
-  // Si la URL tiene ?portal=xxx, este es el link del cliente — no mostrar el ERP
-  if(new URLSearchParams(window.location.search).get('portal')) return;
+  // Si es modo portal del cliente — ignorar completamente la autenticación del ERP
+  if(window._IS_PORTAL) return;
   if(user){
     currentUser=user;
     let ud=await getDoc(doc(db,'users',user.uid));
@@ -1401,8 +1413,8 @@ onAuthStateChanged(auth,async user=>{
     window.loadModule('dashboard');
     actualizarBadgePapelera();
   } else {
-    // Solo mostrar login si NO estamos en modo portal del cliente
-    if(!new URLSearchParams(window.location.search).get('portal')){
+    // Solo mostrar login si NO es portal del cliente
+    if(!window._IS_PORTAL){
       $('auth-screen').style.display='flex';
       $('app-screen').style.display='none';
     }
@@ -3369,9 +3381,10 @@ window.abrirPortal=async function(tenantId){
   const hBiz=$x('portal-header-biz');if(hBiz)hBiz.textContent='Catálogo de productos';
   const wMsg=$x('portal-welcome-msg');if(wMsg)wMsg.textContent=cfg.welcome;
   // Ocultar ERP, mostrar solo portal
+  document.body.classList.add('portal-mode');
   const authEl=document.getElementById('auth-screen');if(authEl)authEl.style.display='none';
   const appEl=document.getElementById('app-screen');if(appEl)appEl.style.display='none';
-  const portalEl=$x('portal-screen');if(portalEl)portalEl.style.display='block';
+  const portalEl=$x('portal-screen');if(portalEl){portalEl.style.display='block';portalEl.style.setProperty('display','block','important');}
   // Cargar productos
   const snap=await getDocs(collection(db,'businesses',tenantId,'productos'));
   portalProductos=snap.docs.filter(d=>!d.data().eliminado&&(d.data().stock||0)>0).map(d=>({id:d.id,...d.data()}));
@@ -3469,17 +3482,17 @@ window.enviarPedido=async function(){
 
 // ─── AUTO-OPEN PORTAL if URL has ?portal=xxx ───
 (async()=>{
-  const params=new URLSearchParams(window.location.search);
-  const portalTid=params.get('portal');
-  if(portalTid){
-    // Modo cliente: ocultar todo el ERP desde el inicio
-    window._portalMode=true;
-    document.getElementById('auth-screen')&&(document.getElementById('auth-screen').style.display='none');
-    document.getElementById('app-screen')&&(document.getElementById('app-screen').style.display='none');
-    const {initializeApp,getApps}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    if(!getApps().length)initializeApp({apiKey:"AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",authDomain:"nexora-erp-2b417.firebaseapp.com",projectId:"nexora-erp-2b417",storageBucket:"nexora-erp-2b417.firebasestorage.app",messagingSenderId:"803467842564",appId:"1:803467842564:web:ceee51faad6dbae218d151"});
-    await window.abrirPortal(portalTid);
-  }
+  if(!window._IS_PORTAL) return; // Solo ejecutar si es link de cliente
+  // Detener el interval de polling del ERP para que no interfiera
+  if(window._authInterval) clearInterval(window._authInterval);
+  // Ocultar todo el ERP inmediatamente
+  document.body.classList.add('portal-mode');
+  document.getElementById('auth-screen')&&(document.getElementById('auth-screen').style.display='none');
+  document.getElementById('app-screen')&&(document.getElementById('app-screen').style.display='none');
+  // Inicializar Firebase y abrir portal
+  const {initializeApp,getApps}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  if(!getApps().length)initializeApp({apiKey:"AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",authDomain:"nexora-erp-2b417.firebaseapp.com",projectId:"nexora-erp-2b417",storageBucket:"nexora-erp-2b417.firebasestorage.app",messagingSenderId:"803467842564",appId:"1:803467842564:web:ceee51faad6dbae218d151"});
+  await window.abrirPortal(window._PORTAL_ID);
 })();
 
 // ─── Expose tenantId after auth ───
