@@ -2113,6 +2113,18 @@ $('cot-filter-desde').addEventListener('change',aplicarFiltrosCot);
 $('cot-filter-hasta').addEventListener('change',aplicarFiltrosCot);
 
 const BADGE_MAP={Borrador:'badge-borrador','En Espera':'badge-espera',Aprobado:'badge-aprobado',Cancelado:'badge-cancelado',Facturada:'badge-facturada',Pendiente:'badge-pendiente',Pagada:'badge-pagada',Anulada:'badge-anulada'};
+function calcTotalCot(c){
+  if(c.items&&c.items.length){
+    const raw=c.items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+    const descItems=c.items.reduce((s,i)=>s+(i.precio*i.cantidad*(i.descItem||0)/100),0);
+    const subtotal=raw-descItems;
+    const dp=c.descuento||0;
+    return Math.round(subtotal*(1-dp/100));
+  }
+  // fallback: si no hay items, desinflar el total guardado
+  const ip=c.iva||0;
+  return ip>0?Math.round((c.total||0)/(1+ip/100)):(c.total||0);
+}
 function renderCotizaciones(docs){
   const tb=$('cot-tbody');tb.innerHTML='';
   if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="7">Sin resultados</td></tr>';return;}
@@ -2123,7 +2135,7 @@ function renderCotizaciones(docs){
       <td>${esc(c.cliente||'—')}</td>
       <td style="font-size:12px;color:var(--muted)">${esc(c.asesorNombre||'—')}</td>
       <td>${esc(c.fecha||'—')}</td>
-      <td><strong>${fmtM(c.total)}</strong></td>
+      <td><strong>${fmtM(calcTotalCot(c))}</strong></td>
       <td><span class="badge ${BADGE_MAP[c.estado]||'badge-borrador'}">${esc(c.estado||'—')}</span></td>
       <td>
         <div class="quick-actions">
@@ -2250,6 +2262,17 @@ function aplicarFiltrosFact(){
   renderFacturas(docs);
 }
 [$('fact-search'),$('fact-filter-estado'),$('fact-filter-cliente'),$('fact-filter-desde'),$('fact-filter-hasta')].forEach(el=>{if(el)el.addEventListener('change',aplicarFiltrosFact);el?.addEventListener('input',aplicarFiltrosFact);});
+function calcTotalFact(f){
+  if(f.items&&f.items.length){
+    const raw=f.items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+    const descItems=f.items.reduce((s,i)=>s+(i.precio*i.cantidad*(i.descItem||0)/100),0);
+    const subtotal=raw-descItems;
+    const dp=f.descuento||0;
+    return Math.round(subtotal*(1-dp/100));
+  }
+  const ip=f.iva||0;
+  return ip>0?Math.round((f.total||0)/(1+ip/100)):(f.total||0);
+}
 function renderFacturas(docs){
   const tb=$('facturas-tbody');tb.innerHTML='';
   if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="6">Sin resultados</td></tr>';return;}
@@ -2258,7 +2281,7 @@ function renderFacturas(docs){
     tb.innerHTML+=`<tr>
       <td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(f.numero||'—')}</strong></td>
       <td>${esc(f.cliente||'—')}</td><td>${esc(f.fecha||'—')}</td>
-      <td><strong>${fmtM(f.total)}</strong></td>
+      <td><strong>${fmtM(calcTotalFact(f))}</strong></td>
       <td><span class="badge ${BADGE_MAP[f.estado]||'badge-borrador'}">${esc(f.estado||'—')}</span></td>
       <td>
         <button class="qa-btn" onclick="window.quickEstado('facturas','${d.id}','${esc(f.estado||'')}','fact')">🏷️ Estado</button>
