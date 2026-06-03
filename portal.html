@@ -769,8 +769,7 @@ function renderProds(prods) {
       : `<div class="prod-img-placeholder">📦</div>`;
 
     const precio = config.showPrices === 'si'
-      ? `<div class="prod-price">${fmt(precioIva)}</div>
-         <div class="prod-price-base">Base: ${fmt(precioBase)}</div>`
+      ? `<div class="prod-price">${fmt(precioIva)}</div>`
       : '';
 
     return `<div class="prod-card">
