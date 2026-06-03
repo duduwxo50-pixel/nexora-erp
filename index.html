@@ -19,6 +19,46 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
   --border:rgba(255,255,255,0.07); --radius:14px;
   --font:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
 }
+[data-theme="light"] {
+  --bg:#f0f4ff; --sidebar:#1e3a8a; --accent:#2563eb; --accent2:#1d4ed8;
+  --green:#059669; --red:#e11d48; --yellow:#d97706; --purple:#7c3aed; --orange:#ea580c;
+  --text:#0f172a; --muted:#64748b; --card:#ffffff;
+  --border:rgba(0,0,0,0.09);
+}
+[data-theme="combined"] {
+  --bg:#f8faff; --sidebar:#0f172a; --accent:#2563eb; --accent2:#38bdf8;
+  --green:#059669; --red:#e11d48; --yellow:#d97706; --purple:#7c3aed; --orange:#ea580c;
+  --text:#0f172a; --muted:#64748b; --card:#ffffff;
+  --border:rgba(0,0,0,0.09);
+}
+[data-theme="light"] body,[data-theme="combined"] body{background:var(--bg);color:var(--text);}
+[data-theme="light"] .main,[data-theme="combined"] .main{background:var(--bg);}
+[data-theme="light"] table,[data-theme="combined"] table{color:var(--text);}
+[data-theme="light"] th,[data-theme="combined"] th{background:rgba(37,99,235,.06);color:var(--muted);}
+[data-theme="light"] td,[data-theme="combined"] td{border-bottom:1px solid var(--border);}
+[data-theme="light"] tr:hover td,[data-theme="combined"] tr:hover td{background:rgba(37,99,235,.04);}
+[data-theme="light"] .card,[data-theme="combined"] .card,
+[data-theme="light"] .dash-card,[data-theme="combined"] .dash-card{background:var(--card);border-color:var(--border);}
+[data-theme="light"] .modal-content,[data-theme="combined"] .modal-content{background:#fff;color:var(--text);}
+[data-theme="light"] input,[data-theme="combined"] input,
+[data-theme="light"] select,[data-theme="combined"] select,
+[data-theme="light"] textarea,[data-theme="combined"] textarea{background:#f1f5f9;border-color:var(--border);color:var(--text);}
+[data-theme="light"] .filter-chip,[data-theme="combined"] .filter-chip{background:#e8edf5;border-color:var(--border);color:var(--text);}
+[data-theme="light"] .btn-icon,[data-theme="combined"] .btn-icon,
+[data-theme="light"] .qa-btn,[data-theme="combined"] .qa-btn,
+[data-theme="light"] .btn-cancel,[data-theme="combined"] .btn-cancel{background:#f1f5f9;border-color:var(--border);color:var(--text);}
+[data-theme="light"] .info-box,[data-theme="combined"] .info-box{background:rgba(37,99,235,.07);}
+[data-theme="light"] .warn-box,[data-theme="combined"] .warn-box{background:rgba(245,158,11,.07);}
+[data-theme="light"] .detail-panel,[data-theme="combined"] .detail-panel{background:#fff;}
+[data-theme="light"] .table-wrap,[data-theme="combined"] .table-wrap{background:#fff;border-radius:var(--radius);border:1px solid var(--border);}
+[data-theme="combined"] .nav-item{color:rgba(255,255,255,.65);}
+[data-theme="combined"] .nav-item:hover,[data-theme="combined"] .nav-item.active{color:#fff;background:rgba(255,255,255,.08);}
+[data-theme="light"] .nav-item{color:rgba(255,255,255,.7);}
+[data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
+.theme-switcher{display:flex;gap:6px;padding:10px 14px;margin-top:4px;}
+.theme-btn{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;text-align:center;}
+.theme-btn:hover{background:rgba(255,255,255,.13);color:#fff;}
+.theme-btn.active{background:rgba(37,99,235,.4);border-color:rgba(56,189,248,.5);color:#fff;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -482,6 +522,11 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
       <div class="user-info">
         <div class="user-avatar" id="user-avatar">U</div>
         <div><div class="user-name" id="user-name">—</div><div class="user-biz biz-el">—</div></div>
+      </div>
+      <div class="theme-switcher">
+        <button class="theme-btn active" id="theme-dark" onclick="setTheme('dark')" title="Oscuro">\U0001f319 Oscuro</button>
+        <button class="theme-btn" id="theme-light" onclick="setTheme('light')" title="Claro">\u2600\ufe0f Claro</button>
+        <button class="theme-btn" id="theme-combined" onclick="setTheme('combined')" title="Combinado">\u26a1 Mix</button>
       </div>
       <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
     </div>
@@ -3685,4 +3730,11 @@ window._authInterval=setInterval(async()=>{
     }
   }
 },2000);
+
+window.setTheme=function(t){
+  document.documentElement.setAttribute('data-theme', t==='dark'?'':t);
+  ['dark','light','combined'].forEach(n=>document.getElementById('theme-'+n)?.classList.toggle('active',n===t));
+  localStorage.setItem('nexora-theme',t);
+};
+(function(){const t=localStorage.getItem('nexora-theme')||'dark';if(t!=='dark')window.setTheme(t);else{['light','combined'].forEach(n=>document.getElementById('theme-'+n)?.classList.remove('active'));document.getElementById('theme-dark')?.classList.add('active');}})();
 </script>
