@@ -1985,10 +1985,10 @@ function totalesCot(){
   const subtotal=raw-descItems;
   const dp=parseFloat($('cot-descuento').value)||0;
   const dm=subtotal*dp/100;
-  const base=subtotal-dm;
+  const total=subtotal-dm;
   const ip=parseFloat($('cot-iva').value)||0;
-  const im=base*ip/100;
-  const total=base+im;
+  const base=ip>0?Math.round(total/(1+ip/100)):total;
+  const im=total-base;
   $('cot-subtotal').textContent=raw.toLocaleString('es-CO',{maximumFractionDigits:0});
   $('cot-desc-monto').textContent=(descItems+dm).toLocaleString('es-CO',{maximumFractionDigits:0});
   $('cot-base').textContent=base.toLocaleString('es-CO',{maximumFractionDigits:0});
@@ -2169,8 +2169,7 @@ function totalesFact(){
   const descItems=factItems.reduce((s,i)=>s+(i.precio*i.cantidad*(i.descItem||0)/100),0);
   const sub=raw-descItems;
   const dp=parseFloat($('fact-descuento').value)||0;const dm=sub*dp/100;
-  const base=sub-dm;const ip=parseFloat($('fact-iva').value)||0;const im=base*ip/100;
-  const total=base+im;
+  const total=sub-dm;const ip=parseFloat($('fact-iva').value)||0;const base=ip>0?Math.round(total/(1+ip/100)):total;const im=total-base;
   $('fact-subtotal').textContent=raw.toLocaleString('es-CO',{maximumFractionDigits:0});
   $('fact-desc-monto').textContent=(descItems+dm).toLocaleString('es-CO',{maximumFractionDigits:0});
   $('fact-iva-lbl').textContent=ip;
