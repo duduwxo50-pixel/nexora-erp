@@ -874,7 +874,7 @@ function renderSheet() {
     </div>`;
   }).join('');
 
-  const total = carrito.reduce(
+ const total = carrito.reduce(
   (s,i) => s + (i.precio * i.cantidad),
   0
 );
