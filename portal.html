@@ -874,14 +874,20 @@ function renderSheet() {
     </div>`;
   }).join('');
 
-  const subtotalBase = carrito.reduce((s,i) => s + i.precio*i.cantidad, 0);
-  const iva = Math.round(subtotalBase * 0.19);
-  const total = Math.round(subtotalBase * 1.19);
-  $('sum-sub').textContent = fmt(subtotalBase);
-  $('sum-iva').textContent = fmt(iva);
-  $('sum-total').textContent = fmt(total);
-  summary.style.display = 'block';
-  form.style.display = 'block';
+  const total = carrito.reduce(
+  (s,i) => s + (i.precio * i.cantidad),
+  0
+);
+
+const subtotalBase = Math.round(total / 1.19);
+const iva = total - subtotalBase;
+
+$('sum-sub').textContent = fmt(subtotalBase);
+$('sum-iva').textContent = fmt(iva);
+$('sum-total').textContent = fmt(total);
+
+summary.style.display = 'block';
+form.style.display = 'block';
 }
 
 window.cambiarItemQty = function(i, d) {
