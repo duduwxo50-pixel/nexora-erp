@@ -1473,23 +1473,159 @@ window.eliminarPermanente=async(colName,docId)=>{if(!confirm('⚠️ Eliminar pe
 async function actualizarBadgePapelera(){if(!currentTenant)return;const cols=['productos','clientes','proveedores','cotizaciones','facturas','compras'];let total=0;for(const c of cols){const s=await getDocs(col(c));s.forEach(d=>{if(d.data().eliminado)total++;});}const b=$('papelera-badge');b.textContent=total;b.classList.toggle('show',total>0);}
 
 // ── IMAGE HELPERS ──
-function fileToBase64(file){return new Promise((res,rej)=>{if(!file)return res(null);const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej();r.readAsDataURL(file);});}
-function setupImgUpload(inputId,previewId,currentId,currentWrapperId,callback){
-  $(inputId).addEventListener('change',async e=>{
-    const file=e.target.files[0];if(!file)return;
-   if(file.size>500*1024){toast('Imagen muy grande (máx 500KB)','error');return;}
-    const b64=await fileToBase64(file);
-    callback(b64);
-    const wrap=$(currentWrapperId);if(wrap){const img=$(currentId);if(img){img.src=b64;wrap.style.display='block';}}
-    const prev=$(previewId);if(prev)prev.innerHTML=`<img src="${b64}" style="max-height:100px;border-radius:8px;object-fit:contain">`;
+
+function fileToBase64(file){
+  return new Promise((res,rej)=>{
+    if(!file) return res(null);
+
+    const r = new FileReader();
+
+    r.onload = e => res(e.target.result);
+    r.onerror = () => rej();
+
+    r.readAsDataURL(file);
   });
 }
-setupImgUpload('prod-img-input','prod-img-preview','prod-img-current','prod-img-url-current',b64=>{prodImgBase64=b64;});
-setupImgUpload('cli-img-input','cli-img-preview','cli-img-current','cli-img-url-current',b64=>{cliImgBase64=b64;});
-setupImgUpload('prov-img-input','prov-img-preview','prov-img-current','prov-img-url-current',b64=>{provImgBase64=b64;});
-window.limpiarImagenProducto=()=>{prodImgBase64='';$('prod-img-url-current').style.display='none';$('prod-img-preview').innerHTML='<div style="font-size:32px;margin-bottom:8px">🖼️</div><div style="font-size:13px;color:var(--muted)">Clic para subir imagen</div>';};
-window.limpiarImagenCliente=()=>{cliImgBase64='';$('cli-img-url-current').style.display='none';};
-window.limpiarImagenProveedor=()=>{provImgBase64='';$('prov-img-url-current').style.display='none';};
+
+function compressImage(file){
+  return new Promise((resolve,reject)=>{
+
+    const img = new Image();
+
+    img.onload = ()=>{
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let width = img.width;
+      let height = img.height;
+
+      const MAX_WIDTH = 800;
+
+      if(width > MAX_WIDTH){
+        height = height * (MAX_WIDTH / width);
+        width = MAX_WIDTH;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.drawImage(img,0,0,width,height);
+
+      const compressed = canvas.toDataURL(
+        "image/jpeg",
+        0.6
+      );
+
+      resolve(compressed);
+    };
+
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+
+  });
+}
+
+function setupImgUpload(inputId,previewId,currentId,currentWrapperId,callback){
+
+  $(inputId).addEventListener('change',async e=>{
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    // Permitir hasta 5 MB de archivo original
+    if(file.size > 5 * 1024 * 1024){
+      toast('Imagen muy grande (máx 5MB)','error');
+      return;
+    }
+
+    try{
+
+      // Comprimir antes de guardar
+      const b64 = await compressImage(file);
+
+      callback(b64);
+
+      const wrap = $(currentWrapperId);
+
+      if(wrap){
+        const img = $(currentId);
+
+        if(img){
+          img.src = b64;
+          wrap.style.display = 'block';
+        }
+      }
+
+      const prev = $(previewId);
+
+      if(prev){
+        prev.innerHTML = `
+          <img
+            src="${b64}"
+            style="
+              max-height:100px;
+              border-radius:8px;
+              object-fit:contain;
+            "
+          >
+        `;
+      }
+
+    }catch(err){
+      console.error(err);
+      toast('Error al procesar imagen','error');
+    }
+
+  });
+
+}
+
+setupImgUpload(
+  'prod-img-input',
+  'prod-img-preview',
+  'prod-img-current',
+  'prod-img-url-current',
+  b64 => { prodImgBase64 = b64; }
+);
+
+setupImgUpload(
+  'cli-img-input',
+  'cli-img-preview',
+  'cli-img-current',
+  'cli-img-url-current',
+  b64 => { cliImgBase64 = b64; }
+);
+
+setupImgUpload(
+  'prov-img-input',
+  'prov-img-preview',
+  'prov-img-current',
+  'prov-img-url-current',
+  b64 => { provImgBase64 = b64; }
+);
+
+window.limpiarImagenProducto = ()=>{
+  prodImgBase64 = '';
+  $('prod-img-url-current').style.display='none';
+  $('prod-img-preview').innerHTML = `
+    <div style="font-size:32px;margin-bottom:8px">🖼️</div>
+    <div style="font-size:13px;color:var(--muted)">
+      Clic para subir imagen
+    </div>
+  `;
+};
+
+window.limpiarImagenCliente = ()=>{
+  cliImgBase64 = '';
+  $('cli-img-url-current').style.display='none';
+};
+
+window.limpiarImagenProveedor = ()=>{
+  provImgBase64 = '';
+  $('prov-img-url-current').style.display='none';
+};
 
 // ── MARGEN CALC ──
 window.calcMargen=function(){
