@@ -1477,7 +1477,7 @@ function fileToBase64(file){return new Promise((res,rej)=>{if(!file)return res(n
 function setupImgUpload(inputId,previewId,currentId,currentWrapperId,callback){
   $(inputId).addEventListener('change',async e=>{
     const file=e.target.files[0];if(!file)return;
-    if(file.size>2.5*1024*1024){toast('Imagen muy grande (máx 2MB)','error');return;}
+   if(file.size>500*1024){toast('Imagen muy grande (máx 500KB)','error');return;}
     const b64=await fileToBase64(file);
     callback(b64);
     const wrap=$(currentWrapperId);if(wrap){const img=$(currentId);if(img){img.src=b64;wrap.style.display='block';}}
