@@ -758,18 +758,20 @@ function renderProds(prods) {
     grid.innerHTML = `<div class="no-results"><div class="icon">🔍</div><p>Sin productos encontrados</p></div>`;
     return;
   }
-  grid.innerHTML = prods.map(p => {
-    const precioBase = p.precio || 0;
-    const precioIva  = Math.round(precioBase * 1.19);
-    const enCarrito  = carrito.find(i => i.id === p.id);
-    const qty        = enCarrito ? enCarrito.cantidad : 1;
-    const stockBajo  = p.stock <= 5;
+ grid.innerHTML = prods.map(p => {
+
+    const precioFinal = p.precio || 0;
+
+    const enCarrito = carrito.find(i => i.id === p.id);
+    const qty = enCarrito ? enCarrito.cantidad : 1;
+    const stockBajo = p.stock <= 5;
+
     const img = p.imagen
       ? `<img class="prod-img" src="${p.imagen}" alt="${esc(p.nombre)}" loading="lazy">`
       : `<div class="prod-img-placeholder">📦</div>`;
 
     const precio = config.showPrices === 'si'
-      ? `<div class="prod-price">${fmt(precioIva)}</div>`
+      ? `<div class="prod-price">${fmt(precioFinal)}</div>`
       : '';
 
     return `<div class="prod-card">
