@@ -3501,7 +3501,7 @@ window.guardarConfigPortal=async function(){
 window.copiarLinkPortal=function(){
   const tid=window._currentTenantId;
   if(!tid){toastX('Debes iniciar sesión','error');return;}
-  const link=`${window.location.href.split('?')[0]}?portal=${tid}`;
+ const link=`${window.location.origin}${window.location.pathname.replace('index.html','')}portal.html?portal=${tid}`;
   navigator.clipboard.writeText(link).then(()=>toastX('🔗 Link copiado al portapapeles')).catch(()=>toastX('Link: '+link,'info'));
 };
 
