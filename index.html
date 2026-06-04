@@ -250,6 +250,90 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .chart-labels{display:flex;gap:5px;}
 .chart-labels span{flex:1;font-size:9.5px;color:var(--muted);text-align:center;}
 
+/* FIRMA / SELLO */
+.firma-upload-area{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-top:8px;}
+.firma-upload-area:hover{border-color:var(--accent);}
+.firma-preview{max-width:200px;max-height:80px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-top:8px;}
+.recibo-btn{background:linear-gradient(135deg,var(--green),#059669);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);transition:opacity .15s;white-space:nowrap;}
+.recibo-btn:hover{opacity:.85;}
+/* META VENTAS */
+.meta-wrap{margin-bottom:20px;}
+.meta-bar-bg{height:12px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin:8px 0 4px;}
+.meta-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .8s cubic-bezier(.34,1.56,.64,1);}
+.meta-bar-fill.warn{background:linear-gradient(90deg,var(--yellow),#f97316);}
+.meta-bar-fill.danger{background:linear-gradient(90deg,var(--red),#f97316);}
+.meta-bar-fill.done{background:linear-gradient(90deg,var(--green),#34d399);}
+.meta-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+.meta-pct{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--accent2);}
+.stock-alert-banner{display:flex;align-items:center;gap:12px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;cursor:pointer;transition:background .2s;}
+.stock-alert-banner:hover{background:rgba(244,63,94,.13);}
+.tarea-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.tarea-item:last-child{border-bottom:none;}
+.tarea-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s;}
+.tarea-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.tarea-text{flex:1;font-size:13px;line-height:1.4;}
+.tarea-text.done{text-decoration:line-through;color:var(--muted);}
+.tarea-fecha{font-size:10px;color:var(--muted);white-space:nowrap;background:rgba(255,255,255,.05);padding:2px 7px;border-radius:6px;}
+.tarea-fecha.vencida{color:var(--red);font-weight:700;background:rgba(244,63,94,.1);}
+.tarea-add{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.tarea-add input{flex:1;min-width:120px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:var(--font);}
+.tarea-add input::placeholder{color:var(--muted);}
+.btn-wa{background:linear-gradient(135deg,#25d366,#128c7e);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);transition:opacity .15s;white-space:nowrap;}
+.btn-wa:hover{opacity:.85;}
+/* Cotización ya facturada */
+.btn-facturar-ok{background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.3);color:var(--purple);padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .2s;}
+.btn-facturar-ok:hover{background:rgba(139,92,246,.22);}
+.btn-facturar-new{background:linear-gradient(135deg,var(--green),#059669);border:none;color:#fff;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .2s;}
+.btn-facturar-new:hover{opacity:.85;transform:translateY(-1px);}
+.fcm-item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12.5px;}
+.fcm-item-row:last-child{border-bottom:none;}
+.fcm-item-row .fcm-item-name{font-weight:600;flex:1}
+.fcm-item-row .fcm-item-qty{color:var(--muted);font-size:11px;margin:0 12px}
+.fcm-item-row .fcm-item-price{font-weight:700;color:var(--green);font-family:var(--mono);font-size:12px}
+/* CRM + USUARIOS */
+.crm-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.crm-item:last-child{border-bottom:none;}
+.crm-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.crm-dot.llamada{background:#38bdf8;}.crm-dot.nota{background:#f59e0b;}.crm-dot.reunion{background:#8b5cf6;}.crm-dot.seguimiento{background:#10b981;}.crm-dot.email{background:#f97316;}
+.crm-tipo{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+.crm-texto{font-size:13px;margin-top:2px;line-height:1.4;}
+.crm-fecha{font-size:10px;color:var(--muted);margin-top:3px;}
+.crm-add{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:flex-start;}
+.crm-add select,.crm-add input,.crm-add textarea{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:var(--font);}
+.crm-add textarea{flex:1;min-width:180px;resize:vertical;min-height:64px;}
+.badge-admin{background:rgba(139,92,246,.15);color:#a78bfa;}
+.badge-vendedor{background:rgba(16,185,129,.12);color:#34d399;}
+.btn-crm{background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.3);border-radius:8px;color:#a78bfa;font-size:12px;font-weight:700;padding:6px 10px;cursor:pointer;font-family:var(--font);transition:background .15s;white-space:nowrap;}
+.btn-crm:hover{background:rgba(139,92,246,.28);}
+/* NOTIFICACIONES */
+.notif-bell-wrap{position:relative;cursor:pointer;}
+.notif-bell{width:36px;height:36px;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .15s;cursor:pointer;}
+.notif-bell:hover{background:rgba(255,255,255,.13);}
+.notif-badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:9px;font-weight:900;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center;display:none;}
+.notif-badge.show{display:block;}
+.notif-panel{position:absolute;top:48px;right:0;width:320px;background:var(--sidebar);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.4);z-index:500;display:none;max-height:420px;overflow-y:auto;}
+.notif-panel.show{display:block;}
+.notif-header{padding:14px 16px 10px;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.notif-item:hover{background:rgba(255,255,255,.04);}
+.notif-item:last-child{border-bottom:none;}
+.notif-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.notif-body{flex:1;}
+.notif-title{font-size:12px;font-weight:700;line-height:1.3;}
+.notif-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.notif-time{font-size:10px;color:var(--muted);flex-shrink:0;}
+.notif-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:12px;}
+/* GRAFICAS */
+.chart-container{position:relative;height:220px;width:100%;}
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:180px;padding:0 8px;}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.chart-bar{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--accent2),var(--accent));min-height:4px;transition:height .6s cubic-bezier(.34,1.56,.64,1);cursor:pointer;position:relative;}
+.chart-bar:hover{opacity:.8;}
+.chart-bar-label{font-size:9px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;}
+.chart-bar-val{font-size:9px;color:var(--accent2);font-weight:700;text-align:center;}
+.chart-legend{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+.chart-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.chart-legend-dot{width:8px;height:8px;border-radius:50%;}
 /* ── MODALS ── */
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);
   backdrop-filter:blur(10px);z-index:1000;overflow-y:auto;padding:28px 16px;align-items:flex-start;justify-content:center;}
@@ -389,6 +473,39 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .detail-panel.open{right:0;}
 .detail-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .detail-panel-title{font-size:16px;font-weight:800;}
+/* Estado de cuenta */
+.ec-tab{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:7px 13px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .18s;white-space:nowrap;}
+.ec-tab:hover{color:var(--text);background:rgba(255,255,255,.1);}
+.ec-tab.active{background:rgba(37,99,235,.18);border-color:rgba(37,99,235,.4);color:var(--accent2);}
+.ec-fact-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:border-color .18s;}
+.ec-fact-row:hover{border-color:rgba(37,99,235,.35);}
+.ec-fact-num{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent2);width:72px;flex-shrink:0}
+.ec-fact-cliente{flex:1;font-size:13px;font-weight:600}
+.ec-fact-fecha{font-size:11px;color:var(--muted);flex-shrink:0}
+.ec-fact-total{font-size:13px;font-weight:800;flex-shrink:0;min-width:80px;text-align:right}
+.ec-pagar-btn{background:linear-gradient(135deg,var(--green),#059669);border:none;color:#fff;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--font);transition:opacity .15s;}
+.ec-pagar-btn:hover{opacity:.85;}
+[data-theme="light"] .ec-tab,[data-theme="combined"] .ec-tab{background:rgba(0,0,0,.05);color:var(--muted);}
+[data-theme="light"] .ec-tab.active,[data-theme="combined"] .ec-tab.active{background:rgba(37,99,235,.1);color:var(--accent);}
+[data-theme="light"] #ec-panel,[data-theme="combined"] #ec-panel{background:#fff;}
+[data-theme="light"] #ec-panel .ec-fact-row,[data-theme="combined"] #ec-panel .ec-fact-row{background:#f8faff;}
+
+/* ── BÚSQUEDA GLOBAL ── */
+#gs-input::placeholder{color:var(--muted);}
+.gs-section{padding:6px 10px 3px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.gs-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;transition:background .15s;}
+.gs-item:hover,.gs-item.focused{background:rgba(37,99,235,.13);}
+.gs-item-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.gs-item-body{flex:1;min-width:0}
+.gs-item-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-item-sub{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-item-badge{font-size:11px;font-weight:700;flex-shrink:0;padding:2px 8px;border-radius:6px}
+.gs-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
+.gs-divider{height:1px;background:var(--border);margin:4px 0}
+[data-theme="light"] #gs-input,[data-theme="combined"] #gs-input{background:rgba(0,0,0,.05);color:var(--text);}
+[data-theme="light"] #gs-dropdown,[data-theme="combined"] #gs-dropdown{background:#fff;}
+[data-theme="light"] .gs-item:hover,[data-theme="combined"] .gs-item:hover,[data-theme="light"] .gs-item.focused,[data-theme="combined"] .gs-item.focused{background:rgba(37,99,235,.08);}
+@media(max-width:768px){#gs-wrap{display:none;}}
 
 /* ── DRILL-DOWN MODAL ── */
 .drill-list li{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
@@ -452,16 +569,74 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 .portal-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}
 
 /* ── MOBILE ── */
+/* ===== MOBILE ===== */
 @media(max-width:860px){
-  .sidebar{width:58px;}
-  .sidebar-logo .sub,.nav-section,.nav-item span:not(.icon),.user-name,.user-biz,.btn-logout{display:none;}
-  .main{margin-left:58px;}
+  /* Sidebar oculto por defecto, se abre con hamburguesa */
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;z-index:400;
+    width:260px;transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    box-shadow:4px 0 32px rgba(0,0,0,.4);
+  }
+  .sidebar.mob-open{transform:translateX(0);}
+  /* Overlay oscuro detrás del sidebar */
+  .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:399;backdrop-filter:blur(2px);}
+  .mob-overlay.show{display:block;}
+  /* Mostrar todo el contenido del sidebar cuando está abierto */
+  .sidebar-logo .sub,.nav-section,.nav-item span:not(.icon),.user-name,.user-biz,.btn-logout{display:block;}
+  /* Topbar móvil */
+  .main{margin-left:0;}
+  .topbar{padding:0 16px;height:56px;}
+  #mod-title{font-size:15px;}
+  /* Botón hamburguesa */
+  .mob-hamburger{display:flex;align-items:center;justify-content:center;
+    width:38px;height:38px;background:rgba(255,255,255,.07);border:1px solid var(--border);
+    border-radius:10px;cursor:pointer;font-size:18px;flex-shrink:0;}
+  /* Bottom nav bar */
+  .mob-bottomnav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:300;
+    background:var(--sidebar);border-top:1px solid var(--border);
+    padding:6px 0 env(safe-area-inset-bottom,6px);
+    box-shadow:0 -4px 20px rgba(0,0,0,.3);
+  }
+  .mob-tab{flex:1;display:flex;flex-direction:column;align-items:center;
+    gap:3px;padding:6px 4px;cursor:pointer;transition:all .15s;
+    font-size:10px;font-weight:600;color:var(--muted);border:none;background:none;}
+  .mob-tab .mob-icon{font-size:20px;line-height:1;}
+  .mob-tab.active{color:var(--accent2);}
+  .mob-tab-badge{position:absolute;top:-2px;right:6px;background:var(--red);color:#fff;
+    font-size:9px;font-weight:800;padding:1px 5px;border-radius:8px;min-width:16px;
+    text-align:center;display:none;}
+  .mob-tab-badge.show{display:block;}
+  .mob-tab-wrap{position:relative;}
+  /* Ajustar contenido para el bottom nav */
+  .content{padding:14px 14px 80px;}
+  /* Grids */
   .dash-grid{grid-template-columns:1fr 1fr;}
   .dash-grid-2,.dash-grid-3{grid-template-columns:1fr;}
   .pro-stats{grid-template-columns:1fr 1fr;}
   .form-row,.form-row-3,.add-item-row{grid-template-columns:1fr;}
-  .quick-actions{display:none;}
-  .content{padding:18px;}
+  /* Tablas: scroll horizontal */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);}
+  table{min-width:500px;}
+  /* Acciones: solo iconos principales */
+  .quick-actions .qa-btn{display:none;}
+  .quick-actions .btn-icon{padding:7px 10px;font-size:13px;}
+  /* Cards del dash más compactas */
+  .dash-card{padding:14px 12px;}
+  .dash-card-val{font-size:20px;}
+  /* Toolbar */
+  .toolbar{gap:7px;}
+  .btn-action{padding:9px 13px;font-size:12px;}
+  /* Modales full-screen en móvil */
+  .modal-content{width:100vw;max-width:100vw;border-radius:20px 20px 0 0;
+    position:fixed;bottom:0;left:0;right:0;max-height:92vh;overflow-y:auto;}
+  .modal{align-items:flex-end;padding:0;}
+  /* Topbar right */
+  .topbar-biz{display:none;}
+}
+@media(min-width:861px){
+  .mob-hamburger,.mob-bottomnav,.mob-overlay{display:none;}
 }
 /* Portal mode: ocultar todo el ERP completamente */
 body.portal-mode #auth-screen,
@@ -498,7 +673,8 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
 
 <!-- APP -->
 <div id="app-screen" style="display:none">
-  <aside class="sidebar">
+  <div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()"></div>
+  <aside class="sidebar" id="main-sidebar">
     <div class="sidebar-logo"><div class="brand">NEXORA</div><div class="sub">ERP Pro v3</div></div>
     <div class="nav-section">Principal</div>
     <div class="nav-item active" data-module="dashboard"><span class="icon">📊</span><span>Dashboard</span></div>
@@ -517,6 +693,7 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
     <div class="nav-item" data-module="importar"><span class="icon">📥</span><span>Importar / Exportar</span></div>
     <div class="nav-item" data-module="pedidos"><span class="icon">🛍️</span><span>Pedidos clientes</span><span class="nav-badge pedidos-badge" id="pedidos-badge">0</span></div>
     <div class="nav-section">Sistema</div>
+    <div class="nav-item admin-only" data-module="usuarios"><span class="icon">👥</span><span>Usuarios</span></div>
     <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span><span class="nav-badge" id="papelera-badge">0</span></div>
     <div class="sidebar-footer">
       <div class="user-info">
@@ -532,10 +709,152 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
     </div>
   </aside>
 
+<!-- CRM MODAL -->
+  <div class="modal-backdrop" id="crm-modal">
+    <div class="modal-content" style="max-width:560px;width:100%">
+      <div class="modal-header">
+        <div class="modal-title">💬 Historial CRM: <span id="crm-cliente-nombre"></span></div>
+        <button class="modal-close" onclick="$('crm-modal').classList.remove('show')">&times;</button>
+      </div>
+      <div style="max-height:320px;overflow-y:auto;padding:4px 0" id="crm-list"><div style="color:var(--muted);padding:16px 0;text-align:center">Sin interacciones registradas</div></div>
+      <div class="crm-add">
+        <select id="crm-tipo" style="max-width:130px">
+          <option value="llamada">📞 Llamada</option>
+          <option value="nota">📝 Nota</option>
+          <option value="reunion">🤝 Reunión</option>
+          <option value="seguimiento">🔔 Seguimiento</option>
+          <option value="email">📧 Email</option>
+        </select>
+        <textarea id="crm-texto" placeholder="Describe la interacción..."></textarea>
+        <input type="date" id="crm-fecha" style="max-width:130px">
+        <button class="btn-action" style="padding:8px 14px;font-size:12px;flex-shrink:0" onclick="addCRM()">+ Agregar</button>
+      </div>
+    </div>
+  </div>
+
+<!-- ESTADO DE CUENTA PANEL -->
+<div id="ec-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:498;backdrop-filter:blur(2px)" onclick="cerrarEstadoCuenta()"></div>
+<div id="ec-panel" style="position:fixed;top:0;right:-600px;width:580px;max-width:100vw;height:100vh;background:var(--sidebar);border-left:1px solid var(--border);z-index:499;transition:right .32s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column">
+  <!-- Header -->
+  <div style="padding:22px 24px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--sidebar);z-index:10">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="ec-logo" style="width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,.18);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🏢</div>
+        <div>
+          <div id="ec-nombre" style="font-size:17px;font-weight:900;letter-spacing:-.4px">—</div>
+          <div id="ec-nit" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:1px">NIT: —</div>
+        </div>
+      </div>
+      <button onclick="cerrarEstadoCuenta()" style="background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:6px;margin-top:14px" id="ec-tabs">
+      <button class="ec-tab active" data-tab="cuenta" onclick="switchEcTab('cuenta')">📊 Estado de Cuenta</button>
+      <button class="ec-tab" data-tab="facturas" onclick="switchEcTab('facturas')">🧾 Facturas</button>
+      <button class="ec-tab" data-tab="cotizaciones" onclick="switchEcTab('cotizaciones')">📄 Cotizaciones</button>
+    </div>
+  </div>
+
+  <!-- TAB: CUENTA -->
+  <div id="ec-tab-cuenta" class="ec-tab-content" style="padding:20px 24px;flex:1">
+    <!-- KPI Cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px">
+      <div style="background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);border-radius:12px;padding:14px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--red);margin-bottom:6px">Por cobrar</div>
+        <div id="ec-kpi-pendiente" style="font-size:18px;font-weight:900;color:var(--red)">—</div>
+        <div id="ec-kpi-pendiente-n" style="font-size:11px;color:var(--muted);margin-top:2px">0 facturas</div>
+      </div>
+      <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:14px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px">Pagado</div>
+        <div id="ec-kpi-pagado" style="font-size:18px;font-weight:900;color:var(--green)">—</div>
+        <div id="ec-kpi-pagado-n" style="font-size:11px;color:var(--muted);margin-top:2px">0 facturas</div>
+      </div>
+      <div style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:12px;padding:14px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--accent2);margin-bottom:6px">Total histórico</div>
+        <div id="ec-kpi-total" style="font-size:18px;font-weight:900;color:var(--accent2)">—</div>
+        <div id="ec-kpi-total-n" style="font-size:11px;color:var(--muted);margin-top:2px">0 facturas</div>
+      </div>
+    </div>
+    <!-- Barra de progreso pago -->
+    <div style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
+        <span>Progreso de cobro</span>
+        <span id="ec-pct-txt">0%</span>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border-radius:20px;height:8px;overflow:hidden">
+        <div id="ec-pct-bar" style="height:100%;background:linear-gradient(90deg,var(--green),#059669);border-radius:20px;transition:width .6s ease;width:0%"></div>
+      </div>
+    </div>
+    <!-- Facturas pendientes recientes -->
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px">Facturas pendientes</div>
+      <div id="ec-pending-list"></div>
+    </div>
+    <!-- Info cliente -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px">Datos del cliente</div>
+      <div id="ec-info-cliente" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:12.5px"></div>
+    </div>
+  </div>
+
+  <!-- TAB: FACTURAS -->
+  <div id="ec-tab-facturas" class="ec-tab-content" style="padding:20px 24px;display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Todas las facturas</div>
+      <select id="ec-fact-filter" onchange="filtrarEcFacturas()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text);font-size:12px">
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Pagada">Pagada</option>
+        <option value="Anulada">Anulada</option>
+      </select>
+    </div>
+    <div id="ec-fact-list"></div>
+  </div>
+
+  <!-- TAB: COTIZACIONES -->
+  <div id="ec-tab-cotizaciones" class="ec-tab-content" style="padding:20px 24px;display:none">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:12px">Historial de cotizaciones</div>
+    <div id="ec-cot-list"></div>
+  </div>
+</div>
+
+  <nav class="mob-bottomnav" id="mob-bottomnav">
+    <div class="mob-tab-wrap"><button class="mob-tab active" data-module="dashboard" onclick="mobNav(this,'dashboard')"><span class="mob-icon">&#x1F4CA;</span>Inicio</button></div>
+    <div class="mob-tab-wrap"><button class="mob-tab" data-module="cotizaciones" onclick="mobNav(this,'cotizaciones')"><span class="mob-icon">&#x1F4C4;</span>Cotiz.</button><span class="mob-tab-badge" id="mob-badge-cot">0</span></div>
+    <div class="mob-tab-wrap"><button class="mob-tab" data-module="facturas" onclick="mobNav(this,'facturas')"><span class="mob-icon">&#x1F9FE;</span>Facturas</button></div>
+    <div class="mob-tab-wrap"><button class="mob-tab" data-module="inventario" onclick="mobNav(this,'inventario')"><span class="mob-icon">&#x1F4E6;</span>Inventario</button></div>
+    <div class="mob-tab-wrap"><button class="mob-tab" data-module="pedidos" onclick="mobNav(this,'pedidos')"><span class="mob-icon">&#x1F6CD;&#xFE0F;</span>Pedidos</button><span class="mob-tab-badge" id="mob-badge-ped">0</span></div>
+  </nav>
+
   <div class="main">
     <div class="topbar">
+      <button class="mob-hamburger" onclick="openMobMenu()" aria-label="Menú">&#9776;</button>
       <div id="mod-title">Dashboard</div>
+      <!-- BÚSQUEDA GLOBAL -->
+      <div id="gs-wrap" style="flex:1;max-width:380px;margin:0 18px;position:relative">
+        <div style="position:relative">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;opacity:.5">🔍</span>
+          <input id="gs-input" type="text" placeholder="Buscar clientes, facturas, productos..." autocomplete="off"
+            style="width:100%;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:10px;padding:9px 12px 9px 36px;color:var(--text);font-size:13px;font-family:var(--font);transition:all .2s;outline:none"
+            onfocus="this.style.borderColor='rgba(37,99,235,.5)';this.style.background='rgba(37,99,235,.06)';gsOnInput()"
+            onblur="setTimeout(()=>{$('gs-dropdown').style.display='none'},180)"
+            oninput="gsOnInput()"
+            onkeydown="gsKeyNav(event)">
+          <span id="gs-shortcut" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--muted);background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:5px;padding:2px 6px;pointer-events:none">⌘K</span>
+        </div>
+        <div id="gs-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--sidebar);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);z-index:600;max-height:420px;overflow-y:auto;padding:6px"></div>
+      </div>
       <div class="topbar-right">
+        <div class="notif-bell-wrap" id="notif-wrap">
+          <div class="notif-bell" onclick="toggleNotifPanel()" title="Notificaciones">🔔</div>
+          <span class="notif-badge" id="notif-badge">0</span>
+          <div class="notif-panel" id="notif-panel">
+            <div class="notif-header">Notificaciones
+              <button onclick="limpiarNotifs()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">Limpiar</button>
+            </div>
+            <div id="notif-list"><div class="notif-empty">🎉 Todo al día</div></div>
+          </div>
+        </div>
         <span class="topbar-biz biz-el">—</span>
       </div>
     </div>
@@ -547,6 +866,55 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
           <div class="dash-card" onclick="window.drillDown('cotizaciones')"><div class="dash-card-icon">📄</div><div class="dash-card-label">Cotizaciones</div><div class="dash-card-val" id="dash-cotizaciones">—</div><div class="dash-card-sub">registradas</div></div>
           <div class="dash-card" onclick="window.drillDown('facturas')"><div class="dash-card-icon">🧾</div><div class="dash-card-label">Facturas</div><div class="dash-card-val" id="dash-facturas">—</div><div class="dash-card-sub">emitidas</div></div>
           <div class="dash-card" onclick="window.drillDown('clientes')"><div class="dash-card-icon">👥</div><div class="dash-card-label">Clientes</div><div class="dash-card-val" id="dash-clientes">—</div><div class="dash-card-sub">registrados</div></div>
+        </div>
+
+        <!-- ALERTAS STOCK BAJO -->
+        <div id="dash-stock-alert" class="stock-alert-banner" style="display:none" onclick="window.drillDown('stock-bajo')">
+          <span style="font-size:22px">⚠️</span>
+          <div><div style="font-weight:800;font-size:13px;color:var(--red)">Alerta de stock bajo</div>
+          <div id="dash-stock-alert-txt" style="font-size:11px;color:var(--muted)">Cargando...</div></div>
+          <span style="margin-left:auto;font-size:12px;color:var(--muted)">→ Ver todos</span>
+        </div>
+
+        <!-- META DE VENTAS -->
+        <div class="report-card meta-wrap" style="margin-bottom:20px">
+          <div class="report-title">🎯 Meta de ventas mensual
+            <button class="qa-btn" onclick="editarMeta()" style="font-size:11px">✏️ Editar meta</button>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+            <div class="meta-pct" id="meta-pct">--</div>
+            <div style="font-size:13px;color:var(--muted)">vendido: <span id="meta-actual" style="font-weight:800;color:var(--text)">$0</span></div>
+          </div>
+          <div class="meta-bar-bg"><div class="meta-bar-fill" id="meta-bar" style="width:0%"></div></div>
+          <div class="meta-labels"><span id="meta-lbl-left">Este mes</span><span id="meta-lbl-right">🎯 Sin meta definida</span></div>
+        </div>
+
+        <!-- TAREAS / RECORDATORIOS -->
+        <div class="report-card" style="margin-bottom:20px">
+          <div class="report-title">📋 Tareas y recordatorios
+            <span style="font-size:11px;color:var(--muted);font-weight:500"><span id="tareas-pendientes-count">0</span> pendientes</span>
+          </div>
+          <div id="tareas-list"><div style="color:var(--muted);font-size:12px;padding:8px 0">👋 Sin tareas. ¡Agrega una!</div></div>
+          <div class="tarea-add">
+            <input type="text" id="tarea-input" placeholder="Nueva tarea... (Enter para agregar)" onkeydown="if(event.key==='Enter')addTarea()">
+            <input type="date" id="tarea-fecha-input" style="max-width:130px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text);">
+            <button class="btn-action" style="padding:8px 14px;font-size:12px;flex-shrink:0" onclick="addTarea()">+ Agregar</button>
+          </div>
+        </div>
+
+        <!-- GRAFICA VENTAS -->
+        <div class="report-card" style="margin-bottom:20px" id="dash-chart-card">
+          <div class="report-title">📈 Ventas por mes
+            <div style="display:flex;gap:6px">
+              <button class="qa-btn active" id="chart-btn-fact" onclick="switchChart('facturas')" style="font-size:11px">Facturas</button>
+              <button class="qa-btn" id="chart-btn-cot" onclick="switchChart('cotizaciones')" style="font-size:11px">Cotizaciones</button>
+            </div>
+          </div>
+          <div class="chart-bar-wrap" id="chart-bars"></div>
+          <div style="display:flex;justify-content:space-between;padding:0 8px;margin-top:4px" id="chart-labels"></div>
+          <div class="chart-legend">
+            <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Monto total</div>
+          </div>
         </div>
 
         <!-- RESUMEN VENTAS PRO -->
@@ -799,6 +1167,21 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
         <div class="report-card" style="margin-top:18px"><div class="report-title">📄 Estados de cotizaciones</div><div id="rep-estados">...</div></div>
       </div>
 
+      <!-- USUARIOS -->
+      <div id="mod-usuarios" style="display:none">
+        <div class="toolbar">
+          <span style="font-size:13px;color:var(--muted)">Gestiona acceso y roles de tu equipo.</span>
+          <button class="btn-action" onclick="abrirInvitarUsuario()">+ Invitar usuario</button>
+        </div>
+        <div class="table-wrap" style="margin-top:16px">
+          <table><thead><tr>
+            <th>Usuario</th><th>Email</th><th>Rol</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="usuarios-tbody"><tr class="no-results"><td colspan="4">Cargando...</td></tr></tbody></table>
+        </div>
+        <div class="info-box" style="margin-top:16px">🔑 <strong>Admin</strong>: acceso total. <strong>Vendedor</strong>: solo ve sus cotizaciones, no accede a contabilidad, reportes ni ajustes.</div>
+      </div>
+
       <!-- PAPELERA -->
       <div id="mod-papelera">
         <div class="info-box">🗑️ Los elementos eliminados se conservan <strong>30 días</strong>. Puedes restaurarlos o eliminarlos permanentemente. Al restaurar una cotización, conservará su número original.</div>
@@ -888,6 +1271,38 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
           </select>
           <input class="toolbar-search" id="pedidos-search" placeholder="🔍 Buscar por cliente, producto...">
           <button class="btn-action" style="background:linear-gradient(135deg,var(--orange),#c2410c)" onclick="abrirConfigPortal()">⚙️ Configurar portal</button>
+          <div class="report-card" style="margin-top:20px">
+            <div class="report-title">🏢 Datos de empresa y firma PDF</div>
+            <div class="form-row" style="margin-bottom:14px">
+              <div><label class="form-label">Nombre del negocio</label><input type="text" id="biz-nombre" class="form-input" placeholder="Mi Empresa S.A.S"></div>
+              <div><label class="form-label">NIT / RUT</label><input type="text" id="biz-nit" class="form-input" placeholder="900.123.456-7"></div>
+            </div>
+            <div class="form-row" style="margin-bottom:14px">
+              <div><label class="form-label">Teléfono empresa</label><input type="text" id="biz-tel" class="form-input" placeholder="+57 300 000 0000"></div>
+              <div><label class="form-label">Dirección</label><input type="text" id="biz-dir" class="form-input" placeholder="Calle 123 # 45-67"></div>
+            </div>
+            <div class="form-row" style="margin-bottom:14px">
+              <div>
+                <label class="form-label">Logo empresa (PNG/JPG)</label>
+                <div class="firma-upload-area" onclick="document.getElementById('logo-file-input').click()" style="padding:14px">
+                  <div id="logo-preview-wrap"><div style="font-size:22px">🏢</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Subir logo</div></div>
+                  <img id="logo-preview" class="firma-preview" style="display:none;max-height:50px">
+                </div>
+                <input type="file" id="logo-file-input" accept="image/*" style="display:none" onchange="cargarLogoPreview(this)">
+              </div>
+              <div></div>
+            </div>
+            <label class="form-label">Firma / Sello (PNG o JPG)</label>
+            <div class="firma-upload-area" onclick="document.getElementById('firma-file-input').click()">
+              <div id="firma-preview-wrap"><div style="font-size:24px">🖊️</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Clic para subir firma o sello</div></div>
+              <img id="firma-preview" class="firma-preview" style="display:none">
+            </div>
+            <input type="file" id="firma-file-input" accept="image/*" style="display:none" onchange="cargarFirmaPreview(this)">
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-action" style="padding:9px 16px;font-size:12px" onclick="guardarConfigEmpresa()">💾 Guardar</button>
+              <button class="btn-action" style="padding:9px 16px;font-size:12px;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text)" onclick="limpiarFirma()">🗑️ Quitar firma</button>
+            </div>
+          </div>
           <button class="btn-action" onclick="copiarLinkPortal()">🔗 Copiar link del portal</button>
         </div>
         <div id="pedidos-list">
@@ -1275,6 +1690,61 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
   </div>
 </div>
 
+<!-- MODAL CONFIRMAR FACTURACIÓN -->
+<div class="modal-backdrop" id="facturar-confirm-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3>🧾 Convertir Cotización en Factura</h3>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px 24px">
+      <!-- Info banner -->
+      <div id="fcm-banner" style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:12px">
+        <span style="font-size:22px;flex-shrink:0">📄</span>
+        <div>
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px" id="fcm-cot-num">—</div>
+          <div style="font-size:12px;color:var(--muted)">Se generará la factura con todos los ítems, precios y descuentos de esta cotización.</div>
+        </div>
+      </div>
+      <!-- Resumen -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px">Cliente</div>
+          <div style="font-weight:700;font-size:13px" id="fcm-cliente">—</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px">Total</div>
+          <div style="font-weight:800;font-size:15px;color:var(--green)" id="fcm-total">—</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px">Ítems</div>
+          <div style="font-weight:700;font-size:13px" id="fcm-items-count">—</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px">N° Factura</div>
+          <div style="font-weight:700;font-size:13px;font-family:var(--mono);color:var(--accent2)" id="fcm-fact-num">—</div>
+        </div>
+      </div>
+      <!-- Lista de ítems -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Productos incluidos</div>
+        <div id="fcm-items-list" style="max-height:160px;overflow-y:auto;padding:8px 0"></div>
+      </div>
+      <!-- Fecha factura editable -->
+      <div class="form-group" style="margin-bottom:0">
+        <label>Fecha de la factura</label>
+        <input type="date" id="fcm-fecha" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:13.5px;width:100%">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel modal-close">Cancelar</button>
+      <button class="btn-save" id="fcm-confirm-btn" style="background:linear-gradient(135deg,var(--green),#059669);min-width:180px">
+        ✅ Confirmar y generar factura
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- MOVIMIENTO CONTABLE -->
 <div class="modal-backdrop" id="movimiento-modal">
   <div class="modal">
@@ -1410,7 +1880,7 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore,collection,addDoc,getDocs,doc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,getDoc,setDoc,where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore,collection,addDoc,getDocs,doc,updateDoc,deleteDoc,query,orderBy,limit,serverTimestamp,getDoc,setDoc,where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyAxyjIZBxBa6hBqAMzw84NE0vUULWibIaU",authDomain:"nexora-erp-2b417.firebaseapp.com",projectId:"nexora-erp-2b417",storageBucket:"nexora-erp-2b417.firebasestorage.app",messagingSenderId:"803467842564",appId:"1:803467842564:web:ceee51faad6dbae218d151"};
 const fbApp=initializeApp(firebaseConfig);
@@ -1428,6 +1898,7 @@ let allProdsCache=[],allClientsCache=[];
 const $=id=>document.getElementById(id);
 const col=(c)=>collection(db,'businesses',currentTenant,c);
 const tdoc=(c,i)=>doc(db,'businesses',currentTenant,c,i);
+window._tdoc=(c,i)=>tdoc(c,i);
 const fmtM=n=>'$'+(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0});
 const fmtDate=ts=>{if(!ts)return'—';if(ts?.toDate)return ts.toDate().toLocaleDateString('es-CO');return ts;};
 const esc=str=>{const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;};
@@ -1449,6 +1920,7 @@ onAuthStateChanged(auth,async user=>{
       ud=await getDoc(doc(db,'users',user.uid));
     }
     currentTenant=ud.data().businessId;
+    window._currentTenant=currentTenant;
     const biz=await getDoc(doc(db,'businesses',currentTenant));
     document.querySelectorAll('.biz-el').forEach(el=>el.textContent=biz.exists()?biz.data().name:'Mi Negocio');
     $('user-name').textContent=user.displayName||user.email.split('@')[0];
@@ -1835,14 +2307,19 @@ async function cargarClientes(){
     const asesorPred=c.asesores?.sort((a,b)=>(b.veces||0)-(a.veces||0))[0];
     tb.innerHTML+=`<tr>
       <td>${logo}</td>
-      <td><strong>${esc(c.nombre)}</strong>${c.sector?`<div style="font-size:11px;color:var(--muted)">${esc(c.sector)}</div>`:''}</td>
+      <td>
+        <strong style="cursor:pointer;color:var(--accent2)" onclick="window.abrirEstadoCuenta('${d.id}')">${esc(c.nombre)}</strong>
+        ${c.sector?`<div style="font-size:11px;color:var(--muted)">${esc(c.sector)}</div>`:''}
+      </td>
       <td><span style="font-family:var(--mono);font-size:12px">${esc(c.nit||'—')}</span></td>
       <td>${c.email?`<a href="mailto:${esc(c.email)}" style="color:var(--accent2);font-size:13px">${esc(c.email)}</a>`:'—'}</td>
       <td>${c.telefono?`<a href="tel:${esc(c.telefono)}" style="color:var(--accent2);font-size:13px">📞 ${esc(c.telefono)}</a>`:'—'}</td>
       <td>${esc(c.ciudad||'—')}</td>
       <td>${asesorPred?`<span style="font-size:12px;font-weight:600">${esc(asesorPred.nombre)}</span>`:'—'}</td>
-      <td><span class="badge badge-ok">${nFact}</span></td>
+      <td><span class="badge badge-ok" style="cursor:pointer" onclick="window.abrirEstadoCuenta('${d.id}')" title="Ver estado de cuenta">${nFact}</span></td>
       <td>
+        <button class="btn-icon" onclick="window.abrirEstadoCuenta('${d.id}')" title="Estado de cuenta" style="color:var(--accent2)">📊</button>
+        <button class="btn-crm" onclick="window.abrirCRM('${d.id}','${esc(c.nombre)}')">💬 CRM</button>
         <button class="btn-icon" onclick="window.editCliente('${d.id}')">✏️</button>
         <button class="btn-icon danger" onclick="window.deleteCliente('${d.id}','${esc(c.nombre)}')">🗑️</button>
       </td>
@@ -2175,8 +2652,16 @@ function renderCotizaciones(docs){
   if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="7">Sin resultados</td></tr>';return;}
   docs.forEach(d=>{
     const c=d.data();
-    tb.innerHTML+=`<tr>
-      <td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(c.numero||'—')}</strong></td>
+    const yaFacturada=c.facturada||c.estado==='Facturada';
+    // Botón de facturar: si ya está facturada muestra link a factura, si no botón verde
+    const btnFacturar=yaFacturada
+      ?`<button class="btn-facturar-ok" onclick="window.verFacturaDeCot('${d.id}')" title="Ver factura generada">🧾 Ver factura</button>`
+      :`<button class="btn-facturar-new" onclick="window.abrirConfirmarFacturacion('${d.id}')" title="Convertir en factura">🧾 Facturar</button>`;
+    tb.innerHTML+=`<tr style="${yaFacturada?'opacity:.82':''}">
+      <td>
+        <strong style="font-family:var(--mono);color:var(--accent2)">${esc(c.numero||'—')}</strong>
+        ${yaFacturada?`<div style="font-size:10px;color:var(--purple);font-weight:700;margin-top:2px">✓ FACTURADA</div>`:''}
+      </td>
       <td>${esc(c.cliente||'—')}</td>
       <td style="font-size:12px;color:var(--muted)">${esc(c.asesorNombre||'—')}</td>
       <td>${esc(c.fecha||'—')}</td>
@@ -2184,11 +2669,12 @@ function renderCotizaciones(docs){
       <td><span class="badge ${BADGE_MAP[c.estado]||'badge-borrador'}">${esc(c.estado||'—')}</span></td>
       <td>
         <div class="quick-actions">
-          <button class="qa-btn" onclick="window.quickEstado('cotizaciones','${d.id}','${esc(c.estado||'')}','cot')">🏷️ Estado</button>
+          ${!yaFacturada?`<button class="qa-btn" onclick="window.quickEstado('cotizaciones','${d.id}','${esc(c.estado||'')}','cot')">🏷️ Estado</button>`:''}
           <button class="qa-btn" onclick="window.editCotizacionTab('${d.id}','items')">📦 Ítems</button>
           <button class="qa-btn" onclick="window.editCotizacionTab('${d.id}','precios')">💰 Precios</button>
           <button class="btn-icon" onclick="window.editCotizacion('${d.id}')">✏️</button>
-          <button class="btn-icon" onclick="window.facturarCotizacion('${d.id}')" title="Facturar">🧾</button>
+          ${btnFacturar}
+          <button class="btn-wa" onclick="window.waEnviarCot('${d.id}','${esc(c.cliente||'')}')">💬 WA</button>
           <button class="btn-icon danger" onclick="window.deleteCot('${d.id}','${esc(c.numero||'')}')">🗑️</button>
         </div>
       </td>
@@ -2208,17 +2694,330 @@ window.quickEstado=function(colName,docId,estadoActual,tipo){
 };
 window.cambiarEstado=async(colName,docId,estado)=>{await updateDoc(tdoc(colName,docId),{estado,updatedAt:serverTimestamp()});$('quick-estado-modal').classList.remove('show');toast(`Estado → ${estado} ✅`);if(colName==='cotizaciones')cargarCotizaciones();if(colName==='facturas')cargarFacturas();};
 
-window.facturarCotizacion=async cotId=>{
-  const d=await getDoc(tdoc('cotizaciones',cotId));if(!d.exists())return;
-  const c=d.data();if(c.facturada){toast('Ya fue facturada','error');return;}
+// ══ CONVERTIR COTIZACIÓN → FACTURA (con modal de confirmación) ══
+let _fcmCotId=null;
+
+window.abrirConfirmarFacturacion=async cotId=>{
+  const d=await getDoc(tdoc('cotizaciones',cotId));
+  if(!d.exists())return;
+  const c=d.data();
+  if(c.facturada||c.estado==='Facturada'){
+    toast('Esta cotización ya fue facturada','error');return;
+  }
+  _fcmCotId=cotId;
   const next=await getNextConsec('facturas');
-  const fd={numero:'FAC-'+next,cotizacionId:cotId,cliente:c.cliente,clienteId:c.clienteId,fecha:new Date().toISOString().slice(0,10),items:c.items,subtotal:c.subtotal,descuento:c.descuento||0,descuentoMonto:c.descuentoMonto||0,iva:c.iva||0,ivaMonto:c.ivaMonto||0,total:c.total,estado:'Pendiente',eliminado:false,createdAt:serverTimestamp()};
-  await addDoc(col('facturas'),fd);
-  await updateDoc(tdoc('cotizaciones',cotId),{facturada:true,estado:'Facturada'});
-  // Descontar stock
-  for(const item of(c.items||[])){const pr=tdoc('productos',item.prodId);const ps=await getDoc(pr);if(ps.exists())await updateDoc(pr,{stock:Math.max(0,(ps.data().stock||0)-item.cantidad)});}
-  toast('Factura FAC-'+next+' generada ✅');cargarCotizaciones();
+  // Rellenar modal
+  $('fcm-cot-num').textContent=(c.numero||'—')+' → FAC-'+next;
+  $('fcm-cliente').textContent=c.cliente||'—';
+  $('fcm-total').textContent=fmtM(calcTotalCot(c));
+  $('fcm-items-count').textContent=(c.items||[]).length+' producto'+(((c.items||[]).length)===1?'':'s');
+  $('fcm-fact-num').textContent='FAC-'+next;
+  $('fcm-fecha').value=new Date().toISOString().slice(0,10);
+  // Lista de ítems
+  const list=$('fcm-items-list');
+  list.innerHTML=(c.items||[]).length?c.items.map(i=>`
+    <div class="fcm-item-row">
+      <span class="fcm-item-name">${esc(i.nombre||'—')}</span>
+      <span class="fcm-item-qty">x${i.cantidad}</span>
+      <span class="fcm-item-price">${fmtM(i.precio*i.cantidad)}</span>
+    </div>`).join(''):'<div style="padding:12px 14px;color:var(--muted);font-size:12px">Sin ítems</div>';
+  $('facturar-confirm-modal').classList.add('show');
 };
+
+$('fcm-confirm-btn').addEventListener('click',async()=>{
+  if(!_fcmCotId)return;
+  const btn=$('fcm-confirm-btn');
+  btn.disabled=true;btn.textContent='Generando...';
+  try{
+    const d=await getDoc(tdoc('cotizaciones',_fcmCotId));
+    if(!d.exists()){toast('Cotización no encontrada','error');return;}
+    const c=d.data();
+    if(c.facturada){toast('Ya fue facturada','error');$('facturar-confirm-modal').classList.remove('show');return;}
+    const next=await getNextConsec('facturas');
+    const fechaFactura=$('fcm-fecha').value||new Date().toISOString().slice(0,10);
+    const fd={
+      numero:'FAC-'+next,
+      cotizacionId:_fcmCotId,
+      cotizacionNumero:c.numero||'',
+      cliente:c.cliente,
+      clienteId:c.clienteId,
+      fecha:fechaFactura,
+      vencimiento:'',
+      items:c.items,
+      subtotal:c.subtotal,
+      descuento:c.descuento||0,
+      descuentoMonto:c.descuentoMonto||0,
+      iva:c.iva||0,
+      ivaMonto:c.ivaMonto||0,
+      total:c.total,
+      notas:c.notas||'',
+      asesorNombre:c.asesorNombre||'',
+      estado:'Pendiente',
+      eliminado:false,
+      createdAt:serverTimestamp()
+    };
+    const ref=await addDoc(col('facturas'),fd);
+    await updateDoc(tdoc('cotizaciones',_fcmCotId),{facturada:true,estado:'Facturada',facturaId:ref.id,facturaNumero:'FAC-'+next,updatedAt:serverTimestamp()});
+    // Descontar stock
+    for(const item of(c.items||[])){
+      if(!item.prodId)continue;
+      const pr=tdoc('productos',item.prodId);
+      const ps=await getDoc(pr);
+      if(ps.exists())await updateDoc(pr,{stock:Math.max(0,(ps.data().stock||0)-item.cantidad)});
+    }
+    $('facturar-confirm-modal').classList.remove('show');
+    toast('✅ Factura FAC-'+next+' generada exitosamente');
+    cargarCotizaciones();
+    // Ofrecer ir a factura
+    setTimeout(()=>{
+      if(confirm('¿Ir a la factura generada FAC-'+next+'?'))window.loadModule('facturas');
+    },400);
+  }catch(err){
+    console.error(err);toast('Error al generar factura','error');
+  }finally{
+    btn.disabled=false;btn.textContent='✅ Confirmar y generar factura';
+    _fcmCotId=null;
+  }
+});
+
+window.verFacturaDeCot=async cotId=>{
+  const d=await getDoc(tdoc('cotizaciones',cotId));
+  if(!d.exists())return;
+  const c=d.data();
+  if(c.facturaNumero){
+    toast('Abriendo factura '+c.facturaNumero+'...');
+    await window.loadModule('facturas');
+    // Buscar y resaltar en la tabla
+    setTimeout(()=>{
+      const rows=document.querySelectorAll('#facturas-tbody tr');
+      rows.forEach(row=>{
+        if(row.textContent.includes(c.facturaNumero)){
+          row.style.background='rgba(139,92,246,.12)';
+          row.scrollIntoView({behavior:'smooth',block:'center'});
+          setTimeout(()=>{row.style.background='';},3000);
+        }
+      });
+    },800);
+  }else{
+    await window.loadModule('facturas');
+  }
+};
+
+// Mantener compatibilidad con llamadas antiguas
+window.facturarCotizacion=window.abrirConfirmarFacturacion;
+
+
+
+// ══════════════════════════════════════════
+// BÚSQUEDA GLOBAL
+// ══════════════════════════════════════════
+let _gsCache={productos:[],clientes:[],facturas:[],cotizaciones:[]};
+let _gsLoaded=false;
+let _gsFocusIdx=-1;
+let _gsResults=[];
+
+async function gsLoadCache(){
+  if(_gsLoaded)return;
+  try{
+    const [pSnap,cSnap,fSnap,cotSnap]=await Promise.all([
+      getDocs(col('productos')),getDocs(col('clientes')),
+      getDocs(col('facturas')),getDocs(col('cotizaciones'))
+    ]);
+    _gsCache.productos=pSnap.docs.filter(d=>!d.data().eliminado).map(d=>({id:d.id,...d.data()}));
+    _gsCache.clientes=cSnap.docs.filter(d=>!d.data().eliminado).map(d=>({id:d.id,...d.data()}));
+    _gsCache.facturas=fSnap.docs.filter(d=>!d.data().eliminado).map(d=>({id:d.id,...d.data()}));
+    _gsCache.cotizaciones=cotSnap.docs.filter(d=>!d.data().eliminado).map(d=>({id:d.id,...d.data()}));
+    _gsLoaded=true;
+  }catch(e){console.warn('GS cache error',e);}
+}
+
+// Invalida cache cuando se guarda algo
+function gsInvalidate(){_gsLoaded=false;}
+// Hookeamos saves existentes para invalidar
+const _origCargarFact=window.cargarFacturas;
+
+window.gsOnInput=async function(){
+  const q=$('gs-input').value.trim().toLowerCase();
+  const dd=$('gs-dropdown');
+  if(!q){dd.style.display='none';_gsFocusIdx=-1;return;}
+  dd.style.display='block';
+  dd.innerHTML='<div class="gs-empty" style="padding:12px">Buscando...</div>';
+  await gsLoadCache();
+  _gsFocusIdx=-1;
+  _gsResults=[];
+  const hits={clientes:[],facturas:[],cotizaciones:[],productos:[]};
+  // Clientes
+  _gsCache.clientes.forEach(c=>{
+    if((c.nombre||'').toLowerCase().includes(q)||(c.nit||'').toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)){
+      hits.clientes.push(c);
+    }
+  });
+  // Facturas
+  _gsCache.facturas.forEach(f=>{
+    if((f.numero||'').toLowerCase().includes(q)||(f.cliente||'').toLowerCase().includes(q)){
+      hits.facturas.push(f);
+    }
+  });
+  // Cotizaciones
+  _gsCache.cotizaciones.forEach(c=>{
+    if((c.numero||'').toLowerCase().includes(q)||(c.cliente||'').toLowerCase().includes(q)){
+      hits.cotizaciones.push(c);
+    }
+  });
+  // Productos
+  _gsCache.productos.forEach(p=>{
+    if((p.nombre||'').toLowerCase().includes(q)||(p.referencia||'').toLowerCase().includes(q)||(p.categoria||'').toLowerCase().includes(q)){
+      hits.productos.push(p);
+    }
+  });
+  const total=hits.clientes.length+hits.facturas.length+hits.cotizaciones.length+hits.productos.length;
+  if(!total){
+    dd.innerHTML='<div class="gs-empty">Sin resultados para <strong>"'+esc(q)+'"</strong></div>';
+    return;
+  }
+  let html='';
+  if(hits.clientes.length){
+    html+=`<div class="gs-section">👥 Clientes (${hits.clientes.length})</div>`;
+    hits.clientes.slice(0,4).forEach(c=>{
+      const idx=_gsResults.push({type:'cliente',id:c.id,label:c.nombre})-1;
+      html+=`<div class="gs-item" data-idx="${idx}" onmousedown="gsSelectItem(${idx})">
+        <div class="gs-item-icon" style="background:rgba(139,92,246,.15)">🏢</div>
+        <div class="gs-item-body">
+          <div class="gs-item-title">${gsHighlight(c.nombre||'—',q)}</div>
+          <div class="gs-item-sub">NIT: ${esc(c.nit||'—')} · ${esc(c.ciudad||'—')}</div>
+        </div>
+        <span class="gs-item-badge" style="background:rgba(139,92,246,.15);color:var(--purple)">Cliente</span>
+      </div>`;
+    });
+  }
+  if(hits.facturas.length){
+    if(html)html+='<div class="gs-divider"></div>';
+    html+=`<div class="gs-section">🧾 Facturas (${hits.facturas.length})</div>`;
+    hits.facturas.slice(0,4).forEach(f=>{
+      const idx=_gsResults.push({type:'factura',id:f.id,label:f.numero})-1;
+      const colorMap={Pendiente:'var(--yellow)',Pagada:'var(--green)',Anulada:'var(--muted)'};
+      html+=`<div class="gs-item" data-idx="${idx}" onmousedown="gsSelectItem(${idx})">
+        <div class="gs-item-icon" style="background:rgba(37,99,235,.15)">🧾</div>
+        <div class="gs-item-body">
+          <div class="gs-item-title" style="font-family:var(--mono)">${gsHighlight(f.numero||'—',q)}</div>
+          <div class="gs-item-sub">${esc(f.cliente||'—')} · ${esc(f.fecha||'—')} · ${fmtM(f.total||0)}</div>
+        </div>
+        <span class="gs-item-badge" style="background:rgba(0,0,0,.15);color:${colorMap[f.estado]||'var(--muted)'}">${f.estado||'—'}</span>
+      </div>`;
+    });
+  }
+  if(hits.cotizaciones.length){
+    if(html)html+='<div class="gs-divider"></div>';
+    html+=`<div class="gs-section">📄 Cotizaciones (${hits.cotizaciones.length})</div>`;
+    hits.cotizaciones.slice(0,4).forEach(c=>{
+      const idx=_gsResults.push({type:'cotizacion',id:c.id,label:c.numero})-1;
+      html+=`<div class="gs-item" data-idx="${idx}" onmousedown="gsSelectItem(${idx})">
+        <div class="gs-item-icon" style="background:rgba(245,158,11,.12)">📄</div>
+        <div class="gs-item-body">
+          <div class="gs-item-title" style="font-family:var(--mono)">${gsHighlight(c.numero||'—',q)}</div>
+          <div class="gs-item-sub">${esc(c.cliente||'—')} · ${esc(c.fecha||'—')} · ${fmtM(c.total||0)}</div>
+        </div>
+        <span class="gs-item-badge" style="background:rgba(0,0,0,.12);color:var(--muted)">${c.estado||'—'}</span>
+      </div>`;
+    });
+  }
+  if(hits.productos.length){
+    if(html)html+='<div class="gs-divider"></div>';
+    html+=`<div class="gs-section">📦 Productos (${hits.productos.length})</div>`;
+    hits.productos.slice(0,4).forEach(p=>{
+      const idx=_gsResults.push({type:'producto',id:p.id,label:p.nombre})-1;
+      const stock=p.stock||0;
+      const stockColor=stock<=0?'var(--red)':stock<=(p.stockMin||5)?'var(--yellow)':'var(--green)';
+      html+=`<div class="gs-item" data-idx="${idx}" onmousedown="gsSelectItem(${idx})">
+        <div class="gs-item-icon" style="background:rgba(16,185,129,.12)">📦</div>
+        <div class="gs-item-body">
+          <div class="gs-item-title">${gsHighlight(p.nombre||'—',q)}</div>
+          <div class="gs-item-sub">${esc(p.categoria||'—')} · Ref: ${esc(p.referencia||'—')}</div>
+        </div>
+        <span class="gs-item-badge" style="color:${stockColor};background:rgba(0,0,0,.1)">${stock} uds</span>
+      </div>`;
+    });
+  }
+  if(total>16)html+=`<div class="gs-empty" style="padding:8px 12px;font-size:11px">+${total-16} más resultados — refina la búsqueda</div>`;
+  dd.innerHTML=html;
+};
+
+function gsHighlight(text,q){
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0)return esc(text);
+  return esc(text.slice(0,i))+'<mark style="background:rgba(37,99,235,.3);color:var(--text);border-radius:3px;padding:0 1px">'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+
+window.gsSelectItem=async function(idx){
+  const item=_gsResults[idx];
+  if(!item)return;
+  $('gs-input').value='';
+  $('gs-dropdown').style.display='none';
+  _gsFocusIdx=-1;
+  if(item.type==='cliente'){
+    await window.loadModule('clientes');
+    setTimeout(()=>{
+      $('cliente-search').value=item.label;
+      $('cliente-search').dispatchEvent(new Event('input'));
+    },400);
+  }else if(item.type==='factura'){
+    await window.loadModule('facturas');
+    setTimeout(()=>{
+      $('fact-search').value=item.label;
+      aplicarFiltrosFact();
+      // resaltar fila
+      setTimeout(()=>{
+        document.querySelectorAll('#facturas-tbody tr').forEach(r=>{
+          if(r.textContent.includes(item.label)){
+            r.style.background='rgba(37,99,235,.13)';
+            r.scrollIntoView({behavior:'smooth',block:'center'});
+            setTimeout(()=>r.style.background='',3000);
+          }
+        });
+      },200);
+    },500);
+  }else if(item.type==='cotizacion'){
+    await window.loadModule('cotizaciones');
+    setTimeout(()=>{
+      $('cot-search').value=item.label;
+      $('cot-search').dispatchEvent(new Event('input'));
+    },400);
+  }else if(item.type==='producto'){
+    await window.loadModule('inventario');
+    setTimeout(()=>{
+      const s=$('inv-search')||$('prod-search');
+      if(s){s.value=item.label;s.dispatchEvent(new Event('input'));}
+    },400);
+  }
+  toast('📍 '+item.label);
+};
+
+window.gsKeyNav=function(e){
+  const items=[...$('gs-dropdown').querySelectorAll('.gs-item')];
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){e.preventDefault();_gsFocusIdx=Math.min(_gsFocusIdx+1,items.length-1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();_gsFocusIdx=Math.max(_gsFocusIdx-1,0);}
+  else if(e.key==='Enter'){e.preventDefault();if(_gsFocusIdx>=0){const idx=parseInt(items[_gsFocusIdx].dataset.idx);gsSelectItem(idx);}return;}
+  else if(e.key==='Escape'){$('gs-dropdown').style.display='none';$('gs-input').blur();return;}
+  items.forEach((el,i)=>el.classList.toggle('focused',i===_gsFocusIdx));
+  if(_gsFocusIdx>=0)items[_gsFocusIdx].scrollIntoView({block:'nearest'});
+};
+
+// Atajo de teclado Cmd+K / Ctrl+K
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){
+    e.preventDefault();
+    $('gs-input').focus();
+    $('gs-input').select();
+    gsLoadCache();
+  }
+});
+
+// Invalidar cache en operaciones de guardado
+['cargarFacturas','cargarCotizaciones','cargarClientes'].forEach(fn=>{
+  const orig=window[fn];
+  if(orig)window[fn]=async(...a)=>{_gsLoaded=false;return orig(...a);};
+});
 
 // ══════════ FACTURAS ══════════
 function totalesFact(){
@@ -2323,8 +3122,9 @@ function renderFacturas(docs){
   if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="6">Sin resultados</td></tr>';return;}
   docs.forEach(d=>{
     const f=d.data();
+    const cotBadge=f.cotizacionNumero?`<div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">📄 ${esc(f.cotizacionNumero)}</div>`:'';
     tb.innerHTML+=`<tr>
-      <td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(f.numero||'—')}</strong></td>
+      <td><strong style="font-family:var(--mono);color:var(--accent2)">${esc(f.numero||'—')}</strong>${cotBadge}</td>
       <td>${esc(f.cliente||'—')}</td><td>${esc(f.fecha||'—')}</td>
       <td><strong>${fmtM(calcTotalFact(f))}</strong></td>
       <td><span class="badge ${BADGE_MAP[f.estado]||'badge-borrador'}">${esc(f.estado||'—')}</span></td>
@@ -2332,6 +3132,8 @@ function renderFacturas(docs){
         <button class="qa-btn" onclick="window.quickEstado('facturas','${d.id}','${esc(f.estado||'')}','fact')">🏷️ Estado</button>
         <button class="btn-icon" onclick="window.editFactura('${d.id}')">✏️</button>
         <button class="btn-icon" onclick="window.imprimirFactura('${d.id}')" title="Descargar PDF">📄 PDF</button>
+        ${f.estado==='Pagada'?`<button class="recibo-btn" onclick="window.imprimirRecibo('${d.id}')">🟢 Recibo</button>`:''}
+        <button class="btn-wa" onclick="window.waEnviarFact('${d.id}','${esc(f.cliente||'')}')">💬 WA</button>
         <button class="btn-icon danger" onclick="window.deleteFact('${d.id}','${esc(f.numero||'')}')">🗑️</button>
       </td>
     </tr>`;
@@ -2517,6 +3319,10 @@ async function cargarDashboard(){
   await generarTopClientes(fa);await generarTopProductos(fa);
   await generarSugerencias(pa,fa,ca);
   await cargarContabilidad();
+
+  actualizarBarraMeta();
+  actualizarAlertaStock();
+  renderTareas();
 }
 
 window.actualizarResumenVentas=async function(faParam,caParam){
@@ -2907,9 +3713,11 @@ window.imprimirFactura=async function(factId){
   const items=f.items||[];
   const subtotal=f.subtotal||items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
   const descMonto=f.descuentoMonto||(subtotal*(f.descuento||0)/100);
-  const base=subtotal-descMonto;
-  const ivaMonto=f.ivaMonto||(base*(f.iva||0)/100);
-  const total=f.total||base+ivaMonto;
+  // Precios ya incluyen IVA: se extrae, no se suma
+  const total=Math.round(subtotal-descMonto);
+  const ip=f.iva||0;
+  const base=ip>0?Math.round(total/(1+ip/100)):total;
+  const ivaMonto=total-base;
   const estadoColor={Pendiente:'#f59e0b',Pagada:'#10b981',Anulada:'#f43f5e'}[f.estado]||'#64748b';
   const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
   <title>Factura ${esc(f.numero||'')}</title>
@@ -3065,9 +3873,7 @@ window.imprimirOrdenCompra=async function(compraId){
   </body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();
 };
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
+
 // ════════════════════════════════════════════════════════
 // NEXORA ERP v4 — Import/Export & Portal Module
 // ════════════════════════════════════════════════════════
@@ -3737,4 +4543,1124 @@ window.setTheme=function(t){
   localStorage.setItem('nexora-theme',t);
 };
 (function(){const t=localStorage.getItem('nexora-theme')||'dark';if(t!=='dark')window.setTheme(t);else{['light','combined'].forEach(n=>document.getElementById('theme-'+n)?.classList.remove('active'));document.getElementById('theme-dark')?.classList.add('active');}})();
+
+// ===== MOBILE NAV =====
+window.openMobMenu=function(){
+  document.getElementById('main-sidebar').classList.add('mob-open');
+  document.getElementById('mob-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+};
+window.closeMobMenu=function(){
+  document.getElementById('main-sidebar').classList.remove('mob-open');
+  document.getElementById('mob-overlay').classList.remove('show');
+  document.body.style.overflow='';
+};
+window.mobNav=function(btn,mod){
+  document.querySelectorAll('.mob-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  window.loadModule(mod);
+  closeMobMenu();
+};
+// Sync bottom nav with sidebar clicks
+const _origLoadModule=window.loadModule;
+window.loadModule=function(mod){
+  if(_origLoadModule)_origLoadModule(mod);
+  document.querySelectorAll('.mob-tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.module===mod);
+  });
+};
+// Sync pedidos badge to mobile badge
+const _mobBadgeObs=new MutationObserver(()=>{
+  const v=document.getElementById('pedidos-badge')?.textContent||'0';
+  const mb=document.getElementById('mob-badge-ped');
+  if(mb){mb.textContent=v;mb.classList.toggle('show',parseInt(v)>0);}
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  const pb=document.getElementById('pedidos-badge');
+  if(pb)_mobBadgeObs.observe(pb,{childList:true,characterData:true,subtree:true});
+});
+
+// ═══════════════════════════════════════
+// META DE VENTAS
+// ═══════════════════════════════════════
+window.editarMeta = function(){
+  const actual = parseFloat(localStorage.getItem('nexora-meta-ventas')||'0');
+  const nueva = prompt('Define tu meta de ventas mensual (solo número):', actual||'');
+  if(nueva===null) return;
+  const val = parseFloat(nueva.replace(/[^0-9.]/g,''));
+  if(isNaN(val)||val<=0){alert('Ingresa un valor válido');return;}
+  localStorage.setItem('nexora-meta-ventas', val);
+  actualizarBarraMeta();
+};
+
+function actualizarBarraMeta(){
+  const meta = parseFloat(localStorage.getItem('nexora-meta-ventas')||'0');
+  const fa = window._factDocsCache||[];
+  const now = new Date();
+  const desdeStr = new Date(now.getFullYear(),now.getMonth(),1).toISOString().slice(0,10);
+  let totalMes = 0;
+  fa.forEach(d=>{const f=d.data();if(f.estado==='Anulada')return;if((f.fecha||'')>=desdeStr)totalMes+=calcTotalFact(f);});
+  const pctEl = document.getElementById('meta-pct');
+  const barEl = document.getElementById('meta-bar');
+  const actEl = document.getElementById('meta-actual');
+  const rEl   = document.getElementById('meta-lbl-right');
+  if(!pctEl) return;
+  actEl.textContent = '$'+Math.round(totalMes).toLocaleString('es-CO');
+  if(!meta){
+    pctEl.textContent='--'; rEl.textContent='\uD83C\uDFAF Sin meta definida';
+    barEl.style.width='0%'; barEl.className='meta-bar-fill';
+    return;
+  }
+  const pct = Math.min(Math.round((totalMes/meta)*100),100);
+  const pctReal = Math.round((totalMes/meta)*100);
+  pctEl.textContent = pctReal+'%';
+  barEl.style.width = pct+'%';
+  rEl.textContent = '\uD83C\uDFAF Meta: $'+Math.round(meta).toLocaleString('es-CO');
+  barEl.className = 'meta-bar-fill' + (pctReal>=100?' done':pctReal>=70?' ':pctReal>=40?' warn':' danger');
+}
+window.actualizarBarraMeta = actualizarBarraMeta;
+
+// ═══════════════════════════════════════
+// ALERTA STOCK BAJO
+// ═══════════════════════════════════════
+function actualizarAlertaStock(){
+  const banner = document.getElementById('dash-stock-alert');
+  const txt    = document.getElementById('dash-stock-alert-txt');
+  if(!banner) return;
+  const prods  = window.allProdsCache||[];
+  const bajos  = prods.filter(d=>{const p=d.data();return(p.stock||0)<=(p.stockMin||5)&&!p.eliminado;});
+  if(bajos.length>0){
+    banner.style.display='flex';
+    txt.textContent = bajos.length+' producto'+(bajos.length>1?'s':'')+' por debajo del m\u00ednimo: '+bajos.slice(0,3).map(d=>d.data().nombre).join(', ')+(bajos.length>3?'...':'');
+  } else {
+    banner.style.display='none';
+  }
+}
+window.actualizarAlertaStock = actualizarAlertaStock;
+
+// ═══════════════════════════════════════
+// TAREAS
+// ═══════════════════════════════════════
+function cargarTareas(){
+  const raw = localStorage.getItem('nexora-tareas');
+  return raw ? JSON.parse(raw) : [];
+}
+function guardarTareas(t){ localStorage.setItem('nexora-tareas', JSON.stringify(t)); }
+
+function renderTareas(){
+  const tareas = cargarTareas();
+  const el = document.getElementById('tareas-list');
+  const cnt = document.getElementById('tareas-pendientes-count');
+  if(!el) return;
+  const pendientes = tareas.filter(t=>!t.done);
+  if(cnt) cnt.textContent = pendientes.length;
+  if(!tareas.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px 0">\uD83D\uDC4B Sin tareas. \u00a1Agrega una!</div>';
+    return;
+  }
+  const hoy = new Date().toISOString().slice(0,10);
+  el.innerHTML = tareas.map((t,i)=>{
+    const vencida = t.fecha && t.fecha<hoy && !t.done;
+    return `<div class="tarea-item">
+      <div class="tarea-check${t.done?' done':''}" onclick="toggleTarea(${i})">${t.done?'&#x2713;':''}</div>
+      <div class="tarea-text${t.done?' done':''}">${t.texto}</div>
+      ${t.fecha?`<span class="tarea-fecha${vencida?' vencida':''}">${vencida?'\u26a0\ufe0f ':'\uD83D\uDCC5 '}${t.fecha}</span>`:''}
+      <button onclick="eliminarTarea(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;">&times;</button>
+    </div>`;
+  }).join('');
+}
+
+window.addTarea = function(){
+  const inp = document.getElementById('tarea-input');
+  const fechaInp = document.getElementById('tarea-fecha-input');
+  const texto = inp?.value?.trim();
+  if(!texto) return;
+  const tareas = cargarTareas();
+  tareas.unshift({texto, fecha: fechaInp?.value||'', done:false, id:Date.now()});
+  guardarTareas(tareas);
+  inp.value=''; if(fechaInp) fechaInp.value='';
+  renderTareas();
+};
+window.toggleTarea = function(i){
+  const tareas = cargarTareas();
+  tareas[i].done = !tareas[i].done;
+  guardarTareas(tareas); renderTareas();
+};
+window.eliminarTarea = function(i){
+  const tareas = cargarTareas();
+  tareas.splice(i,1);
+  guardarTareas(tareas); renderTareas();
+};
+
+// ═══════════════════════════════════════
+// WHATSAPP
+// ═══════════════════════════════════════
+window.waEnviarCot = async function(cotId, cliente, numero){
+  const {getDoc:gd} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+  // Buscar telefono del cliente
+  let tel = '';
+  try{
+    const snap = await window._tdoc('cotizaciones', cotId);
+    const d = await gd(snap);
+    if(d.exists()&&d.data().clienteId){
+      const cs = await gd(window._tdoc('clientes',d.data().clienteId));
+      if(cs.exists()) tel = cs.data().telefono||'';
+    }
+  }catch(e){}
+  const portalLink = `https://duduwxo50-pixel.github.io/nexora-erp/portal.html?portal=${window._currentTenant||''}`;
+  const msg = encodeURIComponent(
+    `\uD83D\uDCCB *Cotizaci\u00f3n ${numero||''}*\n\nHola ${cliente||''},\n\nTe comparto tu cotizaci\u00f3n. Puedes revisarla y hacer tu pedido directamente desde:\n${portalLink}\n\n\u00a1Quedamos atentos a cualquier consulta!`
+  );
+  const phone = tel.replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${phone?phone:''}?text=${msg}`,'_blank');
+};
+
+window.waEnviarFact = async function(factId, cliente, numero){
+  let tel = '';
+  try{
+    const {getDoc:gd} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = window._tdoc('facturas', factId);
+    const d = await gd(snap);
+    if(d.exists()&&d.data().clienteId){
+      const cs = await gd(window._tdoc('clientes',d.data().clienteId));
+      if(cs.exists()) tel = cs.data().telefono||'';
+    }
+  }catch(e){}
+  const msg = encodeURIComponent(
+    `\uD83E\uDDFE *Factura ${numero||''}*\n\nHola ${cliente||''},\n\nTe informamos que tu factura ha sido generada y est\u00e1 lista.\n\n\u00a1Gracias por tu compra! Cualquier duda, estamos disponibles.`
+  );
+  const phone = tel.replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${phone?phone:''}?text=${msg}`,'_blank');
+};
+
+// Hook en loadDashboard para actualizar meta, tareas y alertas
+const _origDashLoad = window.loadDashboard;
+window.loadDashboard = async function(){
+  if(_origDashLoad) await _origDashLoad.apply(this, arguments);
+  setTimeout(()=>{
+    actualizarBarraMeta();
+    actualizarAlertaStock();
+    renderTareas();
+  }, 600);
+};
+
+// Init tareas al arrancar
+document.addEventListener('DOMContentLoaded', ()=>{ renderTareas(); });
+
+// ═══════════════════════════════════════════════════
+// FASE 3 — RECIBO DE PAGO + FIRMA + CONFIG EMPRESA
+// ═══════════════════════════════════════════════════
+
+// -- Firma / Config empresa --
+window.cargarFirmaPreview = function(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('firma-preview');
+    const wrap = document.getElementById('firma-preview-wrap');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    if(wrap) wrap.style.display = 'none';
+    window._firmaDataUrl = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.limpiarFirma = function(){
+  window._firmaDataUrl = null;
+  localStorage.removeItem('nexora-firma');
+  const img = document.getElementById('firma-preview');
+  const wrap = document.getElementById('firma-preview-wrap');
+  if(img){ img.src=''; img.style.display='none'; }
+  if(wrap) wrap.style.display='block';
+  toast('Firma eliminada');
+};
+
+window.guardarConfigEmpresa = function(){
+  const cfg = {
+    nombre: document.getElementById('biz-nombre')?.value?.trim() || '',
+    nit:    document.getElementById('biz-nit')?.value?.trim() || '',
+    tel:    document.getElementById('biz-tel')?.value?.trim() || '',
+    dir:    document.getElementById('biz-dir')?.value?.trim() || '',
+    firma:  window._firmaDataUrl || localStorage.getItem('nexora-firma') || ''
+  };
+  if(cfg.firma) localStorage.setItem('nexora-firma', cfg.firma);
+  localStorage.setItem('nexora-biz-config', JSON.stringify(cfg));
+  toast('✅ Configuración guardada');
+};
+
+function getBizConfig(){
+  try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};}
+}
+
+// Cargar config al abrir importar/exportar
+const _origLoadModule2 = window.loadModule;
+window.loadModule = function(mod){
+  _origLoadModule2.apply(this, arguments);
+  if(mod === 'importar'){
+    setTimeout(()=>{
+      const cfg = getBizConfig();
+      const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
+      const set = (id,v) => { const el=document.getElementById(id); if(el) el.value=v; };
+      set('biz-nombre', cfg.nombre||'');
+      set('biz-nit',    cfg.nit||'');
+      set('biz-tel',    cfg.tel||'');
+      set('biz-dir',    cfg.dir||'');
+      if(firma){
+        window._firmaDataUrl = firma;
+        const img = document.getElementById('firma-preview');
+        const wrap = document.getElementById('firma-preview-wrap');
+        if(img){ img.src=firma; img.style.display='block'; }
+        if(wrap) wrap.style.display='none';
+      }
+    }, 200);
+  }
+};
+
+// -- Recibo de pago PDF --
+window.imprimirRecibo = async function(factId){
+  const snap = await getDoc(tdoc('facturas', factId));
+  if(!snap.exists()) return;
+  const f = snap.data();
+
+  const biz = await getDoc(doc(db,'businesses', currentTenant));
+  const bizName = biz.exists() ? biz.data().name : 'Mi Negocio';
+  const cfg = getBizConfig();
+  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
+
+  let cliInfo = {nit:'',email:'',telefono:'',ciudad:'',direccion:''};
+  if(f.clienteId){
+    const cs = await getDoc(tdoc('clientes',f.clienteId));
+    if(cs.exists()) cliInfo = cs.data();
+  }
+
+  const items = f.items||[];
+  const total = Math.round(items.reduce((s,i)=>s+(i.precio*i.cantidad),0) * (1 - (f.descuento||0)/100));
+  const ip = f.iva||0;
+  const base = ip>0 ? Math.round(total/(1+ip/100)) : total;
+  const ivaMonto = total - base;
+
+  const fechaPago = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'long',day:'numeric'});
+  const reciboCod = 'REC-'+Date.now().toString().slice(-6);
+
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Recibo ${esc(f.numero||'')}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;font-size:13px;}
+    .page{max-width:680px;margin:0 auto;padding:36px 40px;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:3px solid #10b981;}
+    .brand{font-size:22px;font-weight:900;color:#065f46;letter-spacing:-1px;}
+    .brand-sub{font-size:10px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+    .doc-right{text-align:right;}
+    .doc-right h1{font-size:24px;font-weight:900;color:#065f46;}
+    .rec-code{font-family:monospace;font-size:12px;color:#64748b;margin-top:4px;}
+    .paid-stamp{display:inline-block;border:3px solid #10b981;color:#10b981;font-size:18px;font-weight:900;padding:4px 16px;border-radius:6px;letter-spacing:2px;transform:rotate(-8deg);margin-top:8px;}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+    .info-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px;}
+    .info-box h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#059669;margin-bottom:8px;}
+    .info-box p{font-size:12px;color:#334155;margin-bottom:2px;}
+    .amount-box{background:#065f46;color:#fff;border-radius:14px;padding:24px;text-align:center;margin-bottom:24px;}
+    .amount-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.8;margin-bottom:6px;}
+    .amount-val{font-size:36px;font-weight:900;letter-spacing:-2px;}
+    .amount-sub{font-size:12px;opacity:.7;margin-top:4px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:12px;}
+    thead tr{background:#f0fdf4;}
+    thead th{padding:9px 12px;text-align:left;font-weight:700;color:#065f46;border-bottom:2px solid #bbf7d0;}
+    td{padding:8px 12px;border-bottom:1px solid #e2e8f0;}
+    .totales{display:flex;justify-content:flex-end;margin-bottom:20px;}
+    .tot-box{min-width:220px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+    .tot-row{display:flex;justify-content:space-between;padding:7px 14px;border-bottom:1px solid #e2e8f0;font-size:12px;}
+    .tot-row:last-child{background:#065f46;color:#fff;font-weight:900;font-size:14px;border:none;}
+    .firma-wrap{display:flex;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;}
+    .firma-box{text-align:center;min-width:160px;}
+    .firma-img{max-width:160px;max-height:60px;object-fit:contain;margin-bottom:6px;}
+    .firma-line{border-top:1px solid #334155;padding-top:6px;font-size:11px;color:#64748b;}
+    .footer{text-align:center;font-size:10px;color:#94a3b8;margin-top:20px;padding-top:14px;border-top:1px solid #e2e8f0;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body><div class="page">
+  <div class="header">
+    <div>
+      <div class="brand">${esc(cfg.nombre||bizName)}</div>
+      <div class="brand-sub">Recibo de Pago</div>
+      ${cfg.nit?`<div style="font-size:11px;color:#64748b;margin-top:2px">NIT: ${esc(cfg.nit)}</div>`:''}
+      ${cfg.tel?`<div style="font-size:11px;color:#64748b">${esc(cfg.tel)}</div>`:''}
+    </div>
+    <div class="doc-right">
+      <h1>RECIBO</h1>
+      <div class="rec-code">${reciboCod}</div>
+      <div class="paid-stamp">PAGADO</div>
+    </div>
+  </div>
+
+  <div class="amount-box">
+    <div class="amount-label">Total Recibido</div>
+    <div class="amount-val">$${total.toLocaleString('es-CO')}</div>
+    <div class="amount-sub">Factura ${esc(f.numero||'—')} &nbsp;·&nbsp; ${fechaPago}</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-box"><h4>&#x1F4CB; Referencia</h4>
+      <p>Factura: <strong>${esc(f.numero||'—')}</strong></p>
+      <p>Fecha factura: <strong>${esc(f.fecha||'—')}</strong></p>
+      <p>Fecha pago: <strong>${fechaPago}</strong></p>
+      <p>Recibo Nº: <strong style="font-family:monospace">${reciboCod}</strong></p>
+    </div>
+    <div class="info-box"><h4>&#x1F464; Cliente</h4>
+      <p><strong>${esc(f.cliente||'—')}</strong></p>
+      ${cliInfo.nit?`<p>NIT: ${esc(cliInfo.nit)}</p>`:''}
+      ${cliInfo.email?`<p>${esc(cliInfo.email)}</p>`:''}
+      ${cliInfo.telefono?`<p>${esc(cliInfo.telefono)}</p>`:''}
+      ${cliInfo.ciudad?`<p>${esc(cliInfo.ciudad)}</p>`:''}
+    </div>
+  </div>
+
+  <table><thead><tr><th>#</th><th>Descripción</th><th>Cant.</th><th>Precio</th><th>Total</th></tr></thead><tbody>
+  ${items.map((it,i)=>{const sub=Math.round((it.precio-(it.precio*(it.descItem||0)/100))*it.cantidad);return`<tr><td>${i+1}</td><td><strong>${esc(it.nombre)}</strong></td><td>${it.cantidad}</td><td>$${(it.precio||0).toLocaleString('es-CO')}</td><td>$${sub.toLocaleString('es-CO')}</td></tr>`;}).join('')}
+  </tbody></table>
+
+  <div class="totales"><div class="tot-box">
+    ${(f.descuento||0)>0?`<div class="tot-row"><span>Descuento ${f.descuento}%</span><span style="color:#ef4444">-$${Math.round(items.reduce((s,i)=>s+(i.precio*i.cantidad),0)*(f.descuento/100)).toLocaleString('es-CO')}</span></div>`:''}
+    ${ivaMonto>0?`<div class="tot-row"><span>IVA ${ip}% (incluido)</span><span>$${ivaMonto.toLocaleString('es-CO')}</span></div>`:''}
+    <div class="tot-row"><span>TOTAL PAGADO</span><span>$${total.toLocaleString('es-CO')}</span></div>
+  </div></div>
+
+  ${firma?`<div class="firma-wrap"><div class="firma-box"><img src="${firma}" class="firma-img"><div class="firma-line">Firma autorizada &nbsp;·&nbsp; ${esc(cfg.nombre||bizName)}</div></div></div>`:''}
+
+  <div class="footer">Recibo generado por Nexora ERP &nbsp;·&nbsp; ${new Date().toLocaleDateString('es-CO')} &nbsp;·&nbsp; ${esc(cfg.nombre||bizName)}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`;
+
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+};
+
+// -- Firma en facturas PDF --
+const _origImprimirFactura = window.imprimirFactura;
+window.imprimirFactura = async function(factId){
+  // call original then inject firma via localStorage after
+  await _origImprimirFactura(factId);
+};
+
+// Auto-trigger recibo al marcar Pagada
+const _origCambiarEstado = window.cambiarEstado;
+window.cambiarEstado = async function(colName, docId, estado){
+  await _origCambiarEstado(colName, docId, estado);
+  if(colName==='facturas' && estado==='Pagada'){
+    setTimeout(()=>{
+      if(confirm('✅ Factura marcada como Pagada. ¿Deseas generar el recibo de pago ahora?')){
+        window.imprimirRecibo(docId);
+      }
+    }, 400);
+  }
+};
+
+// ════════════════════════════════════════
+// FASE 4A — CRM (historial por cliente)
+// ════════════════════════════════════════
+let _crmClienteId = null;
+
+// ══════════════════════════════════════════
+// ESTADO DE CUENTA POR CLIENTE
+// ══════════════════════════════════════════
+let _ecClienteId=null;
+let _ecFactDocs=[];
+let _ecCotDocs=[];
+
+window.abrirEstadoCuenta=async function(clienteId){
+  _ecClienteId=clienteId;
+  // Mostrar panel vacío mientras carga
+  const panel=$('ec-panel');
+  const overlay=$('ec-overlay');
+  panel.style.right='0';
+  overlay.style.display='block';
+  // Reset
+  ['ec-kpi-pendiente','ec-kpi-pagado','ec-kpi-total'].forEach(id=>{$(id).textContent='...';});
+  $('ec-pending-list').innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;font-size:12px">Cargando...</div>';
+  switchEcTab('cuenta');
+  // Cargar datos en paralelo
+  try{
+    const [cliDoc,factSnap,cotSnap]=await Promise.all([
+      getDoc(tdoc('clientes',clienteId)),
+      getDocs(query(col('facturas'),where('clienteId','==',clienteId),orderBy('createdAt','desc'))),
+      getDocs(query(col('cotizaciones'),where('clienteId','==',clienteId),orderBy('createdAt','desc')))
+    ]);
+    const cli=cliDoc.exists()?cliDoc.data():{nombre:'—'};
+    _ecFactDocs=factSnap.docs.filter(d=>!d.data().eliminado);
+    _ecCotDocs=cotSnap.docs.filter(d=>!d.data().eliminado);
+    // Header
+    const logoEl=$('ec-logo');
+    if(cli.logoImg){logoEl.innerHTML=`<img src="${cli.logoImg}" style="width:40px;height:40px;border-radius:10px;object-fit:contain">`;}
+    else{logoEl.innerHTML='🏢';logoEl.style.fontSize='20px';}
+    $('ec-nombre').textContent=cli.nombre||'—';
+    $('ec-nit').textContent='NIT: '+(cli.nit||'—');
+    // Info cliente
+    const infoEl=$('ec-info-cliente');
+    const infoItems=[
+      ['📧 Email',cli.email],['📞 Teléfono',cli.telefono],
+      ['🏙️ Ciudad',cli.ciudad],['🌐 Sector',cli.sector],
+      ['💳 Pago',cli.pago],['📋 Régimen',cli.regimen]
+    ].filter(([,v])=>v);
+    infoEl.innerHTML=infoItems.map(([k,v])=>`<div><span style="color:var(--muted);font-size:11px">${k}</span><div style="font-weight:600;margin-top:1px">${esc(v)}</div></div>`).join('');
+    // Calcular KPIs
+    let totalPendiente=0,nPendiente=0,totalPagado=0,nPagado=0,totalHist=0;
+    const hoy=new Date().toISOString().slice(0,10);
+    _ecFactDocs.forEach(d=>{
+      const f=d.data();
+      const tot=calcTotalFact(f);
+      totalHist+=tot;
+      if(f.estado==='Pendiente'){totalPendiente+=tot;nPendiente++;}
+      if(f.estado==='Pagada'){totalPagado+=tot;nPagado++;}
+    });
+    $('ec-kpi-pendiente').textContent=fmtM(totalPendiente);
+    $('ec-kpi-pendiente-n').textContent=nPendiente+' factura'+(nPendiente===1?'':'s');
+    $('ec-kpi-pagado').textContent=fmtM(totalPagado);
+    $('ec-kpi-pagado-n').textContent=nPagado+' factura'+(nPagado===1?'':'s');
+    $('ec-kpi-total').textContent=fmtM(totalHist);
+    $('ec-kpi-total-n').textContent=_ecFactDocs.length+' factura'+(_ecFactDocs.length===1?'':'s');
+    // Barra de progreso
+    const pct=totalHist>0?Math.round(totalPagado/totalHist*100):0;
+    $('ec-pct-bar').style.width=pct+'%';
+    $('ec-pct-txt').textContent=pct+'% cobrado';
+    // Facturas pendientes
+    const pendientes=_ecFactDocs.filter(d=>d.data().estado==='Pendiente');
+    if(!pendientes.length){
+      $('ec-pending-list').innerHTML='<div style="color:var(--green);text-align:center;padding:16px;font-size:13px;font-weight:600">✅ Sin facturas pendientes</div>';
+    }else{
+      $('ec-pending-list').innerHTML=pendientes.map(d=>{
+        const f=d.data();
+        const vencida=f.vencimiento&&f.vencimiento<hoy;
+        return `<div class="ec-fact-row" onclick="window.editFactura('${d.id}')">
+          <span class="ec-fact-num">${esc(f.numero||'—')}</span>
+          <span class="ec-fact-fecha">${esc(f.fecha||'—')}${vencida?'<span style="color:var(--red);font-weight:800;margin-left:4px">⚠️ Vencida</span>':''}</span>
+          <span class="ec-fact-total" style="color:var(--red)">${fmtM(calcTotalFact(f))}</span>
+          <button class="ec-pagar-btn" onclick="event.stopPropagation();window.marcarPagadaEC('${d.id}')">✓ Pagar</button>
+        </div>`;
+      }).join('');
+    }
+    // Render tabs de facturas y cotizaciones
+    renderEcFacturas();
+    renderEcCotizaciones();
+  }catch(err){
+    console.error(err);
+    $('ec-pending-list').innerHTML='<div style="color:var(--red);text-align:center;padding:16px;font-size:12px">Error cargando datos</div>';
+  }
+};
+
+window.marcarPagadaEC=async factId=>{
+  if(!confirm('¿Marcar esta factura como Pagada?'))return;
+  await updateDoc(tdoc('facturas',factId),{estado:'Pagada',updatedAt:serverTimestamp()});
+  toast('Factura marcada como Pagada ✅');
+  await window.abrirEstadoCuenta(_ecClienteId);
+  cargarFacturas();
+};
+
+window.cerrarEstadoCuenta=function(){
+  $('ec-panel').style.right='-600px';
+  $('ec-overlay').style.display='none';
+  _ecClienteId=null;
+};
+
+window.switchEcTab=function(tab){
+  document.querySelectorAll('.ec-tab').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
+  document.querySelectorAll('.ec-tab-content').forEach(c=>{c.style.display='none';});
+  $('ec-tab-'+tab).style.display='block';
+};
+
+window.filtrarEcFacturas=function(){renderEcFacturas();};
+
+function renderEcFacturas(){
+  const filtro=$('ec-fact-filter').value;
+  const docs=filtro?_ecFactDocs.filter(d=>d.data().estado===filtro):_ecFactDocs;
+  const el=$('ec-fact-list');
+  if(!docs.length){el.innerHTML='<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sin facturas</div>';return;}
+  const hoy=new Date().toISOString().slice(0,10);
+  el.innerHTML=docs.map(d=>{
+    const f=d.data();
+    const tot=calcTotalFact(f);
+    const colorMap={Pendiente:'var(--yellow)',Pagada:'var(--green)',Anulada:'var(--muted)'};
+    const vencida=f.estado==='Pendiente'&&f.vencimiento&&f.vencimiento<hoy;
+    return `<div class="ec-fact-row" onclick="window.editFactura('${d.id}')">
+      <span class="ec-fact-num">${esc(f.numero||'—')}</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">${esc(f.fecha||'—')}</div>
+        ${f.cotizacionNumero?`<div style="font-size:10px;color:var(--muted)">📄 ${esc(f.cotizacionNumero)}</div>`:''}
+        ${vencida?'<div style="font-size:10px;color:var(--red);font-weight:700">⚠️ Vencida</div>':''}
+      </div>
+      <span class="badge ${BADGE_MAP[f.estado]||'badge-borrador'}" style="flex-shrink:0">${f.estado||'—'}</span>
+      <span class="ec-fact-total" style="color:${colorMap[f.estado]||'var(--text)'}">${fmtM(tot)}</span>
+      ${f.estado==='Pendiente'?`<button class="ec-pagar-btn" onclick="event.stopPropagation();window.marcarPagadaEC('${d.id}')">✓ Pagar</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderEcCotizaciones(){
+  const el=$('ec-cot-list');
+  if(!_ecCotDocs.length){el.innerHTML='<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">Sin cotizaciones</div>';return;}
+  el.innerHTML=_ecCotDocs.map(d=>{
+    const c=d.data();
+    const yaFact=c.facturada||c.estado==='Facturada';
+    return `<div class="ec-fact-row" onclick="window.editCotizacion('${d.id}')">
+      <span class="ec-fact-num">${esc(c.numero||'—')}</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">${esc(c.fecha||'—')}</div>
+        ${yaFact?`<div style="font-size:10px;color:var(--purple);font-weight:700">✓ Facturada ${c.facturaNumero?'como '+esc(c.facturaNumero):''}</div>`:''}
+      </div>
+      <span class="badge ${BADGE_MAP[c.estado]||'badge-borrador'}" style="flex-shrink:0">${c.estado||'—'}</span>
+      <span class="ec-fact-total">${fmtM(calcTotalCot(c))}</span>
+      ${!yaFact?`<button class="ec-pagar-btn" style="background:linear-gradient(135deg,var(--accent),#1d4ed8)" onclick="event.stopPropagation();window.abrirConfirmarFacturacion('${d.id}');cerrarEstadoCuenta()">🧾 Facturar</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+window.abrirCRM = async function(clienteId, nombre) {
+  _crmClienteId = clienteId;
+  $('crm-cliente-nombre').textContent = nombre;
+  $('crm-texto').value = '';
+  $('crm-fecha').value = new Date().toISOString().slice(0,10);
+  $('crm-modal').classList.add('show');
+  await renderCRM();
+};
+
+async function renderCRM() {
+  const list = $('crm-list');
+  list.innerHTML = '<div style="color:var(--muted);padding:12px 0;text-align:center;font-size:12px">Cargando...</div>';
+  try {
+    const snap = await getDocs(query(
+      col('crm'),
+      where('clienteId','==',_crmClienteId),
+      orderBy('fecha','desc'),
+      limit(50)
+    ));
+    if(snap.empty) {
+      list.innerHTML = '<div style="color:var(--muted);padding:16px 0;text-align:center">Sin interacciones aún. ¡Agrega la primera!</div>';
+      return;
+    }
+    const tipoIcons = {llamada:'📞',nota:'📝',reunion:'🤝',seguimiento:'🔔',email:'📧'};
+    const tipoColors = {llamada:'llamada',nota:'nota',reunion:'reunion',seguimiento:'seguimiento',email:'email'};
+    list.innerHTML = snap.docs.map(d => {
+      const r = d.data();
+      const icon = tipoIcons[r.tipo] || '💬';
+      return `<div class="crm-item">
+        <div class="crm-dot ${tipoColors[r.tipo]||'nota'}"></div>
+        <div style="flex:1">
+          <div class="crm-tipo">${icon} ${esc(r.tipo||'nota')}</div>
+          <div class="crm-texto">${esc(r.texto||'')}</div>
+          <div class="crm-fecha">${esc(r.fecha||'')} — ${esc(r.usuario||'')}</div>
+        </div>
+        <button onclick="eliminarCRM('${d.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;flex-shrink:0">&times;</button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="color:var(--muted);padding:12px 0;text-align:center">Error cargando historial</div>';
+  }
+}
+
+window.addCRM = async function() {
+  const texto = $('crm-texto').value.trim();
+  if(!texto) { toast('Escribe una descripción','error'); return; }
+  const tipo  = $('crm-tipo').value;
+  const fecha = $('crm-fecha').value || new Date().toISOString().slice(0,10);
+  await addDoc(col('crm'), {
+    clienteId: _crmClienteId,
+    tipo, texto, fecha,
+    usuario: currentUser?.displayName || currentUser?.email?.split('@')[0] || '',
+    createdAt: serverTimestamp()
+  });
+  $('crm-texto').value = '';
+  toast('✅ Interacción guardada');
+  await renderCRM();
+};
+
+window.eliminarCRM = async function(id) {
+  if(!confirm('¿Eliminar esta interacción?')) return;
+  await deleteDoc(tdoc('crm', id));
+  await renderCRM();
+};
+
+// ════════════════════════════════════════
+// FASE 4B — ROLES Y USUARIOS
+// ════════════════════════════════════════
+let currentUserRole = 'admin';
+
+async function cargarRolUsuario(uid) {
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    const data = snap.exists() ? snap.data() : {};
+    currentUserRole = data.rol || 'admin';
+    window._currentUserRole = currentUserRole;
+    aplicarPermisos();
+  } catch(e) { currentUserRole = 'admin'; }
+}
+
+function aplicarPermisos() {
+  const esAdmin = currentUserRole === 'admin';
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = esAdmin ? '' : 'none';
+  });
+}
+
+const _origLoadModuleRol = window.loadModule;
+window.loadModule = function(mod) {
+  const restringidos = ['contabilidad','reportes','importar','usuarios'];
+  if(currentUserRole !== 'admin' && restringidos.includes(mod)) {
+    toast('No tienes permiso para este módulo','error');
+    return;
+  }
+  _origLoadModuleRol.apply(this, arguments);
+  if(mod === 'usuarios') cargarUsuarios();
+};
+
+async function cargarUsuarios() {
+  const tb = $('usuarios-tbody');
+  if(!tb) return;
+  tb.innerHTML = '<tr class="no-results"><td colspan="4">Cargando...</td></tr>';
+  try {
+    const snap = await getDocs(query(
+      collection(db,'users'),
+      where('businessId','==',currentTenant)
+    ));
+    if(snap.empty) {
+      tb.innerHTML='<tr class="no-results"><td colspan="4">Solo tú en el equipo</td></tr>';
+      return;
+    }
+    tb.innerHTML = snap.docs.map(d => {
+      const u = d.data();
+      const rol = u.rol || 'admin';
+      const esTu = d.id === currentUser?.uid;
+      return `<tr>
+        <td><strong>${esc(u.name||u.email||'—')}</strong>${esTu?' <span style="font-size:10px;color:var(--muted)">(tú)</span>':''}</td>
+        <td style="font-size:12px;color:var(--muted)">${esc(u.email||'—')}</td>
+        <td><span class="badge badge-${rol}">${rol}</span></td>
+        <td>${esTu
+          ? '<span style="color:var(--muted);font-size:11px">Tu cuenta</span>'
+          : `<select onchange="cambiarRol('${d.id}',this.value)" style="background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text)">
+              <option value="admin" ${rol==='admin'?'selected':''}>Admin</option>
+              <option value="vendedor" ${rol==='vendedor'?'selected':''}>Vendedor</option>
+            </select>
+            <button class="btn-icon danger" style="margin-left:4px" onclick="eliminarAcceso('${d.id}','${esc(u.name||u.email||'')}')">Quitar</button>`
+        }</td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    tb.innerHTML='<tr class="no-results"><td colspan="4">Error cargando usuarios</td></tr>';
+  }
+}
+
+window.cambiarRol = async function(uid, rol) {
+  await updateDoc(doc(db,'users',uid), {rol});
+  toast('Rol actualizado a ' + rol + ' ✅');
+  cargarUsuarios();
+};
+
+window.eliminarAcceso = async function(uid, nombre) {
+  if(!confirm('¿Quitar acceso a ' + nombre + '? Ya no podrá entrar al ERP.')) return;
+  await updateDoc(doc(db,'users',uid), {businessId: null, rol: null});
+  toast('Acceso revocado');
+  cargarUsuarios();
+};
+
+window.abrirInvitarUsuario = function() {
+  const email = prompt('¿Email del usuario a invitar?\n(Debe haberse registrado primero en el ERP)');
+  if(!email || !email.includes('@')) return;
+  invitarUsuario(email.trim().toLowerCase());
+};
+
+async function invitarUsuario(email) {
+  const snap = await getDocs(query(collection(db,'users'), where('email','==',email)));
+  if(snap.empty) { toast('Usuario no encontrado. Debe registrarse primero.','error'); return; }
+  const uDoc = snap.docs[0];
+  if(uDoc.data().businessId === currentTenant) { toast('Este usuario ya tiene acceso.','error'); return; }
+  const rol = prompt('Asignar rol:\n1 = Admin (acceso total)\n2 = Vendedor (acceso limitado)\n\nEscribe 1 o 2:');
+  const rolFinal = rol==='2' ? 'vendedor' : 'admin';
+  await updateDoc(doc(db,'users',uDoc.id), {businessId: currentTenant, rol: rolFinal});
+  toast('✅ ' + email + ' ahora tiene acceso como ' + rolFinal);
+  cargarUsuarios();
+}
+
+// Cargar rol al arrancar (post-login)
+setTimeout(() => {
+  if(currentUser) cargarRolUsuario(currentUser.uid);
+}, 2000);
+
+// ════════════════════════════════════════════════
+// FASE 5A — NOTIFICACIONES INTERNAS
+// ════════════════════════════════════════════════
+let _notifs = [];
+
+function cargarNotifsLocal() {
+  try { _notifs = JSON.parse(localStorage.getItem('nexora-notifs') || '[]'); } catch(e) { _notifs = []; }
+}
+function guardarNotifsLocal() {
+  localStorage.setItem('nexora-notifs', JSON.stringify(_notifs.slice(0, 50)));
+}
+
+function pushNotif(icon, titulo, sub, link) {
+  cargarNotifsLocal();
+  _notifs.unshift({ id: Date.now(), icon, titulo, sub, link: link || '', ts: new Date().toISOString(), leida: false });
+  guardarNotifsLocal();
+  renderNotifBadge();
+  renderNotifList();
+}
+window.pushNotif = pushNotif;
+
+function renderNotifBadge() {
+  cargarNotifsLocal();
+  const unread = _notifs.filter(n => !n.leida).length;
+  const badge = document.getElementById('notif-badge');
+  if (!badge) return;
+  badge.textContent = unread;
+  badge.classList.toggle('show', unread > 0);
+}
+
+function renderNotifList() {
+  const list = document.getElementById('notif-list');
+  if (!list) return;
+  cargarNotifsLocal();
+  if (!_notifs.length) {
+    list.innerHTML = '<div class="notif-empty">🎉 Todo al día</div>';
+    return;
+  }
+  list.innerHTML = _notifs.map(n => {
+    const ago = tiempoRelativo(n.ts);
+    return `<div class="notif-item${n.leida ? '' : ' '}" onclick="marcarLeida(${n.id},'${esc(n.link||'')}')">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.titulo)}</div>
+        <div class="notif-sub">${esc(n.sub||'')}</div>
+      </div>
+      <div class="notif-time">${ago}</div>
+    </div>`;
+  }).join('');
+}
+
+function tiempoRelativo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'ahora';
+  if (m < 60) return m + 'm';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h';
+  return Math.floor(h / 24) + 'd';
+}
+
+window.marcarLeida = function(id, link) {
+  cargarNotifsLocal();
+  _notifs = _notifs.map(n => n.id === id ? { ...n, leida: true } : n);
+  guardarNotifsLocal();
+  renderNotifBadge();
+  renderNotifList();
+  if (link) window.loadModule(link);
+};
+
+window.limpiarNotifs = function() {
+  _notifs = [];
+  guardarNotifsLocal();
+  renderNotifBadge();
+  renderNotifList();
+  toggleNotifPanel();
+};
+
+window.toggleNotifPanel = function() {
+  const panel = document.getElementById('notif-panel');
+  if (!panel) return;
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) renderNotifList();
+};
+
+// Cerrar panel al hacer clic fuera
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('notif-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('notif-panel')?.classList.remove('show');
+  }
+});
+
+// Generador automático de notificaciones al cargar dashboard
+const _origCargarDashF5 = window.cargarDashboard;
+window.cargarDashboard = async function() {
+  if (_origCargarDashF5) await _origCargarDashF5.apply(this, arguments);
+  setTimeout(generarNotifsAutomaticas, 800);
+};
+
+async function generarNotifsAutomaticas() {
+  cargarNotifsLocal();
+  const hoy = new Date().toISOString().slice(0, 10);
+  const lastCheck = localStorage.getItem('nexora-notif-lastcheck');
+  if (lastCheck === hoy) { renderNotifBadge(); return; } // solo una vez por día
+  localStorage.setItem('nexora-notif-lastcheck', hoy);
+
+  // 1. Stock bajo
+  const prods = window.allProdsCache || [];
+  const bajos = prods.filter(d => { const p = d.data(); return (p.stock || 0) <= (p.stockMin || 5) && !p.eliminado; });
+  if (bajos.length > 0) {
+    pushNotif('⚠️', `${bajos.length} producto${bajos.length > 1 ? 's' : ''} con stock bajo`,
+      bajos.slice(0, 2).map(d => d.data().nombre).join(', ') + (bajos.length > 2 ? '...' : ''), 'inventario');
+  }
+
+  // 2. Tareas vencidas
+  try {
+    const tareas = JSON.parse(localStorage.getItem('nexora-tareas') || '[]');
+    const vencidas = tareas.filter(t => !t.done && t.fecha && t.fecha < hoy);
+    if (vencidas.length > 0) {
+      pushNotif('📋', `${vencidas.length} tarea${vencidas.length > 1 ? 's' : ''} vencida${vencidas.length > 1 ? 's' : ''}`,
+        vencidas[0].texto.slice(0, 50), 'dashboard');
+    }
+  } catch(e) {}
+
+  // 3. Pedidos nuevos sin ver
+  try {
+    const pedSnap = await getDocs(query(col('pedidos'), where('estado', '==', 'nuevo'), limit(10)));
+    if (!pedSnap.empty) {
+      pushNotif('🛍️', `${pedSnap.size} pedido${pedSnap.size > 1 ? 's' : ''} nuevo${pedSnap.size > 1 ? 's' : ''} del portal`,
+        'Toca para revisar', 'pedidos');
+    }
+  } catch(e) {}
+
+  renderNotifBadge();
+}
+
+// Init al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  renderNotifBadge();
+});
+
+// ════════════════════════════════════════════════
+// FASE 5B — GRÁFICA DE VENTAS POR MES
+// ════════════════════════════════════════════════
+let _chartMode = 'facturas';
+
+window.switchChart = function(mode) {
+  _chartMode = mode;
+  document.getElementById('chart-btn-fact')?.classList.toggle('active', mode === 'facturas');
+  document.getElementById('chart-btn-cot')?.classList.toggle('active', mode === 'cotizaciones');
+  renderChart();
+};
+
+function renderChart() {
+  const barsEl = document.getElementById('chart-bars');
+  const labelsEl = document.getElementById('chart-labels');
+  if (!barsEl) return;
+
+  const docs = _chartMode === 'facturas'
+    ? (window._factDocsCache || [])
+    : (window._cotDocsCache || []);
+
+  // Agrupar por mes (últimos 8 meses)
+  const meses = [];
+  const now = new Date();
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    meses.push({ key: d.toISOString().slice(0, 7), label: d.toLocaleString('es-CO', { month: 'short' }) });
+  }
+
+  const totales = {};
+  meses.forEach(m => totales[m.key] = 0);
+
+  docs.forEach(d => {
+    const data = d.data();
+    if (data.eliminado) return;
+    if (_chartMode === 'facturas' && data.estado === 'Anulada') return;
+    const mes = (data.fecha || '').slice(0, 7);
+    if (totales[mes] !== undefined) {
+      totales[mes] += _chartMode === 'facturas' ? calcTotalFact(data) : calcTotalCot(data);
+    }
+  });
+
+  const valores = meses.map(m => totales[m.key]);
+  const maxVal = Math.max(...valores, 1);
+
+  barsEl.innerHTML = meses.map((m, i) => {
+    const pct = Math.round((valores[i] / maxVal) * 100);
+    const fmt = valores[i] >= 1000000
+      ? '$' + (valores[i] / 1000000).toFixed(1) + 'M'
+      : valores[i] >= 1000
+        ? '$' + Math.round(valores[i] / 1000) + 'K'
+        : '$' + valores[i];
+    return `<div class="chart-bar-col">
+      <div class="chart-bar-val">${valores[i] > 0 ? fmt : ''}</div>
+      <div class="chart-bar" style="height:${Math.max(pct, 2)}%" title="${m.label}: ${fmt}"></div>
+    </div>`;
+  }).join('');
+
+  labelsEl.innerHTML = meses.map(m =>
+    `<span style="flex:1;text-align:center;font-size:9px;color:var(--muted)">${m.label}</span>`
+  ).join('');
+}
+window.renderChart = renderChart;
+
+// Hook en cargarDashboard para renderizar gráfica
+const _origCargarDashChart = window.cargarDashboard;
+window.cargarDashboard = async function() {
+  if (_origCargarDashChart) await _origCargarDashChart.apply(this, arguments);
+  setTimeout(renderChart, 500);
+};
+
+// Guardar cache de docs para la gráfica
+const _origActResumen = window.actualizarResumenVentas;
+window.actualizarResumenVentas = async function(faParam, caParam) {
+  if (_origActResumen) await _origActResumen.apply(this, arguments);
+  if (faParam) window._factDocsCache = faParam;
+  if (caParam) window._cotDocsCache = caParam;
+  renderChart();
+};
+
+// ════════════════════════════════════════════════
+// FASE 5C — LOGO EN PDFs
+// ════════════════════════════════════════════════
+window.cargarLogoPreview = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('logo-preview');
+    const wrap = document.getElementById('logo-preview-wrap');
+    if (img) { img.src = e.target.result; img.style.display = 'block'; }
+    if (wrap) wrap.style.display = 'none';
+    window._logoDataUrl = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+// Extender guardarConfigEmpresa para incluir logo
+const _origGuardarConfig = window.guardarConfigEmpresa;
+window.guardarConfigEmpresa = function() {
+  if (window._logoDataUrl) localStorage.setItem('nexora-logo', window._logoDataUrl);
+  if (_origGuardarConfig) _origGuardarConfig();
+};
+
+// Extender loadModule para cargar logo preview
+const _origLoadModuleLogo = window.loadModule;
+window.loadModule = function(mod) {
+  _origLoadModuleLogo.apply(this, arguments);
+  if (mod === 'importar') {
+    setTimeout(() => {
+      const logo = localStorage.getItem('nexora-logo');
+      if (logo) {
+        window._logoDataUrl = logo;
+        const img = document.getElementById('logo-preview');
+        const wrap = document.getElementById('logo-preview-wrap');
+        if (img) { img.src = logo; img.style.display = 'block'; }
+        if (wrap) wrap.style.display = 'none';
+      }
+    }, 250);
+  }
+};
+
+// Función helper para obtener header con logo para PDFs
+window.getPDFHeader = function(bizName, cfg, subtitulo) {
+  const logo = localStorage.getItem('nexora-logo') || window._logoDataUrl || '';
+  const logoHtml = logo
+    ? `<img src="${logo}" style="max-height:54px;max-width:140px;object-fit:contain">`
+    : `<div style="font-size:24px;font-weight:900;color:#1e40af;letter-spacing:-1px">${esc(bizName)}</div>`;
+  return `<div style="display:flex;align-items:center;gap:14px">
+    ${logoHtml}
+    <div>
+      <div style="font-size:18px;font-weight:900;color:#1e40af">${esc(cfg.nombre || bizName)}</div>
+      ${cfg.nit ? `<div style="font-size:11px;color:#64748b">NIT: ${esc(cfg.nit)}</div>` : ''}
+      ${cfg.tel ? `<div style="font-size:11px;color:#64748b">${esc(cfg.tel)}</div>` : ''}
+      ${cfg.dir ? `<div style="font-size:11px;color:#64748b">${esc(cfg.dir)}</div>` : ''}
+    </div>
+  </div>`;
+};
+
+// Parchar imprimirFactura para usar logo y datos empresa
+const _origImprimirFacturaF5 = window.imprimirFactura;
+window.imprimirFactura = async function(factId) {
+  const snap = await getDoc(tdoc('facturas', factId));
+  if (!snap.exists()) return;
+  const f = snap.data();
+  const biz = await getDoc(doc(db, 'businesses', currentTenant));
+  const bizName = biz.exists() ? biz.data().name : 'Mi Negocio';
+  const cfg = typeof getBizConfig === 'function' ? getBizConfig() : {};
+  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
+  let cliInfo = { nit: '', email: '', telefono: '', ciudad: '', direccion: '' };
+  if (f.clienteId) { const cs = await getDoc(tdoc('clientes', f.clienteId)); if (cs.exists()) cliInfo = cs.data(); }
+  const items = f.items || [];
+  const subtotal = f.subtotal || items.reduce((s, i) => s + (i.precio * i.cantidad), 0);
+  const descMonto = f.descuentoMonto || (subtotal * (f.descuento || 0) / 100);
+  const total = Math.round(subtotal - descMonto);
+  const ip = f.iva || 0;
+  const base = ip > 0 ? Math.round(total / (1 + ip / 100)) : total;
+  const ivaMonto = total - base;
+  const estadoColor = { Pendiente: '#f59e0b', Pagada: '#10b981', Anulada: '#f43f5e' }[f.estado] || '#64748b';
+  const headerHtml = window.getPDFHeader(bizName, cfg, 'Sistema de Facturación');
+  const firmaHtml = firma
+    ? `<div style="display:flex;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0">
+        <div style="text-align:center;min-width:160px">
+          <img src="${firma}" style="max-width:160px;max-height:60px;object-fit:contain;margin-bottom:6px">
+          <div style="border-top:1px solid #334155;padding-top:5px;font-size:11px;color:#64748b">Firma autorizada · ${esc(cfg.nombre || bizName)}</div>
+        </div>
+       </div>` : '';
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Factura ${esc(f.numero || '')}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;font-size:13px;}
+    .page{max-width:780px;margin:0 auto;padding:40px 44px;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid #e2e8f0;}
+    .doc-title{text-align:right;}
+    .doc-title h1{font-size:28px;font-weight:900;color:#1e293b;letter-spacing:-1px;}
+    .doc-num{font-size:13px;color:#64748b;margin-top:4px;font-family:monospace;}
+    .estado-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-top:8px;color:#fff;background:${estadoColor};}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
+    .info-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;}
+    .info-box h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;}
+    .info-box p{font-size:13px;color:#334155;margin-bottom:3px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+    thead tr{background:#1e40af;}
+    thead th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;}
+    tbody tr:nth-child(even){background:#f8fafc;}
+    td{padding:10px 14px;font-size:13px;border-bottom:1px solid #e2e8f0;}
+    .totales{display:flex;justify-content:flex-end;margin-bottom:24px;}
+    .totales-box{min-width:260px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+    .tot-row{display:flex;justify-content:space-between;padding:9px 16px;border-bottom:1px solid #e2e8f0;}
+    .tot-row:last-child{background:#1e40af;color:#fff;font-size:16px;font-weight:900;border-bottom:none;}
+    .footer{text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:18px;margin-top:20px;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body><div class="page">
+  <div class="header">
+    ${headerHtml}
+    <div class="doc-title"><h1>FACTURA</h1><div class="doc-num">${esc(f.numero || '—')}</div><div class="estado-badge">${esc(f.estado || '—')}</div></div>
+  </div>
+  <div class="info-grid">
+    <div class="info-box"><h4>📋 Factura</h4>
+      <p>Fecha: <strong>${esc(f.fecha || '—')}</strong></p>
+      ${f.vencimiento ? `<p>Vence: <strong>${esc(f.vencimiento)}</strong></p>` : ''}
+      <p>N°: <strong style="font-family:monospace">${esc(f.numero || '—')}</strong></p>
+    </div>
+    <div class="info-box"><h4>👤 Cliente</h4>
+      <p><strong>${esc(f.cliente || '—')}</strong></p>
+      ${cliInfo.nit ? `<p>NIT: ${esc(cliInfo.nit)}</p>` : ''}
+      ${cliInfo.email ? `<p>✉ ${esc(cliInfo.email)}</p>` : ''}
+      ${cliInfo.telefono ? `<p>📞 ${esc(cliInfo.telefono)}</p>` : ''}
+      ${cliInfo.ciudad ? `<p>📍 ${esc(cliInfo.ciudad)}</p>` : ''}
+    </div>
+  </div>
+  <table><thead><tr><th>#</th><th>Producto</th><th>Cant.</th><th>Precio</th>${f.descuento || items.some(i => i.descItem) ? '<th>Desc.%</th>' : ''}<th>Subtotal</th></tr></thead><tbody>
+  ${items.map((it, idx) => { const sub = (it.precio - (it.precio * (it.descItem || 0) / 100)) * it.cantidad; return `<tr><td>${idx + 1}</td><td><strong>${esc(it.nombre)}</strong></td><td>${it.cantidad}</td><td>$${(it.precio || 0).toLocaleString('es-CO')}</td>${f.descuento || items.some(i => i.descItem) ? `<td>${it.descItem || 0}%</td>` : ''}<td><strong>$${sub.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</strong></td></tr>`; }).join('')}
+  </tbody></table>
+  <div class="totales"><div class="totales-box">
+    <div class="tot-row"><span>Subtotal</span><span>$${subtotal.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span></div>
+    ${descMonto > 0 ? `<div class="tot-row" style="color:#ef4444"><span>Descuento ${f.descuento || 0}%</span><span>−$${descMonto.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span></div>` : ''}
+    ${ivaMonto > 0 ? `<div class="tot-row" style="color:#10b981"><span>IVA ${ip}% (incluido)</span><span>$${ivaMonto.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span></div>` : ''}
+    <div class="tot-row"><span>TOTAL</span><span>$${total.toLocaleString('es-CO', { maximumFractionDigits: 0 })}</span></div>
+  </div></div>
+  ${f.notas ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:20px"><strong>📝 Notas:</strong> ${esc(f.notas)}</div>` : ''}
+  ${firmaHtml}
+  <div class="footer">Generado por Nexora ERP · ${new Date().toLocaleDateString('es-CO')} · ${esc(cfg.nombre || bizName)}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`;
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+};
+
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- fase code moved into module -->
