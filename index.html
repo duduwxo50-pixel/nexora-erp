@@ -74,16 +74,36 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="light"] .table-wrap,[data-theme="combined"] .table-wrap{background:#fff;border-radius:var(--radius);border:1px solid var(--border);}
 [data-theme="combined"] .nav-item{color:rgba(255,255,255,.65);}
 [data-theme="combined"] .nav-item:hover,[data-theme="combined"] .nav-item.active{color:#fff;background:rgba(255,255,255,.08);}
+[data-theme="neon"] {
+  --bg:#030c0a; --sidebar:#061410; --accent:#10b981; --accent2:#34d399;
+  --green:#10b981; --red:#f43f5e; --yellow:#fbbf24; --purple:#a78bfa; --orange:#fb923c;
+  --text:#ecfdf5; --muted:#6b7280; --card:rgba(16,185,129,0.04);
+  --border:rgba(16,185,129,0.12); --radius:14px;
+}
+[data-theme="neon"] body{background:var(--bg);color:var(--text);}
+[data-theme="neon"] .topbar{background:rgba(3,12,10,.9);}
+[data-theme="neon"] .nav-item.active{background:rgba(16,185,129,0.15);color:var(--accent2);}
+[data-theme="neon"] .nav-item:hover{background:rgba(16,185,129,0.07);}
+[data-theme="neon"] .btn-action,[data-theme="neon"] .btn-primary,[data-theme="neon"] .btn-save{background:linear-gradient(135deg,#059669,#10b981);}
+[data-theme="neon"] .filter-chip:hover,[data-theme="neon"] .filter-chip.active{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--accent2);}
+[data-theme="neon"] input,[data-theme="neon"] select,[data-theme="neon"] textarea{background:rgba(16,185,129,.05);border-color:var(--border);color:var(--text);}
+[data-theme="neon"] .form-group input:focus,[data-theme="neon"] .form-group select:focus,[data-theme="neon"] .form-group textarea:focus{border-color:rgba(16,185,129,.6);box-shadow:0 0 0 3px rgba(16,185,129,.12);}
+
 [data-theme="light"] .nav-item{color:rgba(255,255,255,.7);}
 [data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
-.theme-switcher{display:flex;gap:6px;padding:10px 14px;margin-top:4px;}
+.theme-switcher{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:10px 14px;margin-top:4px;}
 /* ─── MULTI-EMPRESA ─── */
 #mod-empresas .emp-card-switch{transition:box-shadow .2s,border-color .2s;}
 #mod-empresas .emp-card-switch:hover{box-shadow:0 4px 24px rgba(37,99,235,.13);border-color:rgba(37,99,235,.3)!important;}
 #empresa-modal .info-box{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 14px;color:var(--muted);}
-.theme-btn{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;text-align:center;}
-.theme-btn:hover{background:rgba(255,255,255,.13);color:#fff;}
-.theme-btn.active{background:rgba(37,99,235,.4);border-color:rgba(56,189,248,.5);color:#fff;}
+.theme-btn{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:9px;padding:7px 4px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .22s;text-align:center;letter-spacing:.2px;position:relative;overflow:hidden;}
+.theme-btn::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .2s;border-radius:9px;}
+.theme-btn:hover{background:rgba(255,255,255,.12);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.25);}
+.theme-btn.active{color:#fff;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.3);}
+#theme-dark.active{background:linear-gradient(135deg,#1e3a5f,#0f2744);border-color:rgba(56,189,248,.5);}
+#theme-light.active{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:rgba(251,191,36,.6);}
+#theme-combined.active{background:linear-gradient(135deg,#7c3aed,#4f46e5);border-color:rgba(167,139,250,.5);}
+#theme-neon.active{background:linear-gradient(135deg,#059669,#10b981);border-color:rgba(52,211,153,.6);}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -153,7 +173,12 @@ select option{background:#0d1828;color:#e8edf5;}
 #app-screen{display:flex;min-height:100vh;}
 .sidebar{width:238px;background:var(--sidebar);border-right:1px solid var(--border);
   display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:200;
-  transition:width .25s;}
+  transition:width .25s;overflow:hidden;}
+.sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:4px;}
+.sidebar-nav::-webkit-scrollbar{width:3px;}
+.sidebar-nav::-webkit-scrollbar-track{background:transparent;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:10px;}
+.sidebar-nav:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.22);}
 .sidebar-logo{padding:22px 20px 18px;border-bottom:1px solid var(--border);}
 .sidebar-logo .brand{font-size:20px;font-weight:900;letter-spacing:-1px;
   background:linear-gradient(135deg,var(--accent2),var(--accent));
@@ -722,6 +747,7 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
   <div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()"></div>
   <aside class="sidebar" id="main-sidebar">
     <div class="sidebar-logo"><div class="brand">NEXORA</div><div class="sub">ERP Pro v3</div></div>
+    <div class="sidebar-nav">
     <div class="nav-section">Principal</div>
     <div class="nav-item active" data-module="dashboard"><span class="icon">📊</span><span>Dashboard</span></div>
     <div class="nav-section">Operaciones</div>
@@ -743,15 +769,17 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
     <div class="nav-item admin-only" data-module="usuarios"><span class="icon">👥</span><span>Usuarios</span></div>
     <div class="nav-item admin-only" data-module="empresas"><span class="icon">🏢</span><span>Mis Empresas</span><span class="nav-badge" id="empresas-badge" style="display:none"></span></div>
     <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span><span class="nav-badge" id="papelera-badge">0</span></div>
+    </div><!-- /sidebar-nav -->
     <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar" id="user-avatar">U</div>
         <div><div class="user-name" id="user-name">—</div><div class="user-biz biz-el">—</div></div>
       </div>
       <div class="theme-switcher">
-        <button class="theme-btn active" id="theme-dark" onclick="setTheme('dark')" title="Oscuro">\U0001f319 Oscuro</button>
-        <button class="theme-btn" id="theme-light" onclick="setTheme('light')" title="Claro">\u2600\ufe0f Claro</button>
-        <button class="theme-btn" id="theme-combined" onclick="setTheme('combined')" title="Combinado">\u26a1 Mix</button>
+        <button class="theme-btn active" id="theme-dark" onclick="setTheme('dark')" title="Oscuro">🌙 Oscuro</button>
+        <button class="theme-btn" id="theme-light" onclick="setTheme('light')" title="Claro">☀️ Claro</button>
+        <button class="theme-btn" id="theme-combined" onclick="setTheme('combined')" title="Combinado">⚡ Mix</button>
+        <button class="theme-btn" id="theme-neon" onclick="setTheme('neon')" title="Neon">🌿 Neon</button>
       </div>
       <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
     </div>
@@ -4974,10 +5002,10 @@ window._authInterval=setInterval(async()=>{
 
 window.setTheme=function(t){
   document.documentElement.setAttribute('data-theme', t==='dark'?'':t);
-  ['dark','light','combined'].forEach(n=>document.getElementById('theme-'+n)?.classList.toggle('active',n===t));
+  ['dark','light','combined','neon'].forEach(n=>document.getElementById('theme-'+n)?.classList.toggle('active',n===t));
   localStorage.setItem('nexora-theme',t);
 };
-(function(){const t=localStorage.getItem('nexora-theme')||'dark';if(t!=='dark')window.setTheme(t);else{['light','combined'].forEach(n=>document.getElementById('theme-'+n)?.classList.remove('active'));document.getElementById('theme-dark')?.classList.add('active');}})();
+(function(){const t=localStorage.getItem('nexora-theme')||'dark';if(t!=='dark')window.setTheme(t);else{['light','combined','neon'].forEach(n=>document.getElementById('theme-'+n)?.classList.remove('active'));document.getElementById('theme-dark')?.classList.add('active');}})();
 
 // ===== MOBILE NAV =====
 window.openMobMenu=function(){
