@@ -2540,22 +2540,6 @@ window.aplicarPermisos = function(role){
   });
 };
 
-// ── SUPER ADMIN — acceso por ?superadmin=1 con contraseña ──
-if(new URLSearchParams(location.search).get('superadmin')==='1'){
-  const clave = prompt('🔐 Contraseña de Super Admin:');
-  // Contraseña maestra — cámbiala aquí
-  const SUPER_PASS = 'nexora2024admin';
-  if(clave === SUPER_PASS){
-    $('auth-screen').style.display='none';
-    $('superadmin-screen').style.display='block';
-    window.saCargarDatos();
-  } else {
-    alert('Contraseña incorrecta.');
-    // Redirigir al login normal
-    history.replaceState(null,'',location.pathname);
-  }
-}
-
 // ── SUPER ADMIN FUNCIONES ──
 window.saCargarDatos = async function(){
   // Cargar empresas
@@ -2600,6 +2584,22 @@ window.saCargarDatos = async function(){
   });
   if(usrList.innerHTML==='') usrList.innerHTML='<div style="color:#64748b;font-size:13px;padding:8px 0">No hay usuarios creados</div>';
 };
+
+// ── SUPER ADMIN — acceso por ?superadmin=1 con contraseña ──
+if(new URLSearchParams(location.search).get('superadmin')==='1'){
+  const clave = prompt('🔐 Contraseña de Super Admin:');
+  // Contraseña maestra — cámbiala aquí
+  const SUPER_PASS = 'nexora2024admin';
+  if(clave === SUPER_PASS){
+    $('auth-screen').style.display='none';
+    $('superadmin-screen').style.display='block';
+    window.saCargarDatos();
+  } else {
+    alert('Contraseña incorrecta.');
+    // Redirigir al login normal
+    history.replaceState(null,'',location.pathname);
+  }
+}
 
 window.saCrearEmpresa = async function(){
   const name = $('sa-new-biz').value.trim();
