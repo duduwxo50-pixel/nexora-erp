@@ -2338,20 +2338,57 @@ window.aplicarPermisos = function(role){
   });
 };
 
-// ── SUPER ADMIN — acceso por ?superadmin=1 con contraseña ──
+// ── SUPER ADMIN — acceso por ?superadmin=1 con modal propio ──
 if(new URLSearchParams(location.search).get('superadmin')==='1'){
-  const clave = prompt('🔐 Contraseña de Super Admin:');
-  // Contraseña maestra — cámbiala aquí
+  // Inyectar modal de contraseña (evita prompt() bloqueado en HTTPS)
+  const _saOverlay = document.createElement('div');
+  _saOverlay.id = 'sa-pass-overlay';
+  _saOverlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  _saOverlay.innerHTML = `
+    <div style="background:#0d1828;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 40px 80px rgba(0,0,0,.6)">
+      <div style="font-size:20px;font-weight:900;color:#10b981;margin-bottom:6px">🔐 Super Admin</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:24px">Ingresa la contraseña maestra para continuar</div>
+      <input id="sa-pass-input" type="password" placeholder="Contraseña"
+        style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:11px 14px;border-radius:9px;font-size:14px;box-sizing:border-box;margin-bottom:10px;outline:none"
+        autofocus />
+      <div id="sa-pass-error" style="color:#f43f5e;font-size:12px;margin-bottom:10px;display:none">✕ Contraseña incorrecta</div>
+      <div style="display:flex;gap:10px">
+        <button id="sa-pass-cancel"
+          style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600">
+          Cancelar
+        </button>
+        <button id="sa-pass-ok"
+          style="flex:2;background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700">
+          Entrar →
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(_saOverlay);
+
   const SUPER_PASS = 'nexora2024admin';
-  if(clave === SUPER_PASS){
-    $('auth-screen').style.display='none';
-    $('superadmin-screen').style.display='block';
-    window.saCargarDatos();
-  } else {
-    alert('Contraseña incorrecta.');
-    // Redirigir al login normal
-    history.replaceState(null,'',location.pathname);
+
+  function _saVerify(){
+    const val = document.getElementById('sa-pass-input').value;
+    if(val === SUPER_PASS){
+      _saOverlay.remove();
+      $('auth-screen').style.display='none';
+      $('superadmin-screen').style.display='block';
+      window.saCargarDatos();
+    } else {
+      document.getElementById('sa-pass-error').style.display='block';
+      document.getElementById('sa-pass-input').value='';
+      document.getElementById('sa-pass-input').focus();
+    }
   }
+
+  document.getElementById('sa-pass-ok').addEventListener('click', _saVerify);
+  document.getElementById('sa-pass-cancel').addEventListener('click', ()=>{
+    _saOverlay.remove();
+    history.replaceState(null,'',location.pathname);
+  });
+  document.getElementById('sa-pass-input').addEventListener('keydown', e=>{
+    if(e.key==='Enter') _saVerify();
+  });
 }
 
 // ── SUPER ADMIN FUNCIONES ──
