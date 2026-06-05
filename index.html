@@ -2139,6 +2139,7 @@ onAuthStateChanged(auth,async user=>{
     }
     currentTenant=ud.data().businessId;
     window._currentTenant=currentTenant;
+    window._currentTenantId=currentTenant;
     const biz=await getDoc(doc(db,'businesses',currentTenant));
     document.querySelectorAll('.biz-el').forEach(el=>el.textContent=biz.exists()?biz.data().name:'Mi Negocio');
     $('user-name').textContent=user.displayName||user.email.split('@')[0];
@@ -2451,7 +2452,8 @@ function renderProductos(docs){
     const p=d.data();const bajo=(p.stock||0)<=(p.stockMin||5);
     const margen=p.costo&&p.precio?((p.precio-p.costo)/p.costo*100).toFixed(1)+'%':'—';
     const imgTag=p.imagen?`<img src="${p.imagen}" class="item-img-thumb">`:`<div class="item-img-placeholder">📦</div>`;
-    tb.innerHTML+=`<tr>
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
       <td>${imgTag}</td>
       <td><strong>${esc(p.nombre)}</strong>${p.descripcion?`<div style="font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.descripcion)}</div>`:''}${p.unidad?`<div style="font-size:10px;color:var(--muted)">${esc(p.unidad)}</div>`:''}</td>
       <td><span style="font-family:var(--mono);font-size:12px;color:var(--accent2)">${esc(p.referencia||'—')}</span></td>
@@ -2460,19 +2462,31 @@ function renderProductos(docs){
       <td>${p.costo&&p.precio?`<span class="badge badge-ok">${margen}</span>`:'—'}</td>
       <td><span class="badge ${bajo?'badge-peligro':'badge-ok'}">${p.stock||0}</span>${bajo?'<span style="font-size:10px;color:var(--red);margin-left:3px" title="Stock bajo">⚠️</span>':''}</td>
       <td>${p.stockMin||5}</td>
+      <td><button class="btn-icon btn-ajuste-stock" data-id="${d.id}" data-nombre="${esc(p.nombre)}" data-stock="${p.stock||0}" title="Ajustar stock" style="font-size:13px">±</button></td>
       <td>
-        <button class="btn-icon" onclick="window.openAjusteStock('${d.id}','${esc(p.nombre)}',${p.stock||0})" title="Ajustar stock" style="font-size:13px">±</button>
-      </td>
-      <td>
-        <button class="btn-icon" onclick="window.editProducto('${d.id}')">✏️</button>
-        <button class="btn-icon danger" onclick="window.deleteProducto('${d.id}','${esc(p.nombre)}')">🗑️</button>
-      </td>
-    </tr>`;
+        <button class="btn-icon btn-edit-prod" data-id="${d.id}">✏️</button>
+        <button class="btn-icon danger btn-del-prod" data-id="${d.id}" data-nombre="${esc(p.nombre)}">🗑️</button>
+      </td>`;
+    tb.appendChild(tr);
   });
+  // Bind events via delegation to avoid onclick/quote issues
+  tb.querySelectorAll('.btn-edit-prod').forEach(b=>b.addEventListener('click',()=>window.editProducto(b.dataset.id)));
+  tb.querySelectorAll('.btn-del-prod').forEach(b=>b.addEventListener('click',()=>window.deleteProducto(b.dataset.id,b.dataset.nombre)));
+  tb.querySelectorAll('.btn-ajuste-stock').forEach(b=>b.addEventListener('click',()=>window.openAjusteStock(b.dataset.id,b.dataset.nombre,parseInt(b.dataset.stock))));
 }
 $('prod-search').addEventListener('input',aplicarFiltrosProd);
 $('prod-filter-stock').addEventListener('change',aplicarFiltrosProd);
 $('prod-filter-cat').addEventListener('change',aplicarFiltrosProd);
+
+// Delegated events for inventory table
+document.getElementById('prod-tbody').addEventListener('click', e=>{
+  const del = e.target.closest('.btn-del-prod');
+  const edit = e.target.closest('.btn-edit-prod');
+  const ajuste = e.target.closest('.btn-ajuste-stock');
+  if(del) window.deleteProducto(del.dataset.id, del.dataset.nombre);
+  if(edit) window.editProducto(edit.dataset.id);
+  if(ajuste) window.openAjusteStock(ajuste.dataset.id, ajuste.dataset.nombre, parseInt(ajuste.dataset.stock));
+});
 
 window.openProductoModal=async()=>{
   editingProdId=null;$('prod-form').reset();prodImgBase64=null;
@@ -2540,13 +2554,17 @@ async function cargarClientes(){
         <button class="btn-icon" onclick="window.abrirEstadoCuenta('${d.id}')" title="Estado de cuenta" style="color:var(--accent2)">📊</button>
         <button class="btn-crm" onclick="window.abrirCRM('${d.id}','${esc(c.nombre)}')">💬 CRM</button>
         <button class="btn-icon" onclick="window.editCliente('${d.id}')">✏️</button>
-        <button class="btn-icon danger" onclick="window.deleteCliente('${d.id}','${esc(c.nombre)}')">🗑️</button>
+        <button class="btn-icon danger btn-del-cli" data-id="${d.id}" data-nombre="${esc(c.nombre)}">🗑️</button>
       </td>
     </tr>`;
   });
   if(!docs.length)tb.innerHTML='<tr class="no-results"><td colspan="9">Sin resultados</td></tr>';
 }
 $('cliente-search').addEventListener('input',cargarClientes);
+document.getElementById('cli-tbody').addEventListener('click',e=>{
+  const del=e.target.closest('.btn-del-cli');
+  if(del) window.deleteCliente(del.dataset.id,del.dataset.nombre);
+});
 $('cliente-filter-ciudad').addEventListener('change',cargarClientes);
 
 window.openClienteModal=()=>{
@@ -2602,13 +2620,17 @@ async function cargarProveedores(){
       <td>${esc(p.ciudad||'—')}</td>
       <td>
         <button class="btn-icon" onclick="window.editProveedor('${d.id}')">✏️</button>
-        <button class="btn-icon danger" onclick="window.deleteProveedor('${d.id}','${esc(p.nombre)}')">🗑️</button>
+        <button class="btn-icon danger btn-del-prov" data-id="${d.id}" data-nombre="${esc(p.nombre)}">🗑️</button>
       </td>
     </tr>`;
   });
   if(!filtered.length)tb.innerHTML='<tr class="no-results"><td colspan="8">Sin resultados</td></tr>';
 }
 $('proveedor-search').addEventListener('input',cargarProveedores);
+document.getElementById('prov-tbody').addEventListener('click',e=>{
+  const del=e.target.closest('.btn-del-prov');
+  if(del) window.deleteProveedor(del.dataset.id,del.dataset.nombre);
+});
 window.openProveedorModal=()=>{editingProvId=null;$('proveedor-form').reset();provImgBase64=null;$('prov-img-url-current').style.display='none';$('proveedor-modal-title').textContent='Nuevo proveedor';$('prov-map-preview').style.display='none';$('proveedor-modal').classList.add('show');switchModalTab('provModal','info');};
 window.editProveedor=async id=>{
   const d=await getDoc(tdoc('proveedores',id));const p=d.data();
