@@ -42,7 +42,28 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="light"] .modal-content,[data-theme="combined"] .modal-content{background:#fff;color:var(--text);}
 [data-theme="light"] input,[data-theme="combined"] input,
 [data-theme="light"] select,[data-theme="combined"] select,
-[data-theme="light"] textarea,[data-theme="combined"] textarea{background:#f1f5f9;border-color:var(--border);color:var(--text);}
+[data-theme="light"] textarea,[data-theme="combined"] textarea{background:#f1f5f9;border-color:var(--border);color:#0f172a;}
+[data-theme="light"] input::placeholder,[data-theme="combined"] input::placeholder,
+[data-theme="light"] textarea::placeholder,[data-theme="combined"] textarea::placeholder{color:#64748b;}
+/* Fix: modal inputs always readable */
+[data-theme="light"] .modal input,[data-theme="combined"] .modal input,
+[data-theme="light"] .modal select,[data-theme="combined"] .modal select,
+[data-theme="light"] .modal textarea,[data-theme="combined"] .modal textarea,
+[data-theme="light"] .auth-card input,[data-theme="combined"] .auth-card input,
+[data-theme="light"] .auth-card select,[data-theme="combined"] .auth-card select{color:#0f172a !important;background:#f1f5f9 !important;}
+/* Fix dark theme: inputs in modals/auth always white text */
+.modal .form-group input,.modal .form-group select,.modal .form-group textarea,
+.auth-card .form-group input,.auth-card .form-group select,
+.toolbar-search,.toolbar-select,
+.crm-add select,.crm-add input,.crm-add textarea{color:#e8edf5;}
+[data-theme="light"] .modal .form-group input,[data-theme="light"] .modal .form-group select,[data-theme="light"] .modal .form-group textarea,
+[data-theme="combined"] .modal .form-group input,[data-theme="combined"] .modal .form-group select,[data-theme="combined"] .modal .form-group textarea,
+[data-theme="light"] .auth-card .form-group input,[data-theme="combined"] .auth-card .form-group input,
+[data-theme="light"] .toolbar-search,[data-theme="combined"] .toolbar-search,
+[data-theme="light"] .toolbar-select,[data-theme="combined"] .toolbar-select,
+[data-theme="light"] .crm-add select,[data-theme="combined"] .crm-add select,
+[data-theme="light"] .crm-add input,[data-theme="combined"] .crm-add input,
+[data-theme="light"] .crm-add textarea,[data-theme="combined"] .crm-add textarea{color:#0f172a !important;}
 [data-theme="light"] .filter-chip,[data-theme="combined"] .filter-chip{background:#e8edf5;border-color:var(--border);color:var(--text);}
 [data-theme="light"] .btn-icon,[data-theme="combined"] .btn-icon,
 [data-theme="light"] .qa-btn,[data-theme="combined"] .qa-btn,
@@ -67,7 +88,8 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 html{scroll-behavior:smooth;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 input,select,textarea,button{font-family:inherit;}
-select option{background:#0d1828;color:var(--text);}
+select option{background:#0d1828;color:#e8edf5;}
+[data-theme="light"] select option,[data-theme="combined"] select option{background:#f1f5f9;color:#0f172a;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:10px;}
@@ -85,7 +107,8 @@ select option{background:#0d1828;color:var(--text);}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .auth-logo span{display:block;font-size:11px;font-weight:500;color:var(--muted);
   -webkit-text-fill-color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
-.auth-card h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:20px 0 18px;}
+.auth-card h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:20px 0 18px;color:#e8edf5;}
+[data-theme="light"] .auth-card h2,[data-theme="combined"] .auth-card h2{color:#0f172a;}
 
 /* ── FORMS ── */
 .form-group{margin-bottom:13px;}
