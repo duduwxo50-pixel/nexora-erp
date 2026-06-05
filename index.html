@@ -5081,6 +5081,7 @@ window.convertirPedidoACotizacion=async function(pedidoId){
   const subtotal=(p.items||[]).reduce((s,i)=>s+(i.precio*i.cantidad),0);
   await addDoc(collection(db,'businesses',tid,'cotizaciones'),{
     numero:'COT-'+next,cliente:p.clienteNombre||'',clienteId:'',
+    clienteTel:p.clienteTel||'',clienteEmail:p.clienteEmail||'',
     fecha:new Date().toISOString().slice(0,10),
     items:p.items||[],subtotal,descuento:0,iva:19,
     total:subtotal*1.19,estado:'En Espera',
@@ -5456,9 +5457,14 @@ window.waEnviarCot = async function(cotId, cliente, numero){
   try{
     const snap = await window._tdoc('cotizaciones', cotId);
     const d = await gd(snap);
-    if(d.exists()&&d.data().clienteId){
-      const cs = await gd(window._tdoc('clientes',d.data().clienteId));
-      if(cs.exists()) tel = cs.data().telefono||'';
+    if(d.exists()){
+      const cData = d.data();
+      if(cData.clienteId){
+        const cs = await gd(window._tdoc('clientes',cData.clienteId));
+        if(cs.exists()) tel = cs.data().telefono||'';
+      }
+      // Fallback: teléfono guardado en la cotización (pedidos del portal)
+      if(!tel) tel = cData.clienteTel||'';
     }
   }catch(e){}
   const portalLink = `https://duduwxo50-pixel.github.io/nexora-erp/portal.html?portal=${window._currentTenant||''}`;
@@ -7264,6 +7270,9 @@ window.abrirEnviarCot = async function(cotId){
       }
     }catch(e){}
   }
+  // Fallback: usar datos guardados directamente en la cotización (ej: pedidos del portal)
+  if(!tel) tel = c.clienteTel||'';
+  if(!email) email = c.clienteEmail||'';
 
   const cfg = getBizCfg();
   const fmtCOP = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
