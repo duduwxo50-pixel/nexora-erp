@@ -4489,98 +4489,6 @@ window.imprimirFactura=async function(factId){
   const w=window.open('','_blank');w.document.write(html);w.document.close();
 };
 
-<!-- ══ MODAL DUPLICADOS ══ -->
-<div class="modal-backdrop" id="duplicados-modal">
-  <div class="modal modal-wide">
-    <div class="modal-header">
-      <h3>🔍 Productos con nombre duplicado</h3>
-      <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" id="duplicados-body" style="max-height:65vh;overflow-y:auto"></div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ MODAL CARGA MASIVA IMÁGENES ══ -->
-<div class="modal-backdrop" id="bulk-img-modal">
-  <div class="modal modal-xl">
-    <div class="modal-header">
-      <h3>🖼️ Carga masiva de imágenes</h3>
-      <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:20px 26px">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-        📌 Sube varias imágenes. Luego elige a qué producto corresponde cada una. Si el nombre del archivo coincide con un producto, se asigna automáticamente.
-      </div>
-      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px"
-        onclick="document.getElementById('bulk-img-input').click()"
-        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
-        ondragleave="this.style.borderColor='var(--border)'"
-        ondrop="window.handleBulkDrop(event)">
-        <div style="font-size:34px;margin-bottom:8px">📂</div>
-        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos</div>
-        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="window.handleBulkFiles(this.files)">
-      </div>
-      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-height:45vh;overflow-y:auto"></div>
-    </div>
-    <div class="modal-footer">
-      <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-      <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-      <button class="btn-save" onclick="window.saveBulkImages()">💾 Guardar imágenes asignadas</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CUSTOM CONFIRM MODAL ══ -->
-<div class="modal-backdrop" id="confirm-modal" style="z-index:2000">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-header" style="border-bottom:none;padding-bottom:8px">
-      <h3 id="confirm-title" style="font-size:15px">¿Confirmar acción?</h3>
-    </div>
-    <div class="modal-body" style="padding:0 26px 16px">
-      <p id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" id="confirm-no">Cancelar</button>
-      <button class="btn-save" id="confirm-yes" style="background:linear-gradient(135deg,var(--red),#b91c1c)">Confirmar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ── CERRAR MODALES — script global (no módulo, ejecuta inmediatamente) ──
-(function() {
-  function cerrarModal(backdrop) {
-    if (backdrop) backdrop.classList.remove('show');
-  }
-
-  document.addEventListener('click', function(e) {
-    // 1. Clic en botón con clase modal-close
-    var btn = e.target.closest ? e.target.closest('.modal-close') : null;
-    if (btn) {
-      // Si el botón ya tiene onclick propio, no interferir
-      if (btn.getAttribute('onclick')) return;
-      cerrarModal(btn.closest('.modal-backdrop'));
-      e.stopPropagation();
-      return;
-    }
-
-    // 2. Clic directamente sobre el backdrop (el overlay oscuro)
-    //    Nota: el modal usa overflow-y:auto en el backdrop, así que el .modal
-    //    llena casi todo — verificamos también el padding area
-    if (e.target.classList && e.target.classList.contains('modal-backdrop')) {
-      cerrarModal(e.target);
-    }
-  }, true); // useCapture=true para capturar antes que otros listeners
-})();
-</script>
-</body></html>`;
-  const w=window.open('','_blank');w.document.write(html);w.document.close();
-};
-
 // ══════════ PDF ORDEN DE COMPRA ══════════
 window.imprimirOrdenCompra=async function(compraId){
   const snap=await getDoc(tdoc('compras',compraId));
@@ -6931,6 +6839,54 @@ if(typeof window._nexoraRegister === 'function') {
 }
 
 </script>
+
+<!-- ══ CUSTOM CONFIRM MODAL ══ -->
+<div class="modal-backdrop" id="confirm-modal" style="z-index:2000">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header" style="border-bottom:none;padding-bottom:8px">
+      <h3 id="confirm-title" style="font-size:15px">¿Confirmar acción?</h3>
+    </div>
+    <div class="modal-body" style="padding:0 26px 16px">
+      <p id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="confirm-no">Cancelar</button>
+      <button class="btn-save" id="confirm-yes" style="background:linear-gradient(135deg,var(--red),#b91c1c)">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CERRAR MODALES — script global (no módulo, ejecuta inmediatamente) ──
+(function() {
+  function cerrarModal(backdrop) {
+    if (backdrop) backdrop.classList.remove('show');
+  }
+
+  document.addEventListener('click', function(e) {
+    // 1. Clic en botón con clase modal-close
+    var btn = e.target.closest ? e.target.closest('.modal-close') : null;
+    if (btn) {
+      // Si el botón ya tiene onclick propio, no interferir
+      if (btn.getAttribute('onclick')) return;
+      cerrarModal(btn.closest('.modal-backdrop'));
+      e.stopPropagation();
+      return;
+    }
+
+    // 2. Clic directamente sobre el backdrop (el overlay oscuro)
+    //    Nota: el modal usa overflow-y:auto en el backdrop, así que el .modal
+    //    llena casi todo — verificamos también el padding area
+    if (e.target.classList && e.target.classList.contains('modal-backdrop')) {
+      cerrarModal(e.target);
+    }
+  }, true); // useCapture=true para capturar antes que otros listeners
+})();
+<\/script>
+</body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+};
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <!-- fase code moved into module -->
