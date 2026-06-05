@@ -66,20 +66,176 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="neon"] .nav-item.active{background:rgba(16,185,129,0.15);color:var(--accent2);}
 [data-theme="neon"] .btn-action,[data-theme="neon"] .btn-primary,[data-theme="neon"] .btn-save{background:linear-gradient(135deg,#059669,#10b981);}
 
+/* ══════════════════════════════════════════════
+   TEXTO BLANCO NEON — temas oscuros: dark + neon
+   ══════════════════════════════════════════════ */
+
+/* Variables de texto blanco para dark (default) y neon */
+:root,
+[data-theme="dark"],
+[data-theme="neon"] {
+  --text-bright: #ffffff;
+  --text-soft:   rgba(255,255,255,.82);
+  --text-dim:    rgba(255,255,255,.55);
+}
+
+/* ── Títulos principales de módulos y secciones ── */
+:root .module-title,
+:root .section-title,
+:root .card-title,
+:root .report-title,
+:root .modal-header h3,
+:root .modal-header h2,
+[data-theme="neon"] .module-title,
+[data-theme="neon"] .section-title,
+[data-theme="neon"] .card-title,
+[data-theme="neon"] .report-title,
+[data-theme="neon"] .modal-header h3,
+[data-theme="neon"] .modal-header h2 {
+  color: var(--text-bright) !important;
+}
+
+/* ── Labels de formulario (oscuro y neon) ── */
+:root .form-group label,
+:root .form-label,
+[data-theme="neon"] .form-group label,
+[data-theme="neon"] .form-label {
+  color: var(--text-dim) !important;
+}
+
+/* ── Inputs, selects, textareas — texto blanco ── */
+:root .form-group input,
+:root .form-group select,
+:root .form-group textarea,
+[data-theme="neon"] .form-group input,
+[data-theme="neon"] .form-group select,
+[data-theme="neon"] .form-group textarea {
+  color: var(--text-bright) !important;
+}
+:root .form-group input::placeholder,
+:root .form-group textarea::placeholder,
+[data-theme="neon"] .form-group input::placeholder,
+[data-theme="neon"] .form-group textarea::placeholder {
+  color: var(--text-dim) !important;
+}
+
+/* ── Nav items ── */
+:root .nav-item,
+[data-theme="neon"] .nav-item {
+  color: var(--text-soft) !important;
+}
+:root .nav-item:hover,
+:root .nav-item.active,
+[data-theme="neon"] .nav-item:hover {
+  color: var(--text-bright) !important;
+}
+[data-theme="neon"] .nav-item.active {
+  color: var(--accent2) !important;
+}
+
+/* ── Nav section labels ── */
+:root .nav-section,
+[data-theme="neon"] .nav-section {
+  color: var(--text-dim) !important;
+}
+
+/* ── Auth screen ── */
+:root .auth-card h2,
+[data-theme="neon"] .auth-card h2 {
+  color: var(--text-bright) !important;
+}
+:root .auth-card label,
+[data-theme="neon"] .auth-card label {
+  color: var(--text-dim) !important;
+}
+:root .auth-card input,
+[data-theme="neon"] .auth-card input {
+  color: var(--text-bright) !important;
+}
+:root .auth-card input::placeholder,
+[data-theme="neon"] .auth-card input::placeholder {
+  color: var(--text-dim) !important;
+}
+
+/* ── Tablas — texto de celdas ── */
+:root td,
+[data-theme="neon"] td {
+  color: var(--text-soft) !important;
+}
+:root th,
+[data-theme="neon"] th {
+  color: var(--text-dim) !important;
+}
+
+/* ── Topbar nombre empresa ── */
+:root .topbar-biz,
+[data-theme="neon"] .topbar-biz {
+  color: var(--text-soft) !important;
+}
+
+/* ── Dash cards y report cards ── */
+:root .dash-card-val,
+:root .pro-stat-val,
+[data-theme="neon"] .dash-card-val,
+[data-theme="neon"] .pro-stat-val {
+  color: var(--text-bright) !important;
+}
+
+/* ── Textos dentro de cards generales ── */
+:root .card p,
+:root .card span:not(.icon),
+[data-theme="neon"] .card p,
+[data-theme="neon"] .card span:not(.icon) {
+  color: var(--text-soft);
+}
+
+/* ── Neon específico: glow sutil en títulos ── */
+[data-theme="neon"] .module-title,
+[data-theme="neon"] .section-title,
+[data-theme="neon"] .card-title,
+[data-theme="neon"] .modal-header h3,
+[data-theme="neon"] .auth-card h2,
+[data-theme="neon"] .auth-logo {
+  text-shadow: 0 0 18px rgba(52,211,153,.35), 0 0 4px rgba(52,211,153,.15);
+}
+
+/* ── Neon: nav item activo glow ── */
+[data-theme="neon"] .nav-item.active {
+  text-shadow: 0 0 10px rgba(52,211,153,.5);
+}
+
+/* ── Neon: inputs focus glow ── */
+[data-theme="neon"] .form-group input:focus,
+[data-theme="neon"] .form-group select:focus,
+[data-theme="neon"] .form-group textarea:focus {
+  border-color: rgba(16,185,129,.7) !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.12) !important;
+}
+
+/* ── No pisar temas claro/mix ── */
+[data-theme="light"] td,
+[data-theme="combined"] td { color: var(--text) !important; }
+[data-theme="light"] th,
+[data-theme="combined"] th { color: var(--muted) !important; }
+[data-theme="light"] .form-group label,
+[data-theme="combined"] .form-group label { color: var(--muted) !important; }
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea,
+[data-theme="combined"] .form-group input,
+[data-theme="combined"] .form-group select,
+[data-theme="combined"] .form-group textarea { color: #0f172a !important; }
+[data-theme="light"] .nav-item,
+[data-theme="combined"] .nav-item { color: rgba(255,255,255,.7) !important; }
+[data-theme="light"] .nav-section,
+[data-theme="combined"] .nav-section { color: rgba(255,255,255,.4) !important; }
+[data-theme="light"] .modal-header h3,
+[data-theme="combined"] .modal-header h3 { color: var(--text) !important; text-shadow: none !important; }
+
 [data-theme="light"] .nav-item{color:rgba(255,255,255,.7);}
 [data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
 .theme-switcher{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:10px 14px;margin-top:4px;}
 /* ─── MULTI-EMPRESA ─── */
-/* ── SUPERADMIN: forzar texto blanco sin importar el tema ── */
-#superadmin-screen input,
-#superadmin-screen select {
-  background: rgba(255,255,255,.08) !important;
-  color: #e8edf5 !important;
-  border-color: rgba(255,255,255,.15) !important;
-}
-#superadmin-screen input::placeholder { color: rgba(255,255,255,.35) !important; }
-#superadmin-screen select option { background: #0d1828 !important; color: #e8edf5 !important; }
-#superadmin-screen label { color: #94a3b8 !important; }
 #mod-empresas .emp-card-switch{transition:box-shadow .2s,border-color .2s;}
 #mod-empresas .emp-card-switch:hover{box-shadow:0 4px 24px rgba(37,99,235,.13);border-color:rgba(37,99,235,.3)!important;}
 #empresa-modal .info-box{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 14px;color:var(--muted);}
@@ -2144,6 +2300,42 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
   </div>
 </div>
 
+<!-- MODAL LINK DEL PORTAL -->
+<div class="modal-backdrop" id="portal-link-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3>🔗 Link del Portal</h3>
+      <button class="modal-close" onclick="document.getElementById('portal-link-modal').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box" style="margin-bottom:16px">
+        Este es el link exclusivo de <strong id="portal-link-biz-name">tu tienda</strong>. Compártelo con tus clientes para que puedan hacer pedidos directamente.
+      </div>
+      <!-- URL display box -->
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="font-size:18px;flex-shrink:0">🌐</span>
+        <span id="portal-link-url" style="font-family:var(--mono,monospace);font-size:11px;color:var(--muted);word-break:break-all;flex:1;line-height:1.5"></span>
+      </div>
+      <!-- Action buttons -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="copiarLinkDesdeModal()" style="flex:1;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;color:#fff;border-radius:10px;padding:12px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>📋</span> Copiar link
+        </button>
+        <button onclick="abrirPortalEnNuevaPestana()" style="flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>↗️</span> Ver portal
+        </button>
+      </div>
+      <!-- QR hint -->
+      <div style="margin-top:12px;background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.15);border-radius:10px;padding:10px 12px;font-size:12px;color:#2563eb;font-weight:500;display:flex;align-items:center;gap:8px">
+        💡 Puedes compartir este link por WhatsApp, email o redes sociales. Cada tienda tiene su propio link único.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('portal-link-modal').classList.remove('show')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL NUEVA EMPRESA -->
 <div class="modal-backdrop" id="empresa-modal">
   <div class="modal" style="max-width:480px">
@@ -2348,57 +2540,20 @@ window.aplicarPermisos = function(role){
   });
 };
 
-// ── SUPER ADMIN — acceso por ?superadmin=1 con modal propio ──
+// ── SUPER ADMIN — acceso por ?superadmin=1 con contraseña ──
 if(new URLSearchParams(location.search).get('superadmin')==='1'){
-  // Inyectar modal de contraseña (evita prompt() bloqueado en HTTPS)
-  const _saOverlay = document.createElement('div');
-  _saOverlay.id = 'sa-pass-overlay';
-  _saOverlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
-  _saOverlay.innerHTML = `
-    <div style="background:#0d1828;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 40px 80px rgba(0,0,0,.6)">
-      <div style="font-size:20px;font-weight:900;color:#10b981;margin-bottom:6px">🔐 Super Admin</div>
-      <div style="font-size:13px;color:#64748b;margin-bottom:24px">Ingresa la contraseña maestra para continuar</div>
-      <input id="sa-pass-input" type="password" placeholder="Contraseña"
-        style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:11px 14px;border-radius:9px;font-size:14px;box-sizing:border-box;margin-bottom:10px;outline:none"
-        autofocus />
-      <div id="sa-pass-error" style="color:#f43f5e;font-size:12px;margin-bottom:10px;display:none">✕ Contraseña incorrecta</div>
-      <div style="display:flex;gap:10px">
-        <button id="sa-pass-cancel"
-          style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600">
-          Cancelar
-        </button>
-        <button id="sa-pass-ok"
-          style="flex:2;background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700">
-          Entrar →
-        </button>
-      </div>
-    </div>`;
-  document.body.appendChild(_saOverlay);
-
+  const clave = prompt('🔐 Contraseña de Super Admin:');
+  // Contraseña maestra — cámbiala aquí
   const SUPER_PASS = 'nexora2024admin';
-
-  function _saVerify(){
-    const val = document.getElementById('sa-pass-input').value;
-    if(val === SUPER_PASS){
-      _saOverlay.remove();
-      $('auth-screen').style.display='none';
-      $('superadmin-screen').style.display='block';
-      setTimeout(()=>window.saCargarDatos(),100);
-    } else {
-      document.getElementById('sa-pass-error').style.display='block';
-      document.getElementById('sa-pass-input').value='';
-      document.getElementById('sa-pass-input').focus();
-    }
-  }
-
-  document.getElementById('sa-pass-ok').addEventListener('click', _saVerify);
-  document.getElementById('sa-pass-cancel').addEventListener('click', ()=>{
-    _saOverlay.remove();
+  if(clave === SUPER_PASS){
+    $('auth-screen').style.display='none';
+    $('superadmin-screen').style.display='block';
+    window.saCargarDatos();
+  } else {
+    alert('Contraseña incorrecta.');
+    // Redirigir al login normal
     history.replaceState(null,'',location.pathname);
-  });
-  document.getElementById('sa-pass-input').addEventListener('keydown', e=>{
-    if(e.key==='Enter') _saVerify();
-  });
+  }
 }
 
 // ── SUPER ADMIN FUNCIONES ──
@@ -5374,6 +5529,8 @@ window.guardarConfigPortal=async function(){
   const cfg={bizName:$x('portal-biz-name').value,welcome:$x('portal-welcome').value,color:$x('portal-color').value,showPrices:$x('portal-show-prices').value,activosProdIds:activos};
   await setDoc(doc(db,'businesses',tid,'config','portal'),cfg);
   Object.assign(portalConfig,cfg);
+  const bizNameEl=document.getElementById('portal-link-biz-name');
+  if(bizNameEl) bizNameEl.textContent=cfg.bizName||'tu tienda';
   $x('portal-config-modal').classList.remove('show');
   toastX('✅ Portal configurado');
 };
@@ -5381,8 +5538,28 @@ window.guardarConfigPortal=async function(){
 window.copiarLinkPortal=function(){
   const tid=window._currentTenantId;
   if(!tid){toastX('Debes iniciar sesión','error');return;}
- const link=`https://duduwxo50-pixel.github.io/nexora-erp/portal.html?portal=${tid}`;
-  navigator.clipboard.writeText(link).then(()=>toastX('🔗 Link copiado al portapapeles')).catch(()=>toastX('Link: '+link,'info'));
+  const link=`https://duduwxo50-pixel.github.io/nexora-erp/portal.html?portal=${tid}`;
+  // Llenar el modal con datos de esta tienda
+  const bizNameEl=document.getElementById('portal-link-biz-name');
+  const urlEl=document.getElementById('portal-link-url');
+  if(bizNameEl) bizNameEl.textContent=portalConfig?.bizName||'tu tienda';
+  if(urlEl) urlEl.textContent=link;
+  // Guardar link en variable global para los botones del modal
+  window._currentPortalLink=link;
+  document.getElementById('portal-link-modal').classList.add('show');
+};
+
+window.copiarLinkDesdeModal=function(){
+  const link=window._currentPortalLink;
+  if(!link) return;
+  navigator.clipboard.writeText(link)
+    .then(()=>{ toastX('🔗 Link copiado al portapapeles'); })
+    .catch(()=>{ toastX('Link: '+link,'info'); });
+};
+
+window.abrirPortalEnNuevaPestana=function(){
+  const link=window._currentPortalLink;
+  if(link) window.open(link,'_blank');
 };
 
 // ─── PORTAL PÚBLICO ───
