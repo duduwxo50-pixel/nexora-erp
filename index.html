@@ -2114,6 +2114,8 @@ let tempAsesores=[];
 let allProdsCache=[],allClientsCache=[];
 
 const $=id=>document.getElementById(id);
+// Helper seguro: no explota si el elemento no existe todavía
+const safeOn=(id,ev,fn)=>{ const el=typeof id==='string'?document.getElementById(id):id; if(el)el.addEventListener(ev,fn); };
 const col=(c)=>collection(db,'businesses',currentTenant,c);
 const tdoc=(c,i)=>doc(db,'businesses',currentTenant,c,i);
 window._tdoc=(c,i)=>tdoc(c,i);
@@ -2410,7 +2412,7 @@ window.calcMargen=function(){
   if(costo>0&&md>0)$('precio-sugerido').textContent=fmtM(costo*(1+md/100));
   else $('precio-sugerido').textContent='—';
 };
-$('margen-deseado').addEventListener('input',window.calcMargen);
+safeOn('margen-deseado','input',window.calcMargen);
 
 // ── CONSECUTIVE ──
 async function getNextConsec(colName){
@@ -2506,12 +2508,12 @@ function renderProductos(docs){
   tb.querySelectorAll('.btn-del-prod').forEach(b=>b.addEventListener('click',()=>window.deleteProducto(b.dataset.id,b.dataset.nombre)));
   tb.querySelectorAll('.btn-ajuste-stock').forEach(b=>b.addEventListener('click',()=>window.openAjusteStock(b.dataset.id,b.dataset.nombre,parseInt(b.dataset.stock))));
 }
-$('prod-search').addEventListener('input',aplicarFiltrosProd);
-$('prod-filter-stock').addEventListener('change',aplicarFiltrosProd);
-$('prod-filter-cat').addEventListener('change',aplicarFiltrosProd);
+safeOn('prod-search','input',aplicarFiltrosProd);
+safeOn('prod-filter-stock','change',aplicarFiltrosProd);
+safeOn('prod-filter-cat','change',aplicarFiltrosProd);
 
 // Delegated events for inventory table
-document.getElementById('prod-tbody').addEventListener('click', e=>{
+safeOn('prod-tbody','click', e=>{
   const del = e.target.closest('.btn-del-prod');
   const edit = e.target.closest('.btn-edit-prod');
   const ajuste = e.target.closest('.btn-ajuste-stock');
@@ -2556,7 +2558,7 @@ window.deleteProducto=async(id,nombre)=>{
     toast('Error al eliminar: '+err.message,'error');
   }
 };
-$('prod-form').addEventListener('submit',async e=>{
+safeOn('prod-form','submit',async e=>{
   e.preventDefault();
   const data={nombre:$('prod-nombre').value,referencia:$('prod-ref').value,precio:parseFloat($('prod-precio').value)||0,costo:parseFloat($('prod-costo').value)||0,stock:parseInt($('prod-stock').value)||0,stockMin:parseInt($('prod-stockmin').value)||5,categoria:$('prod-categoria').value,descripcion:$('prod-descripcion').value,unidad:$('prod-unidad').value,eliminado:false,updatedAt:serverTimestamp()};
   if(prodImgBase64!==undefined)data.imagen=prodImgBase64||'';
@@ -2603,12 +2605,12 @@ async function cargarClientes(){
   });
   if(!docs.length)tb.innerHTML='<tr class="no-results"><td colspan="9">Sin resultados</td></tr>';
 }
-$('cliente-search').addEventListener('input',cargarClientes);
-document.getElementById('cli-tbody').addEventListener('click',e=>{
+safeOn('cliente-search','input',cargarClientes);
+safeOn('cli-tbody','click',e=>{
   const del=e.target.closest('.btn-del-cli');
   if(del) window.deleteCliente(del.dataset.id,del.dataset.nombre);
 });
-$('cliente-filter-ciudad').addEventListener('change',cargarClientes);
+safeOn('cliente-filter-ciudad','change',cargarClientes);
 
 window.openClienteModal=()=>{
   editingCliId=null;$('cliente-form').reset();cliImgBase64=null;tempAsesores=[];
@@ -2640,7 +2642,7 @@ window.deleteCliente=async(id,nombre)=>{
     await softDelete('clientes',id,nombre);cargarClientes();
   }catch(err){console.error(err);toast('Error: '+err.message,'error');}
 };
-$('cliente-form').addEventListener('submit',async e=>{
+safeOn('cliente-form','submit',async e=>{
   e.preventDefault();
   const data={nombre:$('cliente-nombre').value,email:$('cliente-email').value,telefono:$('cliente-telefono').value,nit:$('cliente-nit').value,ciudad:$('cliente-ciudad').value,pais:$('cliente-pais').value,direccion:$('cliente-direccion').value,sector:$('cliente-sector').value,descripcion:$('cliente-descripcion').value,web:$('cliente-web').value,regimen:$('cliente-regimen').value,pago:$('cliente-pago').value,asesores:tempAsesores,eliminado:false,updatedAt:serverTimestamp()};
   if(cliImgBase64!==undefined)data.logoImg=cliImgBase64||'';
@@ -2676,8 +2678,8 @@ async function cargarProveedores(){
   });
   if(!filtered.length)tb.innerHTML='<tr class="no-results"><td colspan="8">Sin resultados</td></tr>';
 }
-$('proveedor-search').addEventListener('input',cargarProveedores);
-document.getElementById('prov-tbody').addEventListener('click',e=>{
+safeOn('proveedor-search','input',cargarProveedores);
+safeOn('prov-tbody','click',e=>{
   const del=e.target.closest('.btn-del-prov');
   if(del) window.deleteProveedor(del.dataset.id,del.dataset.nombre);
 });
@@ -2700,7 +2702,7 @@ window.deleteProveedor=async(id,nombre)=>{
     await softDelete('proveedores',id,nombre);cargarProveedores();
   }catch(err){console.error(err);toast('Error: '+err.message,'error');}
 };
-$('proveedor-form').addEventListener('submit',async e=>{
+safeOn('proveedor-form','submit',async e=>{
   e.preventDefault();
   const data={nombre:$('proveedor-nombre').value,nit:$('proveedor-nit').value,contacto:$('proveedor-contacto').value,cargo:$('proveedor-cargo').value,telefono:$('proveedor-telefono').value,email:$('proveedor-email').value,ciudad:$('proveedor-ciudad').value,pais:$('proveedor-pais').value,direccion:$('proveedor-direccion').value,sector:$('proveedor-sector').value,descripcion:$('proveedor-descripcion').value,web:$('proveedor-web').value,plazo:$('proveedor-plazo').value,condpago:$('proveedor-condpago').value,eliminado:false,updatedAt:serverTimestamp()};
   if(provImgBase64!==undefined)data.logoImg=provImgBase64||'';
@@ -2839,7 +2841,7 @@ function renderCotItems(){
   totalesCot();
 }
 
-$('btn-add-item').addEventListener('click',()=>{
+safeOn('btn-add-item','click',()=>{
   const sel=$('cot-item-prod');if(!sel.value)return;
   const o=sel.options[sel.selectedIndex];
   cotItems.push({prodId:sel.value,nombre:o.dataset.nombre||o.text.split(' —')[0].split(' (')[0],cantidad:parseInt($('cot-item-qty').value)||1,precio:parseFloat($('cot-item-precio').value)||0,descItem:parseFloat($('cot-item-desc').value)||0,descripcion:o.dataset.descripcion||'',imagen:o.dataset.imagen||''});
@@ -2875,7 +2877,7 @@ window.editCotizacion=async id=>{
 };
 window.editCotizacionTab=async(id,tab)=>{await window.editCotizacion(id);switchCotTab(tab);};
 
-$('cot-form').addEventListener('submit',async e=>{
+safeOn('cot-form','submit',async e=>{
   e.preventDefault();
   const clienteId=$('cot-cliente-id').value;if(!clienteId){toast('Seleccione un cliente','error');return;}
   const clienteNombre=$('cot-cliente-id').options[$('cot-cliente-id').selectedIndex].text;
@@ -2926,11 +2928,11 @@ function aplicarFiltrosCot(){
   });
   renderCotizaciones(docs);
 }
-$('cot-search').addEventListener('input',aplicarFiltrosCot);
-$('cot-filter-estado').addEventListener('change',aplicarFiltrosCot);
-$('cot-filter-cliente').addEventListener('change',aplicarFiltrosCot);
-$('cot-filter-desde').addEventListener('change',aplicarFiltrosCot);
-$('cot-filter-hasta').addEventListener('change',aplicarFiltrosCot);
+safeOn('cot-search','input',aplicarFiltrosCot);
+safeOn('cot-filter-estado','change',aplicarFiltrosCot);
+safeOn('cot-filter-cliente','change',aplicarFiltrosCot);
+safeOn('cot-filter-desde','change',aplicarFiltrosCot);
+safeOn('cot-filter-hasta','change',aplicarFiltrosCot);
 
 const BADGE_MAP={Borrador:'badge-borrador','En Espera':'badge-espera',Aprobado:'badge-aprobado',Cancelado:'badge-cancelado',Facturada:'badge-facturada',Pendiente:'badge-pendiente',Pagada:'badge-pagada',Anulada:'badge-anulada'};
 function calcTotalCot(c){
@@ -3022,7 +3024,7 @@ window.abrirConfirmarFacturacion=async cotId=>{
   $('facturar-confirm-modal').classList.add('show');
 };
 
-$('fcm-confirm-btn').addEventListener('click',async()=>{
+safeOn('fcm-confirm-btn','click',async()=>{
   if(!_fcmCotId)return;
   const btn=$('fcm-confirm-btn');
   btn.disabled=true;btn.textContent='Generando...';
@@ -3346,7 +3348,7 @@ function renderFactItems(){
   });
   totalesFact();
 }
-$('btn-add-fact-item').addEventListener('click',()=>{
+safeOn('btn-add-fact-item','click',()=>{
   const sel=$('fact-item-prod');if(!sel.value)return;
   const o=sel.options[sel.selectedIndex];
   factItems.push({prodId:sel.value,nombre:o.dataset.nombre||o.text.split(' —')[0].split(' (')[0],cantidad:parseInt($('fact-item-qty').value)||1,precio:parseFloat($('fact-item-precio').value)||0,descItem:parseFloat($('fact-item-desc')||{value:0}).value||0,imagen:o.dataset.imagen||''});
@@ -3375,7 +3377,7 @@ window.editFactura=async id=>{
   $('fact-notas').value=f.notas||'';
   renderFactItems();switchFactTab('general');$('factura-modal').classList.add('show');
 };
-$('factura-form').addEventListener('submit',async e=>{
+safeOn('factura-form','submit',async e=>{
   e.preventDefault();
   const clienteId=$('fact-cliente-id').value;if(!clienteId){toast('Seleccione un cliente','error');return;}
   const clienteNombre=$('fact-cliente-id').options[$('fact-cliente-id').selectedIndex].text;
@@ -3491,7 +3493,7 @@ window.openCompraModal=async()=>{
   $('compra-numero').value='OC-'+await getNextConsec('compras');
   renderCompraItems();$('compra-modal').classList.add('show');
 };
-$('btn-add-compra-item').addEventListener('click',()=>{
+safeOn('btn-add-compra-item','click',()=>{
   const prod=compraProds[0];
   compraItems.push({prodId:prod?.id||'',nombre:prod?.nombre||'',cantidad:1,precio:0,precioSugerido:prod?.precio||0});
   renderCompraItems();
@@ -3545,13 +3547,13 @@ window.openMovimientoModal=function(tipo){
   $('mov-fecha').value=new Date().toISOString().slice(0,10);
   $('movimiento-modal').classList.add('show');
 };
-$('movimiento-form').addEventListener('submit',async e=>{
+safeOn('movimiento-form','submit',async e=>{
   e.preventDefault();
   await addDoc(col('movimientos'),{tipo:$('mov-tipo').value,concepto:$('mov-concepto').value,monto:parseFloat($('mov-monto').value)||0,fecha:$('mov-fecha').value,categoria:$('mov-categoria').value,notas:$('mov-notas').value,auto:false,eliminado:false,createdAt:serverTimestamp()});
   $('movimiento-modal').classList.remove('show');cargarContabilidad();toast('Movimiento registrado ✅');
 });
 window.openPresupuestoModal=function(){$('presupuesto-form').reset();$('presupuesto-modal').classList.add('show');};
-$('presupuesto-form').addEventListener('submit',async e=>{
+safeOn('presupuesto-form','submit',async e=>{
   e.preventDefault();
   await addDoc(col('presupuestos'),{nombre:$('pres-nombre').value,monto:parseFloat($('pres-monto').value)||0,ejecutado:parseFloat($('pres-ejecutado').value)||0,inicio:$('pres-inicio').value,fin:$('pres-fin').value,descripcion:$('pres-desc').value,eliminado:false,createdAt:serverTimestamp()});
   $('presupuesto-modal').classList.remove('show');cargarContabilidad();toast('Presupuesto guardado ✅');
@@ -3602,7 +3604,7 @@ async function cargarContabilidad(){
       <div class="flujo-monto ${m.tipo}">${m.tipo==='ingreso'?'+':'−'} ${fmtM(m.monto)}</div>
     </div>`).join('');
 }
-$('cont-periodo').addEventListener('change',cargarContabilidad);
+safeOn('cont-periodo','change',cargarContabilidad);
 
 // ══════════════════════════════════════════
 // PRESUPUESTO VS REAL
@@ -3807,7 +3809,7 @@ window.deletePvr=async function(id,cat){
   cargarPvR();
 };
 
-$('pvr-form').addEventListener('submit',async e=>{
+safeOn('pvr-form','submit',async e=>{
   e.preventDefault();
   const data={
     categoria:$('pvr-categoria').value,
@@ -3836,7 +3838,7 @@ async function cargarDashboard(){
   const cla=clis.docs.filter(d=>!d.data().eliminado);
   $('dash-productos').textContent=pa.length;$('dash-cotizaciones').textContent=ca.length;$('dash-facturas').textContent=fa.length;$('dash-clientes').textContent=cla.length;
   allProdsCache=pa;
-  await actualizarResumenVentas(fa,ca);
+  await window.actualizarResumenVentas(fa,ca);
   await generarTopClientes(fa);await generarTopProductos(fa);
   await generarSugerencias(pa,fa,ca);
   await cargarContabilidad();
@@ -4059,7 +4061,7 @@ window.editCompra=async function(id){
 };
 
 // Override compra form submit to handle editing
-$('compra-form').addEventListener('submit',async e=>{
+safeOn('compra-form','submit',async e=>{
   e.preventDefault();
   const pid=$('compra-proveedor-id').value;if(!pid){toast('Seleccione proveedor','error');return;}
   const pnombre=$('compra-proveedor-id').options[$('compra-proveedor-id').selectedIndex].text;
@@ -4232,7 +4234,7 @@ document.addEventListener('click', function(e) {
     e.target.classList.remove('show');
   }
 });
-$('periodo-ventas').addEventListener('change',()=>window.actualizarResumenVentas());
+safeOn('periodo-ventas','change',()=>window.actualizarResumenVentas());
 
 // ══════════ PDF FACTURAS ══════════
 window.imprimirFactura=async function(factId){
