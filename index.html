@@ -6502,11 +6502,15 @@ window.imprimirFactura = async function(factId) {
 
 // ══════════ DUPLICADOS ══════════
 window.openDuplicadosModal = async function() {
+  if(!currentTenant){ toast('Inicia sesión primero','error'); return; }
   const modal = document.getElementById('duplicados-modal');
   const body  = document.getElementById('duplicados-body');
+  if(!modal||!body){ toast('Error: modal no encontrado','error'); return; }
   body.innerHTML = '<p style="color:var(--muted);text-align:center;padding:30px">Buscando duplicados...</p>';
   modal.classList.add('show');
-  const snap = await getDocs(col('productos'));
+  let snap;
+  try { snap = await getDocs(col('productos')); }
+  catch(e){ body.innerHTML='<p style="color:var(--red);text-align:center;padding:30px">Error al cargar productos: '+e.message+'</p>'; return; }
   const activos = snap.docs.filter(d => !d.data().eliminado);
   const grupos = {};
   activos.forEach(d => {
@@ -6563,8 +6567,12 @@ window.eliminarDupsGrupo = async function(btn) {
   const checks = [...grupo.querySelectorAll('input[type=checkbox]:checked')];
   if (!checks.length) { toast('Ninguno seleccionado','warn'); return; }
   const lista = checks.map(c=>c.dataset.dupNombre).join(', ');
-  if (!confirm(`¿Mover ${checks.length} producto(s) a la papelera?\n${lista}`)) return;
-  for (const c of checks) await softDelete('productos', c.dataset.dupId, c.dataset.dupNombre);
+  if (!await window._nexoraConfirm(`¿Mover ${checks.length} producto(s) a la papelera?\n${lista}`)) return;
+  btn.disabled = true;
+  try {
+    for (const c of checks) await softDelete('productos', c.dataset.dupId, c.dataset.dupNombre);
+  } catch(e) { toast('Error al eliminar: '+e.message,'error'); btn.disabled=false; return; }
+  btn.disabled = false;
   toast(`✅ ${checks.length} producto(s) a la papelera`);
   cargarInventario();
   window.openDuplicadosModal();
@@ -6574,12 +6582,17 @@ window.eliminarDupsGrupo = async function(btn) {
 window._bulkFiles = [];
 
 window.openBulkImgModal = function() {
+  if(!currentTenant){ toast('Inicia sesión primero','error'); return; }
+  const modal = document.getElementById('bulk-img-modal');
+  const list  = document.getElementById('bulk-img-list');
+  const status= document.getElementById('bulk-img-status');
+  if(!modal||!list||!status){ toast('Error: modal no disponible','error'); return; }
   window._bulkFiles = [];
-  document.getElementById('bulk-img-list').innerHTML = '';
-  document.getElementById('bulk-img-status').textContent = '';
+  list.innerHTML = '';
+  status.textContent = '';
   const inp = document.getElementById('bulk-img-input');
   if (inp) inp.value = '';
-  document.getElementById('bulk-img-modal').classList.add('show');
+  modal.classList.add('show');
 };
 
 window.handleBulkDrop = function(e) {
@@ -6589,9 +6602,14 @@ window.handleBulkDrop = function(e) {
 };
 
 window.handleBulkFiles = async function(files) {
+  if(!currentTenant){ toast('Inicia sesión primero','error'); return; }
   const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
   if (!arr.length) { toast('No hay imágenes válidas','warn'); return; }
-  const snap = await getDocs(col('productos'));
+  const statusEl = document.getElementById('bulk-img-status');
+  if(statusEl) statusEl.textContent = 'Cargando productos...';
+  let snap;
+  try { snap = await getDocs(col('productos')); }
+  catch(e){ toast('Error al cargar productos: '+e.message,'error'); return; }
   const prods = snap.docs.filter(d=>!d.data().eliminado)
     .map(d=>({id:d.id,nombre:d.data().nombre||''}))
     .sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
@@ -6625,20 +6643,67 @@ window.handleBulkFiles = async function(files) {
 };
 
 window.saveBulkImages = async function() {
-  const asig = window._bulkFiles.filter(f=>f.prodId);
+  if(!currentTenant){ toast('Inicia sesión primero','error'); return; }
+  const asig = (window._bulkFiles||[]).filter(f=>f.prodId);
   if (!asig.length) { toast('Asigna al menos una imagen a un producto','warn'); return; }
-  document.getElementById('bulk-img-status').textContent='Guardando...';
-  let ok=0;
+  const statusEl = document.getElementById('bulk-img-status');
+  const saveBtn  = document.querySelector('#bulk-img-modal .btn-save');
+  if(statusEl) statusEl.textContent='Guardando 0/'+asig.length+'...';
+  if(saveBtn){ saveBtn.disabled=true; saveBtn.textContent='⏳ Guardando...'; }
+  let ok=0, fail=0;
   for (const item of asig) {
-    try { await updateDoc(tdoc('productos',item.prodId),{imagen:item.base64,updatedAt:serverTimestamp()}); ok++; }
-    catch(e){console.error(e);}
+    try {
+      await updateDoc(tdoc('productos',item.prodId),{imagen:item.base64,updatedAt:serverTimestamp()});
+      ok++;
+      if(statusEl) statusEl.textContent=`Guardando ${ok+fail}/${asig.length}...`;
+    } catch(e){ console.error(e); fail++; }
   }
-  toast(`✅ ${ok} imagen(es) guardada(s)`);
-  document.getElementById('bulk-img-modal').classList.remove('show');
+  if(saveBtn){ saveBtn.disabled=false; saveBtn.textContent='💾 Guardar imágenes asignadas'; }
+  toast(`✅ ${ok} imagen(es) guardada(s)${fail?' — '+fail+' con error':''}`);
+  const modal = document.getElementById('bulk-img-modal');
+  if(modal) modal.classList.remove('show');
   cargarInventario();
 };
+
+// ── Registrar funciones para que los wrappers inline las encuentren ──
+if(typeof window._nexoraRegister === 'function') {
+  window._nexoraRegister('openDuplicadosModal', window.openDuplicadosModal);
+  window._nexoraRegister('openBulkImgModal',    window.openBulkImgModal);
+  window._nexoraRegister('handleBulkDrop',      window.handleBulkDrop);
+  window._nexoraRegister('handleBulkFiles',     window.handleBulkFiles);
+  window._nexoraRegister('saveBulkImages',      window.saveBulkImages);
+  window._nexoraRegister('eliminarDupsGrupo',   window.eliminarDupsGrupo);
+} else {
+  // Módulo cargó antes que el script de cola — asignación directa ya hecha
+}
 
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <!-- fase code moved into module -->
+<script>
+// ── Cola de seguridad para botones que pueden llamarse antes de que el módulo Firebase cargue ──
+(function(){
+  var _queue = {};
+  var _fns = ['openDuplicadosModal','openBulkImgModal','handleBulkDrop','handleBulkFiles','saveBulkImages','eliminarDupsGrupo'];
+  _fns.forEach(function(fn){
+    if(!window[fn]){
+      window[fn] = function(){
+        var a = arguments;
+        // Reintentar cada 200ms hasta que el módulo asigne la función real
+        var t = setInterval(function(){
+          if(window['_mod_'+fn]){
+            clearInterval(t);
+            window['_mod_'+fn].apply(window, a);
+          }
+        }, 200);
+        setTimeout(function(){ clearInterval(t); }, 8000);
+      };
+    }
+  });
+  window._nexoraRegister = function(fn, impl){
+    window['_mod_'+fn] = impl;
+    window[fn] = impl; // reemplaza el wrapper con la función real
+  };
+})();
+</script>
