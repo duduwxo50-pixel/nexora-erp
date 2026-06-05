@@ -2122,6 +2122,26 @@ const fmtDate=ts=>{if(!ts)return'—';if(ts?.toDate)return ts.toDate().toLocaleD
 const esc=str=>{const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;};
 
 function toast(msg,type='success'){const t=$('global-toast');t.textContent=msg;t.className=`toast toast-${type} show`;clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
+
+// ══ Custom confirm (replaces native confirm which is blocked in some contexts) ══
+window._nexoraConfirm = function(msg) {
+  return new Promise(resolve => {
+    const modal = document.getElementById('confirm-modal');
+    document.getElementById('confirm-msg').textContent = msg;
+    modal.classList.add('show');
+    const yes = document.getElementById('confirm-yes');
+    const no = document.getElementById('confirm-no');
+    const cleanup = (result) => {
+      modal.classList.remove('show');
+      yes.replaceWith(yes.cloneNode(true));
+      no.replaceWith(no.cloneNode(true));
+      resolve(result);
+    };
+    document.getElementById('confirm-yes').addEventListener('click', () => cleanup(true), {once:true});
+    document.getElementById('confirm-no').addEventListener('click', () => cleanup(false), {once:true});
+  });
+};
+
 window.sortTable=function(tbId,col){const tb=$(tbId);const rows=Array.from(tb.querySelectorAll('tr'));let asc=tb.dataset.sortCol==col&&tb.dataset.sortDir=='asc'?false:true;tb.dataset.sortCol=col;tb.dataset.sortDir=asc?'asc':'desc';rows.sort((a,b)=>{const av=a.cells[col]?.textContent.replace(/[$,.]/g,'').trim()||'';const bv=b.cells[col]?.textContent.replace(/[$,.]/g,'').trim()||'';const an=parseFloat(av),bn=parseFloat(bv);if(!isNaN(an)&&!isNaN(bn))return asc?an-bn:bn-an;return asc?av.localeCompare(bv,'es'):bv.localeCompare(av,'es');});rows.forEach(r=>tb.appendChild(r));};
 
 // ── AUTH ──
@@ -2205,7 +2225,7 @@ window.switchFactTab=function(tab){
 // ── SOFT DELETE ──
 async function softDelete(colName,docId,nombre){await updateDoc(tdoc(colName,docId),{eliminado:true,eliminadoEn:serverTimestamp(),eliminadoNombre:nombre||'—'});toast('Movido a papelera 🗑️');actualizarBadgePapelera();}
 window.restaurar=async(colName,docId)=>{await updateDoc(tdoc(colName,docId),{eliminado:false,eliminadoEn:null,eliminadoNombre:null});toast('✅ Restaurado');cargarPapelera();actualizarBadgePapelera();};
-window.eliminarPermanente=async(colName,docId)=>{if(!confirm('⚠️ Eliminar permanentemente?'))return;await deleteDoc(tdoc(colName,docId));toast('Eliminado','error');cargarPapelera();actualizarBadgePapelera();};
+window.eliminarPermanente=async(colName,docId)=>{if(!await window._nexoraConfirm('⚠️ Eliminar permanentemente. Esta acción no se puede deshacer.'))return;await deleteDoc(tdoc(colName,docId));toast('Eliminado','error');cargarPapelera();actualizarBadgePapelera();};
 
 async function actualizarBadgePapelera(){if(!currentTenant)return;const cols=['productos','clientes','proveedores','cotizaciones','facturas','compras'];let total=0;for(const c of cols){const s=await getDocs(col(c));s.forEach(d=>{if(d.data().eliminado)total++;});}const b=$('papelera-badge');b.textContent=total;b.classList.toggle('show',total>0);}
 
@@ -2512,7 +2532,18 @@ window.editProducto=async id=>{
   calcMargen();
   $('prod-modal').classList.add('show');switchModalTab('prod','info');
 };
-window.deleteProducto=async(id,nombre)=>{if(confirm(`¿Mover "${nombre}" a la papelera?`)){await softDelete('productos',id,nombre);cargarInventario();}};
+window.deleteProducto=async(id,nombre)=>{
+  try {
+    if(!currentTenant){toast('Error: sesión no iniciada','error');return;}
+    const ok = await window._nexoraConfirm(`¿Mover "${nombre}" a la papelera?`);
+    if(!ok)return;
+    await softDelete('productos',id,nombre);
+    cargarInventario();
+  } catch(err){
+    console.error('deleteProducto error:',err);
+    toast('Error al eliminar: '+err.message,'error');
+  }
+};
 $('prod-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const data={nombre:$('prod-nombre').value,referencia:$('prod-ref').value,precio:parseFloat($('prod-precio').value)||0,costo:parseFloat($('prod-costo').value)||0,stock:parseInt($('prod-stock').value)||0,stockMin:parseInt($('prod-stockmin').value)||5,categoria:$('prod-categoria').value,descripcion:$('prod-descripcion').value,unidad:$('prod-unidad').value,eliminado:false,updatedAt:serverTimestamp()};
@@ -2589,7 +2620,14 @@ window.editCliente=async id=>{
   $('cliente-modal').classList.add('show');
   switchModalTab('cliModal','info');
 };
-window.deleteCliente=async(id,nombre)=>{if(confirm(`¿Mover "${nombre}" a la papelera?`)){await softDelete('clientes',id,nombre);cargarClientes();}};
+window.deleteCliente=async(id,nombre)=>{
+  try{
+    if(!currentTenant){toast('Error: sesión no iniciada','error');return;}
+    const ok=await window._nexoraConfirm(`¿Mover "${nombre}" a la papelera?`);
+    if(!ok)return;
+    await softDelete('clientes',id,nombre);cargarClientes();
+  }catch(err){console.error(err);toast('Error: '+err.message,'error');}
+};
 $('cliente-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const data={nombre:$('cliente-nombre').value,email:$('cliente-email').value,telefono:$('cliente-telefono').value,nit:$('cliente-nit').value,ciudad:$('cliente-ciudad').value,pais:$('cliente-pais').value,direccion:$('cliente-direccion').value,sector:$('cliente-sector').value,descripcion:$('cliente-descripcion').value,web:$('cliente-web').value,regimen:$('cliente-regimen').value,pago:$('cliente-pago').value,asesores:tempAsesores,eliminado:false,updatedAt:serverTimestamp()};
@@ -2642,7 +2680,14 @@ window.editProveedor=async id=>{
   $('prov-map-preview').style.display='none';
   $('proveedor-modal').classList.add('show');switchModalTab('provModal','info');
 };
-window.deleteProveedor=async(id,nombre)=>{if(confirm(`¿Mover "${nombre}" a la papelera?`)){await softDelete('proveedores',id,nombre);cargarProveedores();}};
+window.deleteProveedor=async(id,nombre)=>{
+  try{
+    if(!currentTenant){toast('Error: sesión no iniciada','error');return;}
+    const ok=await window._nexoraConfirm(`¿Mover "${nombre}" a la papelera?`);
+    if(!ok)return;
+    await softDelete('proveedores',id,nombre);cargarProveedores();
+  }catch(err){console.error(err);toast('Error: '+err.message,'error');}
+};
 $('proveedor-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const data={nombre:$('proveedor-nombre').value,nit:$('proveedor-nit').value,contacto:$('proveedor-contacto').value,cargo:$('proveedor-cargo').value,telefono:$('proveedor-telefono').value,email:$('proveedor-email').value,ciudad:$('proveedor-ciudad').value,pais:$('proveedor-pais').value,direccion:$('proveedor-direccion').value,sector:$('proveedor-sector').value,descripcion:$('proveedor-descripcion').value,web:$('proveedor-web').value,plazo:$('proveedor-plazo').value,condpago:$('proveedor-condpago').value,eliminado:false,updatedAt:serverTimestamp()};
@@ -2922,7 +2967,7 @@ function renderCotizaciones(docs){
     </tr>`;
   });
 }
-window.deleteCot=async(id,num)=>{if(confirm(`¿Mover "${num}" a la papelera?`)){await softDelete('cotizaciones',id,num);cargarCotizaciones();}};
+window.deleteCot=async(id,num)=>{if(await window._nexoraConfirm(`¿Mover "${num}" a la papelera?`)){await softDelete('cotizaciones',id,num);cargarCotizaciones();}};
 
 // QUICK ESTADO
 window.quickEstado=function(colName,docId,estadoActual,tipo){
@@ -3380,7 +3425,7 @@ function renderFacturas(docs){
     </tr>`;
   });
 }
-window.deleteFact=async(id,num)=>{if(confirm(`¿Mover "${num}" a la papelera?`)){await softDelete('facturas',id,num);cargarFacturas();}};
+window.deleteFact=async(id,num)=>{if(await window._nexoraConfirm(`¿Mover "${num}" a la papelera?`)){await softDelete('facturas',id,num);cargarFacturas();}};
 
 // ══════════ COMPRAS ══════════
 let compraProds=[];
@@ -3478,7 +3523,7 @@ function aplicarFiltrosCompras(){
     </tr>`;})
 }
 [$('comp-search'),$('comp-filter-prov'),$('comp-filter-desde'),$('comp-filter-hasta')].forEach(el=>{if(el)el.addEventListener('change',aplicarFiltrosCompras);el?.addEventListener('input',aplicarFiltrosCompras);});
-window.deleteComp=async(id,num)=>{if(confirm(`¿Mover compra "${num}" a la papelera?`)){await softDelete('compras',id,num);cargarCompras();}};
+window.deleteComp=async(id,num)=>{if(await window._nexoraConfirm(`¿Mover compra "${num}" a la papelera?`)){await softDelete('compras',id,num);cargarCompras();}};
 
 // ══════════ CONTABILIDAD ══════════
 window.openMovimientoModal=function(tipo){
@@ -3938,7 +3983,7 @@ async function renderPapelera(filtro=''){
   c.innerHTML=html;
 }
 window.filtrarPapelera=v=>renderPapelera(v);
-window.vaciarPapeleraTab=async()=>{if(!confirm(`⚠️ ¿Vaciar todos los ${currentPapeleraTab} de la papelera permanentemente?`))return;const snap=await getDocs(col(currentPapeleraTab));const ps=[];snap.forEach(d=>{if(d.data().eliminado)ps.push(deleteDoc(tdoc(currentPapeleraTab,d.id)));});await Promise.all(ps);toast('Sección vaciada','error');cargarPapelera();actualizarBadgePapelera();};
+window.vaciarPapeleraTab=async()=>{if(!await window._nexoraConfirm(`⚠️ ¿Vaciar todos los ${currentPapeleraTab} de la papelera permanentemente?`))return;const snap=await getDocs(col(currentPapeleraTab));const ps=[];snap.forEach(d=>{if(d.data().eliminado)ps.push(deleteDoc(tdoc(currentPapeleraTab,d.id)));});await Promise.all(ps);toast('Sección vaciada','error');cargarPapelera();actualizarBadgePapelera();};
 
 // ══════════ STOCK AJUSTE (agregar/quitar) ══════════
 window.openAjusteStock=async function(prodId,nombre,stockActual){
@@ -4290,6 +4335,22 @@ window.imprimirFactura=async function(factId){
       <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
       <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
       <button class="btn-save" onclick="window.saveBulkImages()">💾 Guardar imágenes asignadas</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CUSTOM CONFIRM MODAL ══ -->
+<div class="modal-backdrop" id="confirm-modal" style="z-index:2000">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header" style="border-bottom:none;padding-bottom:8px">
+      <h3 id="confirm-title" style="font-size:15px">¿Confirmar acción?</h3>
+    </div>
+    <div class="modal-body" style="padding:0 26px 16px">
+      <p id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="confirm-no">Cancelar</button>
+      <button class="btn-save" id="confirm-yes" style="background:linear-gradient(135deg,var(--red),#b91c1c)">Confirmar</button>
     </div>
   </div>
 </div>
