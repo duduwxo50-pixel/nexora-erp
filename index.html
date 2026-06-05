@@ -1042,19 +1042,18 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
             <option value="">Todas las categorías</option>
           </select>
           <button class="btn-action" onclick="openProductoModal()">+ Nuevo producto</button>
-          <button class="btn-icon" id="btn-bulk-img" onclick="window.openBulkImgModal()" style="white-space:nowrap">🖼️ Imágenes masivas</button>
-          <button class="btn-icon" id="btn-sel-mode" onclick="window.toggleSeleccionMode()" style="white-space:nowrap">☑️ Seleccionar</button>
+          <button class="btn-icon" onclick="window.openDuplicadosModal()" style="white-space:nowrap">🔍 Duplicados</button>
+          <button class="btn-icon" onclick="window.openBulkImgModal()" style="white-space:nowrap">🖼️ Imágenes masivas</button>
         </div>
         <div class="table-wrap">
-          <table id="prod-table"><thead><tr>
-            <th style="width:36px;padding:8px 6px" id="th-check"><input type="checkbox" id="check-all-prods" style="width:15px;height:15px;cursor:pointer;display:none" onchange="window.toggleCheckAll(this)"></th>
+          <table><thead><tr>
             <th style="width:50px">Img</th>
-            <th onclick="sortTable('prod-tbody',2)">Producto ↕</th>
+            <th onclick="sortTable('prod-tbody',1)">Producto ↕</th>
             <th>Ref</th>
-            <th onclick="sortTable('prod-tbody',4)">Precio venta ↕</th>
+            <th onclick="sortTable('prod-tbody',3)">Precio venta ↕</th>
             <th>Precio costo</th>
             <th>Margen</th>
-            <th onclick="sortTable('prod-tbody',7)">Stock ↕</th>
+            <th onclick="sortTable('prod-tbody',6)">Stock ↕</th>
             <th>Mín</th>
             <th>Ajustar stock</th>
             <th>Acciones</th>
@@ -2481,102 +2480,16 @@ function aplicarFiltrosProd(){
   });
   renderProductos(docs);
 }
-// ── Selección mode state ──
-window._selMode = false;
-window._selIds = new Set();
-
-window.toggleSeleccionMode = function(){
-  window._selMode = !window._selMode;
-  window._selIds.clear();
-  const btn = document.getElementById('btn-sel-mode');
-  const chkAll = document.getElementById('check-all-prods');
-  if(btn){ 
-    btn.textContent = window._selMode ? '✕ Cancelar selección' : '☑️ Seleccionar';
-    btn.style.background = window._selMode ? 'rgba(244,63,94,.12)' : '';
-    btn.style.borderColor = window._selMode ? 'rgba(244,63,94,.3)' : '';
-    btn.style.color = window._selMode ? 'var(--red)' : '';
-  }
-  if(chkAll){ chkAll.style.display = window._selMode ? 'inline-block' : 'none'; chkAll.checked = false; }
-  // Re-render to show/hide checkboxes
-  aplicarFiltrosProd();
-  // Show/hide the floating action bar
-  window.updateSelBar();
-};
-
-window.toggleCheckAll = function(el){
-  window._selIds.clear();
-  document.querySelectorAll('.prod-row-check').forEach(c=>{
-    c.checked = el.checked;
-    if(el.checked) window._selIds.add(c.dataset.id);
-  });
-  window.updateSelBar();
-};
-
-window.updateSelBar = function(){
-  let bar = document.getElementById('sel-action-bar');
-  if(!bar){
-    bar = document.createElement('div');
-    bar.id = 'sel-action-bar';
-    bar.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0a1526;border:1px solid rgba(37,99,235,.4);border-radius:14px;padding:10px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:500;transition:opacity .2s';
-    document.body.appendChild(bar);
-  }
-  const n = window._selIds.size;
-  if(!window._selMode || n === 0){ bar.style.opacity='0'; bar.style.pointerEvents='none'; return; }
-  bar.style.opacity='1'; bar.style.pointerEvents='all';
-  bar.innerHTML = `
-    <span style="font-size:13px;font-weight:700;color:var(--accent2)">${n} seleccionado(s)</span>
-    <button class="btn-action" style="font-size:12px;padding:7px 14px" onclick="window.bulkImgSelected()">🖼️ Subir imágenes</button>
-    <button class="btn-action" style="font-size:12px;padding:7px 14px;background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="window.bulkEditSelected()">✏️ Editar</button>
-    <button class="btn-icon danger" style="font-size:12px;padding:7px 14px" onclick="window.bulkDeleteSelected()">🗑️ Eliminar</button>
-    <button class="btn-cancel" style="font-size:12px;padding:7px 12px" onclick="window.toggleSeleccionMode()">✕ Cancelar</button>`;
-};
-
-window.bulkDeleteSelected = async function(){
-  const ids = [...window._selIds];
-  if(!ids.length) return;
-  if(!await window._nexoraConfirm('¿Mover '+ids.length+' producto(s) a la papelera?')) return;
-  for(const id of ids){
-    const tr = document.querySelector('[data-check-id="'+id+'"]');
-    const nombre = tr ? tr.dataset.nombre : id;
-    await softDelete('productos', id, nombre);
-  }
-  toast('✅ '+ids.length+' producto(s) a la papelera');
-  window.toggleSeleccionMode();
-  cargarInventario();
-};
-
-window.bulkEditSelected = function(){
-  const ids = [...window._selIds];
-  if(!ids.length) return;
-  if(ids.length === 1){ window.editProducto(ids[0]); return; }
-  toast('Selecciona solo 1 producto para editar','warn');
-};
-
-window.bulkImgSelected = function(){
-  window._bulkPreselIds = [...window._selIds];
-  window.openBulkImgModal();
-};
-
 function renderProductos(docs){
   const tb=$('prod-tbody');tb.innerHTML='';
-  if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="11">Sin resultados</td></tr>';return;}
-  const selMode = window._selMode;
+  if(!docs.length){tb.innerHTML='<tr class="no-results"><td colspan="10">Sin resultados</td></tr>';return;}
   docs.forEach(d=>{
     const p=d.data();const bajo=(p.stock||0)<=(p.stockMin||5);
     const margen=p.costo&&p.precio?((p.precio-p.costo)/p.costo*100).toFixed(1)+'%':'—';
-    const imgTag=p.imagen
-      ?`<img src="${p.imagen}" class="item-img-thumb" data-img="${p.imagen}" data-nombre="${esc(p.nombre)}" style="cursor:zoom-in">`
-      :`<div class="item-img-placeholder" style="cursor:default">📦</div>`;
-    const checked = window._selIds.has(d.id) ? 'checked' : '';
+    const imgTag=p.imagen?`<img src="${p.imagen}" class="item-img-thumb">`:`<div class="item-img-placeholder">📦</div>`;
     const tr=document.createElement('tr');
-    tr.style.cursor = 'pointer';
-    tr.dataset.checkId = d.id;
-    tr.dataset.nombre = esc(p.nombre);
     tr.innerHTML=`
-      <td style="padding:8px 6px" onclick="event.stopPropagation()">
-        <input type="checkbox" class="prod-row-check" data-id="${d.id}" style="width:15px;height:15px;cursor:pointer;display:${selMode?'inline-block':'none'}" ${checked} onchange="window._onRowCheck(this)">
-      </td>
-      <td class="td-img-cell">${imgTag}</td>
+      <td>${imgTag}</td>
       <td><strong>${esc(p.nombre)}</strong>${p.descripcion?`<div style="font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.descripcion)}</div>`:''}${p.unidad?`<div style="font-size:10px;color:var(--muted)">${esc(p.unidad)}</div>`:''}</td>
       <td><span style="font-family:var(--mono);font-size:12px;color:var(--accent2)">${esc(p.referencia||'—')}</span></td>
       <td>${fmtM(p.precio)}</td>
@@ -2584,119 +2497,18 @@ function renderProductos(docs){
       <td>${p.costo&&p.precio?`<span class="badge badge-ok">${margen}</span>`:'—'}</td>
       <td><span class="badge ${bajo?'badge-peligro':'badge-ok'}">${p.stock||0}</span>${bajo?'<span style="font-size:10px;color:var(--red);margin-left:3px" title="Stock bajo">⚠️</span>':''}</td>
       <td>${p.stockMin||5}</td>
-      <td onclick="event.stopPropagation()"><button class="btn-icon btn-ajuste-stock" data-id="${d.id}" data-nombre="${esc(p.nombre)}" data-stock="${p.stock||0}" title="Ajustar stock" style="font-size:13px">±</button></td>
-      <td onclick="event.stopPropagation()">
+      <td><button class="btn-icon btn-ajuste-stock" data-id="${d.id}" data-nombre="${esc(p.nombre)}" data-stock="${p.stock||0}" title="Ajustar stock" style="font-size:13px">±</button></td>
+      <td>
         <button class="btn-icon btn-edit-prod" data-id="${d.id}">✏️</button>
         <button class="btn-icon danger btn-del-prod" data-id="${d.id}" data-nombre="${esc(p.nombre)}">🗑️</button>
       </td>`;
-    // Row click → open detail panel
-    tr.addEventListener('click', (e)=>{
-      if(e.target.closest('button')||e.target.closest('input')) return;
-      if(window._selMode){ 
-        const chk = tr.querySelector('.prod-row-check');
-        if(chk){ chk.checked = !chk.checked; window._onRowCheck(chk); }
-        return;
-      }
-      // Click on image thumbnail → open lightbox
-      if(e.target.classList.contains('item-img-thumb')){
-        window.openImgLightbox(e.target.dataset.img, e.target.dataset.nombre);
-        return;
-      }
-      window.openProdDetail(d.id, p);
-    });
     tb.appendChild(tr);
   });
-  // Image thumbnail click (also via delegation for safety)
-  tb.querySelectorAll('.item-img-thumb').forEach(img=>{
-    img.addEventListener('click', e=>{
-      e.stopPropagation();
-      window.openImgLightbox(img.dataset.img, img.dataset.nombre);
-    });
-  });
-  tb.querySelectorAll('.btn-edit-prod').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();window.editProducto(b.dataset.id);}));
-  tb.querySelectorAll('.btn-del-prod').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();window.deleteProducto(b.dataset.id,b.dataset.nombre);}));
-  tb.querySelectorAll('.btn-ajuste-stock').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();window.openAjusteStock(b.dataset.id,b.dataset.nombre,parseInt(b.dataset.stock));}));
+  // Bind events via delegation to avoid onclick/quote issues
+  tb.querySelectorAll('.btn-edit-prod').forEach(b=>b.addEventListener('click',()=>window.editProducto(b.dataset.id)));
+  tb.querySelectorAll('.btn-del-prod').forEach(b=>b.addEventListener('click',()=>window.deleteProducto(b.dataset.id,b.dataset.nombre)));
+  tb.querySelectorAll('.btn-ajuste-stock').forEach(b=>b.addEventListener('click',()=>window.openAjusteStock(b.dataset.id,b.dataset.nombre,parseInt(b.dataset.stock))));
 }
-
-window._onRowCheck = function(chk){
-  if(chk.checked) window._selIds.add(chk.dataset.id);
-  else window._selIds.delete(chk.dataset.id);
-  window.updateSelBar();
-};
-
-// ── Image lightbox ──
-window.openImgLightbox = function(src, nombre){
-  let lb = document.getElementById('img-lightbox');
-  if(!lb){
-    lb = document.createElement('div');
-    lb.id = 'img-lightbox';
-    lb.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:12px;cursor:zoom-out';
-    lb.innerHTML = `<img id="lb-img" style="max-width:90vw;max-height:82vh;border-radius:12px;box-shadow:0 0 60px rgba(0,0,0,.8);object-fit:contain"><div id="lb-nombre" style="color:rgba(255,255,255,.7);font-size:13px;font-weight:600;margin-top:4px"></div><button onclick="document.getElementById('img-lightbox').style.display='none'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">✕</button>`;
-    lb.addEventListener('click', e=>{ if(e.target===lb) lb.style.display='none'; });
-    document.body.appendChild(lb);
-  }
-  document.getElementById('lb-img').src = src;
-  document.getElementById('lb-nombre').textContent = nombre || '';
-  lb.style.display = 'flex';
-};
-
-// ── Product detail side panel ──
-window.openProdDetail = function(id, p){
-  let panel = document.getElementById('prod-detail-panel');
-  if(!panel){
-    panel = document.createElement('div');
-    panel.id = 'prod-detail-panel';
-    panel.style.cssText = 'position:fixed;right:0;top:0;bottom:0;width:340px;background:#0a1526;border-left:1px solid rgba(255,255,255,.09);z-index:300;overflow-y:auto;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.4)';
-    document.body.appendChild(panel);
-  }
-  const bajo = (p.stock||0) <= (p.stockMin||5);
-  const margen = p.costo&&p.precio ? ((p.precio-p.costo)/p.precio*100).toFixed(1)+'%' : '—';
-  const colorStock = bajo ? '244,63,94' : '16,185,129';
-  const varStock = bajo ? 'red' : 'green';
-  panel.innerHTML = [
-    '<div style="padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center">',
-      '<div style="font-size:15px;font-weight:800">📦 Detalle</div>',
-      '<button id="pd-close-btn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px">✕</button>',
-    '</div>',
-    p.imagen ? '<div style="padding:18px 22px 0"><img id="pd-img" src="'+p.imagen+'" style="width:100%;border-radius:10px;object-fit:cover;max-height:180px;cursor:zoom-in"></div>' : '',
-    '<div style="padding:18px 22px">',
-      '<div style="font-size:18px;font-weight:900;margin-bottom:4px">'+esc(p.nombre)+'</div>',
-      p.referencia ? '<div style="font-family:var(--mono);font-size:12px;color:var(--accent2);margin-bottom:12px">'+esc(p.referencia)+'</div>' : '',
-      p.descripcion ? '<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.05)">'+esc(p.descripcion)+'</div>' : '',
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">',
-        '<div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.15);border-radius:10px;padding:12px">',
-          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio venta</div>',
-          '<div style="font-size:18px;font-weight:900;color:var(--green)">'+fmtM(p.precio)+'</div>',
-        '</div>',
-        '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">',
-          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio costo</div>',
-          '<div style="font-size:18px;font-weight:900">'+(p.costo?fmtM(p.costo):'—')+'</div>',
-        '</div>',
-        '<div style="background:rgba('+colorStock+',.07);border:1px solid rgba('+colorStock+',.15);border-radius:10px;padding:12px">',
-          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stock actual</div>',
-          '<div style="font-size:18px;font-weight:900;color:var(--'+varStock+')">'+(p.stock||0)+(bajo?' ⚠️':'')+'</div>',
-        '</div>',
-        '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">',
-          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Margen</div>',
-          '<div style="font-size:18px;font-weight:900;color:var(--accent2)">'+margen+'</div>',
-        '</div>',
-      '</div>',
-      p.categoria ? '<div style="margin-bottom:8px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Categoría:</span> <span style="font-size:13px">'+esc(p.categoria)+'</span></div>' : '',
-      p.unidad ? '<div style="margin-bottom:16px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Unidad:</span> <span style="font-size:13px">'+esc(p.unidad)+'</span></div>' : '',
-      '<div style="display:flex;gap:8px;margin-top:8px">',
-        '<button id="pd-edit-btn" class="btn-action" style="flex:1;justify-content:center;font-size:13px">✏️ Editar</button>',
-        '<button id="pd-del-btn" class="btn-icon danger" style="font-size:13px">🗑️</button>',
-      '</div>',
-    '</div>'
-  ].join('');
-  // Bind events safely (no inline onclick needed)
-  panel.querySelector('#pd-close-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; });
-  if(p.imagen){ panel.querySelector('#pd-img').addEventListener('click', ()=>{ window.openImgLightbox(p.imagen, p.nombre); }); }
-  panel.querySelector('#pd-edit-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; window.editProducto(id); });
-  panel.querySelector('#pd-del-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; window.deleteProducto(id, p.nombre); });
-  panel.style.transform = 'translateX(0)';
-};
-
 safeOn('prod-search','input',aplicarFiltrosProd);
 safeOn('prod-filter-stock','change',aplicarFiltrosProd);
 safeOn('prod-filter-cat','change',aplicarFiltrosProd);
@@ -4494,7 +4306,96 @@ window.imprimirFactura=async function(factId){
   <div class="footer">Generado por Nexora ERP · ${new Date().toLocaleDateString('es-CO')} · ${esc(bizName)}</div>
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
-  </body></html>`;
+  
+<!-- ══ MODAL DUPLICADOS ══ -->
+<div class="modal-backdrop" id="duplicados-modal">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h3>🔍 Productos con nombre duplicado</h3>
+      <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" id="duplicados-body" style="max-height:65vh;overflow-y:auto"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL CARGA MASIVA IMÁGENES ══ -->
+<div class="modal-backdrop" id="bulk-img-modal">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <h3>🖼️ Carga masiva de imágenes</h3>
+      <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" style="padding:20px 26px">
+      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
+        📌 Sube varias imágenes. Luego elige a qué producto corresponde cada una. Si el nombre del archivo coincide con un producto, se asigna automáticamente.
+      </div>
+      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px"
+        onclick="document.getElementById('bulk-img-input').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragleave="this.style.borderColor='var(--border)'"
+        ondrop="window.handleBulkDrop(event)">
+        <div style="font-size:34px;margin-bottom:8px">📂</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
+        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos</div>
+        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="window.handleBulkFiles(this.files)">
+      </div>
+      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-height:45vh;overflow-y:auto"></div>
+    </div>
+    <div class="modal-footer">
+      <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
+      <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
+      <button class="btn-save" onclick="window.saveBulkImages()">💾 Guardar imágenes asignadas</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CUSTOM CONFIRM MODAL ══ -->
+<div class="modal-backdrop" id="confirm-modal" style="z-index:2000">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header" style="border-bottom:none;padding-bottom:8px">
+      <h3 id="confirm-title" style="font-size:15px">¿Confirmar acción?</h3>
+    </div>
+    <div class="modal-body" style="padding:0 26px 16px">
+      <p id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="confirm-no">Cancelar</button>
+      <button class="btn-save" id="confirm-yes" style="background:linear-gradient(135deg,var(--red),#b91c1c)">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CERRAR MODALES — script global (no módulo, ejecuta inmediatamente) ──
+(function() {
+  function cerrarModal(backdrop) {
+    if (backdrop) backdrop.classList.remove('show');
+  }
+
+  document.addEventListener('click', function(e) {
+    // 1. Clic en botón con clase modal-close
+    var btn = e.target.closest ? e.target.closest('.modal-close') : null;
+    if (btn) {
+      // Si el botón ya tiene onclick propio, no interferir
+      if (btn.getAttribute('onclick')) return;
+      cerrarModal(btn.closest('.modal-backdrop'));
+      e.stopPropagation();
+      return;
+    }
+
+    // 2. Clic directamente sobre el backdrop (el overlay oscuro)
+    //    Nota: el modal usa overflow-y:auto en el backdrop, así que el .modal
+    //    llena casi todo — verificamos también el padding area
+    if (e.target.classList && e.target.classList.contains('modal-backdrop')) {
+      cerrarModal(e.target);
+    }
+  }, true); // useCapture=true para capturar antes que otros listeners
+})();
+</script>
+</body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();
 };
 
@@ -6711,55 +6612,15 @@ window._bulkFiles = [];
 
 window.openBulkImgModal = function() {
   if(!currentTenant){ toast('Inicia sesión primero','error'); return; }
-  // The modal elements may be in a detached DOM due to broken template literal (now fixed).
-  // Ensure modal exists; if not, create it dynamically.
-  let modal = document.getElementById('bulk-img-modal');
-  if(!modal){
-    modal = document.createElement('div');
-    modal.className = 'modal-backdrop';
-    modal.id = 'bulk-img-modal';
-    modal.innerHTML = `
-      <div class="modal modal-xl">
-        <div class="modal-header">
-          <h3>🖼️ Carga masiva de imágenes</h3>
-          <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
-        </div>
-        <div class="modal-body" style="padding:20px 26px">
-          <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-            📌 Sube varias imágenes. Si el nombre del archivo coincide con un producto, se asigna automáticamente.
-          </div>
-          <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px"
-            onclick="document.getElementById('bulk-img-input').click()"
-            ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
-            ondragleave="this.style.borderColor='var(--border)'"
-            ondrop="window.handleBulkDrop(event)">
-            <div style="font-size:34px;margin-bottom:8px">📂</div>
-            <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-            <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos</div>
-            <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="window.handleBulkFiles(this.files)">
-          </div>
-          <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-height:45vh;overflow-y:auto"></div>
-        </div>
-        <div class="modal-footer">
-          <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-          <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-          <button class="btn-save" onclick="window.saveBulkImages()">💾 Guardar imágenes asignadas</button>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-  }
+  const modal = document.getElementById('bulk-img-modal');
   const list  = document.getElementById('bulk-img-list');
   const status= document.getElementById('bulk-img-status');
+  if(!modal||!list||!status){ toast('Error: modal no disponible','error'); return; }
   window._bulkFiles = [];
   list.innerHTML = '';
   status.textContent = '';
   const inp = document.getElementById('bulk-img-input');
   if (inp) inp.value = '';
-  // If called from selection mode, show preselected hint
-  if(window._bulkPreselIds && window._bulkPreselIds.length){
-    status.textContent = window._bulkPreselIds.length+' producto(s) preseleccionado(s)';
-    window._bulkPreselIds = null;
-  }
   modal.classList.add('show');
 };
 
@@ -6848,54 +6709,6 @@ if(typeof window._nexoraRegister === 'function') {
 }
 
 </script>
-
-<!-- ══ CUSTOM CONFIRM MODAL ══ -->
-<div class="modal-backdrop" id="confirm-modal" style="z-index:2000">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-header" style="border-bottom:none;padding-bottom:8px">
-      <h3 id="confirm-title" style="font-size:15px">¿Confirmar acción?</h3>
-    </div>
-    <div class="modal-body" style="padding:0 26px 16px">
-      <p id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" id="confirm-no">Cancelar</button>
-      <button class="btn-save" id="confirm-yes" style="background:linear-gradient(135deg,var(--red),#b91c1c)">Confirmar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ── CERRAR MODALES — script global (no módulo, ejecuta inmediatamente) ──
-(function() {
-  function cerrarModal(backdrop) {
-    if (backdrop) backdrop.classList.remove('show');
-  }
-
-  document.addEventListener('click', function(e) {
-    // 1. Clic en botón con clase modal-close
-    var btn = e.target.closest ? e.target.closest('.modal-close') : null;
-    if (btn) {
-      // Si el botón ya tiene onclick propio, no interferir
-      if (btn.getAttribute('onclick')) return;
-      cerrarModal(btn.closest('.modal-backdrop'));
-      e.stopPropagation();
-      return;
-    }
-
-    // 2. Clic directamente sobre el backdrop (el overlay oscuro)
-    //    Nota: el modal usa overflow-y:auto en el backdrop, así que el .modal
-    //    llena casi todo — verificamos también el padding area
-    if (e.target.classList && e.target.classList.contains('modal-backdrop')) {
-      cerrarModal(e.target);
-    }
-  }, true); // useCapture=true para capturar antes que otros listeners
-})();
-<\/script>
-</body></html>`;
-  const w=window.open('','_blank');w.document.write(html);w.document.close();
-};
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <!-- fase code moved into module -->
