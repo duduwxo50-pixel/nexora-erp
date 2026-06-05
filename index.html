@@ -2127,10 +2127,16 @@ function toast(msg,type='success'){const t=$('global-toast');t.textContent=msg;t
 window._nexoraConfirm = function(msg) {
   return new Promise(resolve => {
     const modal = document.getElementById('confirm-modal');
-    document.getElementById('confirm-msg').textContent = msg;
-    modal.classList.add('show');
+    const msgEl = document.getElementById('confirm-msg');
     const yes = document.getElementById('confirm-yes');
     const no = document.getElementById('confirm-no');
+    // Fallback al confirm nativo si el modal no está disponible aún
+    if(!modal || !msgEl || !yes || !no) {
+      resolve(window.confirm(msg));
+      return;
+    }
+    msgEl.textContent = msg;
+    modal.classList.add('show');
     const cleanup = (result) => {
       modal.classList.remove('show');
       yes.replaceWith(yes.cloneNode(true));
@@ -2223,7 +2229,13 @@ window.switchFactTab=function(tab){
 };
 
 // ── SOFT DELETE ──
-async function softDelete(colName,docId,nombre){await updateDoc(tdoc(colName,docId),{eliminado:true,eliminadoEn:serverTimestamp(),eliminadoNombre:nombre||'—'});toast('Movido a papelera 🗑️');actualizarBadgePapelera();}
+async function softDelete(colName,docId,nombre){
+  if(!currentTenant){toast("Error: sesión no iniciada","error");throw new Error("Sin sesión activa");}
+  if(!docId){toast("Error: ID de documento inválido","error");throw new Error("ID inválido");}
+  await updateDoc(tdoc(colName,docId),{eliminado:true,eliminadoEn:serverTimestamp(),eliminadoNombre:nombre||"—"});
+  toast("Movido a papelera 🗑️");
+  actualizarBadgePapelera();
+}
 window.restaurar=async(colName,docId)=>{await updateDoc(tdoc(colName,docId),{eliminado:false,eliminadoEn:null,eliminadoNombre:null});toast('✅ Restaurado');cargarPapelera();actualizarBadgePapelera();};
 window.eliminarPermanente=async(colName,docId)=>{if(!await window._nexoraConfirm('⚠️ Eliminar permanentemente. Esta acción no se puede deshacer.'))return;await deleteDoc(tdoc(colName,docId));toast('Eliminado','error');cargarPapelera();actualizarBadgePapelera();};
 
@@ -6308,7 +6320,7 @@ document.getElementById('empresa-form').addEventListener('submit', async functio
   if(!nombre) { toast('El nombre es requerido', 'error'); return; }
 
   const btn = document.getElementById('emp-submit-btn');
-  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+  if(btn) { btn.disabled = true; btn.textContent = '⏳ Guardando...'; }
 
   try {
     const data = {
@@ -6353,8 +6365,10 @@ document.getElementById('empresa-form').addEventListener('submit', async functio
     console.error(err);
     toast('Error: ' + err.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.textContent = window._editingEmpresaId ? '💾 Guardar cambios' : '🏢 Crear empresa';
+    if(btn) {
+      btn.disabled = false;
+      btn.textContent = window._editingEmpresaId ? '💾 Guardar cambios' : '🏢 Crear empresa';
+    }
   }
 });
 
