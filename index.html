@@ -4215,9 +4215,23 @@ window.restaurar=async(colName,docId)=>{
   cargarPapelera();actualizarBadgePapelera();
 };
 
-// ── CLOSE MODALS ──
-document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
-document.querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click',()=>b.closest('.modal-backdrop').classList.remove('show')));
+// ── CLOSE MODALS — event delegation (funciona con modales dinámicos también) ──
+document.addEventListener('click', function(e) {
+  // Clic en botón .modal-close (prioridad máxima)
+  const closeBtn = e.target.closest('.modal-close');
+  if (closeBtn) {
+    // Si tiene onclick propio ya lo maneja él solo — sólo actuar si NO tiene onclick
+    if (!closeBtn.hasAttribute('onclick')) {
+      const backdrop = closeBtn.closest('.modal-backdrop');
+      if (backdrop) { backdrop.classList.remove('show'); e.stopPropagation(); }
+    }
+    return;
+  }
+  // Clic directamente en el backdrop (el overlay oscuro, fuera del .modal)
+  if (e.target.classList.contains('modal-backdrop')) {
+    e.target.classList.remove('show');
+  }
+});
 $('periodo-ventas').addEventListener('change',()=>window.actualizarResumenVentas());
 
 // ══════════ PDF FACTURAS ══════════
@@ -6667,14 +6681,16 @@ window.saveBulkImages = async function() {
 
 // ── Registrar funciones para que los wrappers inline las encuentren ──
 if(typeof window._nexoraRegister === 'function') {
-  window._nexoraRegister('openDuplicadosModal', window.openDuplicadosModal);
-  window._nexoraRegister('openBulkImgModal',    window.openBulkImgModal);
-  window._nexoraRegister('handleBulkDrop',      window.handleBulkDrop);
-  window._nexoraRegister('handleBulkFiles',     window.handleBulkFiles);
-  window._nexoraRegister('saveBulkImages',      window.saveBulkImages);
-  window._nexoraRegister('eliminarDupsGrupo',   window.eliminarDupsGrupo);
-} else {
-  // Módulo cargó antes que el script de cola — asignación directa ya hecha
+  [
+    'openDuplicadosModal','openBulkImgModal','handleBulkDrop','handleBulkFiles','saveBulkImages','eliminarDupsGrupo',
+    'openProductoModal','openClienteModal','openProveedorModal','openCotizacionModal','openCompraModal','openPvrModal',
+    'deleteProducto','deleteCliente','deleteProveedor','deleteCot','deleteFact','deleteComp',
+    'editProducto','editCliente','editProveedor','editCotizacion','editCotizacionTab',
+    'quickEstado','cambiarEstado','sortTable','switchModalTab','switchCotTab','switchFactTab',
+    'imprimirFactura','imprimirCotizacion','verFacturaDeCot','abrirConfirmarFacturacion',
+    'ajustarStock','generarOC','limpiarImagenProducto','limpiarImagenCliente','limpiarImagenProveedor',
+    'calcMargen','onCotProdChange','onFactProdChange','actualizarTotalesCot','quickEstado','restaurar','eliminarPermanente'
+  ].forEach(function(fn){ if(window[fn]) window._nexoraRegister(fn, window[fn]); });
 }
 
 </script>
@@ -6685,7 +6701,15 @@ if(typeof window._nexoraRegister === 'function') {
 // ── Cola de seguridad para botones que pueden llamarse antes de que el módulo Firebase cargue ──
 (function(){
   var _queue = {};
-  var _fns = ['openDuplicadosModal','openBulkImgModal','handleBulkDrop','handleBulkFiles','saveBulkImages','eliminarDupsGrupo'];
+  var _fns = [
+    'openDuplicadosModal','openBulkImgModal','handleBulkDrop','handleBulkFiles','saveBulkImages','eliminarDupsGrupo',
+    'openProductoModal','openClienteModal','openProveedorModal','openCotizacionModal','openCompraModal','openPvrModal',
+    'deleteProducto','deleteCliente','deleteProveedor','deleteCot','deleteFact','deleteComp',
+    'editProducto','editCliente','editProveedor','editCotizacion','editCotizacionTab',
+    'quickEstado','cambiarEstado','sortTable','switchModalTab','switchCotTab','switchFactTab',
+    'imprimirFactura','imprimirCotizacion','verFacturaDeCot','abrirConfirmarFacturacion',
+    'ajustarStock','generarOC'
+  ];
   _fns.forEach(function(fn){
     if(!window[fn]){
       window[fn] = function(){
