@@ -2631,7 +2631,7 @@ window.openImgLightbox = function(src, nombre){
     lb = document.createElement('div');
     lb.id = 'img-lightbox';
     lb.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:12px;cursor:zoom-out';
-    lb.innerHTML = '<img id="lb-img" style="max-width:90vw;max-height:82vh;border-radius:12px;box-shadow:0 0 60px rgba(0,0,0,.8);object-fit:contain"><div id="lb-nombre" style="color:rgba(255,255,255,.7);font-size:13px;font-weight:600;margin-top:4px"></div><button onclick="document.getElementById('img-lightbox').style.display='none'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">✕</button>';
+    lb.innerHTML = `<img id="lb-img" style="max-width:90vw;max-height:82vh;border-radius:12px;box-shadow:0 0 60px rgba(0,0,0,.8);object-fit:contain"><div id="lb-nombre" style="color:rgba(255,255,255,.7);font-size:13px;font-weight:600;margin-top:4px"></div><button onclick="document.getElementById('img-lightbox').style.display='none'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">✕</button>`;
     lb.addEventListener('click', e=>{ if(e.target===lb) lb.style.display='none'; });
     document.body.appendChild(lb);
   }
@@ -2651,43 +2651,52 @@ window.openProdDetail = function(id, p){
   }
   const bajo = (p.stock||0) <= (p.stockMin||5);
   const margen = p.costo&&p.precio ? ((p.precio-p.costo)/p.precio*100).toFixed(1)+'%' : '—';
-  panel.innerHTML = `
-    <div style="padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:15px;font-weight:800">📦 Detalle</div>
-      <button onclick="document.getElementById('prod-detail-panel').style.transform='translateX(100%)'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px">✕</button>
-    </div>
-    ${p.imagen?`<div style="padding:18px 22px 0"><img src="${p.imagen}" style="width:100%;border-radius:10px;object-fit:cover;max-height:180px;cursor:zoom-in" onclick="window.openImgLightbox('${p.imagen}','${esc(p.nombre)}')"></div>`:''}
-    <div style="padding:18px 22px">
-      <div style="font-size:18px;font-weight:900;margin-bottom:4px">${esc(p.nombre)}</div>
-      ${p.referencia?`<div style="font-family:var(--mono);font-size:12px;color:var(--accent2);margin-bottom:12px">${esc(p.referencia)}</div>`:''}
-      ${p.descripcion?`<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.05)">${esc(p.descripcion)}</div>`:''}
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-        <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.15);border-radius:10px;padding:12px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio venta</div>
-          <div style="font-size:18px;font-weight:900;color:var(--green)">${fmtM(p.precio)}</div>
-        </div>
-        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio costo</div>
-          <div style="font-size:18px;font-weight:900">${p.costo?fmtM(p.costo):'—'}</div>
-        </div>
-        <div style="background:rgba(${bajo?'244,63,94':'16,185,129'},.07);border:1px solid rgba(${bajo?'244,63,94':'16,185,129'},.15);border-radius:10px;padding:12px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stock actual</div>
-          <div style="font-size:18px;font-weight:900;color:var(--${bajo?'red':'green'})">${p.stock||0} ${bajo?'⚠️':''}</div>
-        </div>
-        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">
-          <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Margen</div>
-          <div style="font-size:18px;font-weight:900;color:var(--accent2)">${margen}</div>
-        </div>
-      </div>
-      ${p.categoria?`<div style="margin-bottom:8px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Categoría:</span> <span style="font-size:13px">${esc(p.categoria)}</span></div>`:''}
-      ${p.unidad?`<div style="margin-bottom:16px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Unidad:</span> <span style="font-size:13px">${esc(p.unidad)}</span></div>`:''}
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn-action" style="flex:1;justify-content:center;font-size:13px" onclick="document.getElementById('prod-detail-panel').style.transform='translateX(100%)';window.editProducto('${id}')">✏️ Editar</button>
-        <button class="btn-icon danger" style="font-size:13px" onclick="document.getElementById('prod-detail-panel').style.transform='translateX(100%)';window.deleteProducto('${id}','${esc(p.nombre)}')">🗑️</button>
-      </div>
-    </div>`;
+  const colorStock = bajo ? '244,63,94' : '16,185,129';
+  const varStock = bajo ? 'red' : 'green';
+  panel.innerHTML = [
+    '<div style="padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center">',
+      '<div style="font-size:15px;font-weight:800">📦 Detalle</div>',
+      '<button id="pd-close-btn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px">✕</button>',
+    '</div>',
+    p.imagen ? '<div style="padding:18px 22px 0"><img id="pd-img" src="'+p.imagen+'" style="width:100%;border-radius:10px;object-fit:cover;max-height:180px;cursor:zoom-in"></div>' : '',
+    '<div style="padding:18px 22px">',
+      '<div style="font-size:18px;font-weight:900;margin-bottom:4px">'+esc(p.nombre)+'</div>',
+      p.referencia ? '<div style="font-family:var(--mono);font-size:12px;color:var(--accent2);margin-bottom:12px">'+esc(p.referencia)+'</div>' : '',
+      p.descripcion ? '<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.05)">'+esc(p.descripcion)+'</div>' : '',
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">',
+        '<div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.15);border-radius:10px;padding:12px">',
+          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio venta</div>',
+          '<div style="font-size:18px;font-weight:900;color:var(--green)">'+fmtM(p.precio)+'</div>',
+        '</div>',
+        '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">',
+          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Precio costo</div>',
+          '<div style="font-size:18px;font-weight:900">'+(p.costo?fmtM(p.costo):'—')+'</div>',
+        '</div>',
+        '<div style="background:rgba('+colorStock+',.07);border:1px solid rgba('+colorStock+',.15);border-radius:10px;padding:12px">',
+          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stock actual</div>',
+          '<div style="font-size:18px;font-weight:900;color:var(--'+varStock+')">'+(p.stock||0)+(bajo?' ⚠️':'')+'</div>',
+        '</div>',
+        '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px">',
+          '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Margen</div>',
+          '<div style="font-size:18px;font-weight:900;color:var(--accent2)">'+margen+'</div>',
+        '</div>',
+      '</div>',
+      p.categoria ? '<div style="margin-bottom:8px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Categoría:</span> <span style="font-size:13px">'+esc(p.categoria)+'</span></div>' : '',
+      p.unidad ? '<div style="margin-bottom:16px"><span style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700">Unidad:</span> <span style="font-size:13px">'+esc(p.unidad)+'</span></div>' : '',
+      '<div style="display:flex;gap:8px;margin-top:8px">',
+        '<button id="pd-edit-btn" class="btn-action" style="flex:1;justify-content:center;font-size:13px">✏️ Editar</button>',
+        '<button id="pd-del-btn" class="btn-icon danger" style="font-size:13px">🗑️</button>',
+      '</div>',
+    '</div>'
+  ].join('');
+  // Bind events safely (no inline onclick needed)
+  panel.querySelector('#pd-close-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; });
+  if(p.imagen){ panel.querySelector('#pd-img').addEventListener('click', ()=>{ window.openImgLightbox(p.imagen, p.nombre); }); }
+  panel.querySelector('#pd-edit-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; window.editProducto(id); });
+  panel.querySelector('#pd-del-btn').addEventListener('click', ()=>{ panel.style.transform='translateX(100%)'; window.deleteProducto(id, p.nombre); });
   panel.style.transform = 'translateX(0)';
 };
+
 safeOn('prod-search','input',aplicarFiltrosProd);
 safeOn('prod-filter-stock','change',aplicarFiltrosProd);
 safeOn('prod-filter-cat','change',aplicarFiltrosProd);
