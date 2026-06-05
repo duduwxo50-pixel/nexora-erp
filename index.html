@@ -51,49 +51,15 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="light"] .warn-box,[data-theme="combined"] .warn-box{background:rgba(245,158,11,.07);}
 [data-theme="light"] .detail-panel,[data-theme="combined"] .detail-panel{background:#fff;}
 [data-theme="light"] .table-wrap,[data-theme="combined"] .table-wrap{background:#fff;border-radius:var(--radius);border:1px solid var(--border);}
-/* Extra light/combined contrast fixes */
-[data-theme="light"] .report-card,[data-theme="combined"] .report-card{background:#fff;color:var(--text);}
-[data-theme="light"] .pro-stat,[data-theme="combined"] .pro-stat{background:#f1f5f9;color:var(--text);}
-[data-theme="light"] .chart-bar::after,[data-theme="combined"] .chart-bar::after{background:#fff;color:#1e293b;border-color:rgba(0,0,0,.12);}
-[data-theme="light"] .flujo-item,[data-theme="combined"] .flujo-item{background:#fff;color:var(--text);}
-[data-theme="light"] .crm-texto,[data-theme="combined"] .crm-texto{color:var(--text);}
-[data-theme="light"] .crm-add select,[data-theme="light"] .crm-add input,[data-theme="light"] .crm-add textarea,
-[data-theme="combined"] .crm-add select,[data-theme="combined"] .crm-add input,[data-theme="combined"] .crm-add textarea{background:#f1f5f9;color:var(--text);}
-[data-theme="light"] .tarea-add input,[data-theme="combined"] .tarea-add input{background:#f1f5f9;color:var(--text);}
-[data-theme="light"] .toolbar-search,[data-theme="combined"] .toolbar-search{background:#fff;color:var(--text);}
-[data-theme="light"] .toolbar-select,[data-theme="combined"] .toolbar-select{background:#fff;color:var(--text);}
-[data-theme="light"] .import-preview,[data-theme="combined"] .import-preview{background:#f8fafc;color:var(--text);}
-[data-theme="light"] .import-card,[data-theme="combined"] .import-card{background:#fff;color:var(--text);}
-[data-theme="light"] .papelera-tab,[data-theme="combined"] .papelera-tab{background:#f1f5f9;color:var(--text);}
-[data-theme="light"] .toast,[data-theme="combined"] .toast{background:#fff;color:#1e293b;border-color:rgba(0,0,0,.12);}
-[data-theme="light"] .pedido-card,[data-theme="combined"] .pedido-card{color:var(--text);}
-[data-theme="light"] .estado-option,[data-theme="combined"] .estado-option{background:#f8faff;color:var(--text);}
-[data-theme="light"] .modal-content h3,[data-theme="combined"] .modal-content h3,
-[data-theme="light"] .modal-content p,[data-theme="combined"] .modal-content p,
-[data-theme="light"] .modal-content label,[data-theme="combined"] .modal-content label{color:var(--text);}
-[data-theme="light"] .detail-panel-title,[data-theme="combined"] .detail-panel-title{color:var(--text);}
-[data-theme="light"] .dash-card,[data-theme="combined"] .dash-card{color:var(--text);}
-[data-theme="light"] .dash-card-sub,[data-theme="combined"] .dash-card-sub{color:var(--muted);}
-[data-theme="light"] .sug-item,[data-theme="combined"] .sug-item{color:var(--text);}
-[data-theme="light"] .meta-bar-bg,[data-theme="combined"] .meta-bar-bg{background:rgba(0,0,0,.08);}
-[data-theme="light"] .progress-bar,[data-theme="combined"] .progress-bar{background:rgba(0,0,0,.08);}
-[data-theme="light"] .progress-import,[data-theme="combined"] .progress-import{background:rgba(0,0,0,.08);}
-[data-theme="light"] td,[data-theme="combined"] td{color:var(--text);}
-[data-theme="light"] .no-results td,[data-theme="combined"] .no-results td{color:var(--muted);}
-[data-theme="light"] .user-name,[data-theme="combined"] .user-name{color:#fff;}
-[data-theme="light"] .user-biz,[data-theme="combined"] .user-biz{color:rgba(255,255,255,.65);}
-[data-theme="light"] .nav-section,[data-theme="combined"] .nav-section{color:rgba(255,255,255,.45);}
-[data-theme="light"] .sidebar-logo .sub,[data-theme="combined"] .sidebar-logo .sub{color:rgba(255,255,255,.55);}
-[data-theme="light"] .gs-item-title,[data-theme="combined"] .gs-item-title{color:var(--text);}
-[data-theme="light"] #gs-dropdown,[data-theme="combined"] #gs-dropdown{color:var(--text);}
-[data-theme="light"] .fcm-item-row,[data-theme="combined"] .fcm-item-row{color:var(--text);}
-[data-theme="light"] .fcm-item-name,[data-theme="combined"] .fcm-item-name{color:var(--text);}
-
 [data-theme="combined"] .nav-item{color:rgba(255,255,255,.65);}
 [data-theme="combined"] .nav-item:hover,[data-theme="combined"] .nav-item.active{color:#fff;background:rgba(255,255,255,.08);}
 [data-theme="light"] .nav-item{color:rgba(255,255,255,.7);}
 [data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
 .theme-switcher{display:flex;gap:6px;padding:10px 14px;margin-top:4px;}
+/* ─── MULTI-EMPRESA ─── */
+#mod-empresas .emp-card-switch{transition:box-shadow .2s,border-color .2s;}
+#mod-empresas .emp-card-switch:hover{box-shadow:0 4px 24px rgba(37,99,235,.13);border-color:rgba(37,99,235,.3)!important;}
+#empresa-modal .info-box{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 14px;color:var(--muted);}
 .theme-btn{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;text-align:center;}
 .theme-btn:hover{background:rgba(255,255,255,.13);color:#fff;}
 .theme-btn.active{background:rgba(37,99,235,.4);border-color:rgba(56,189,248,.5);color:#fff;}
@@ -101,12 +67,10 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 html{scroll-behavior:smooth;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 input,select,textarea,button{font-family:inherit;}
-select option{background:#0d1828;color:#e8edf5;}
-[data-theme="light"] select option,[data-theme="combined"] select option{background:#fff;color:#0f172a;}
+select option{background:#0d1828;color:var(--text);}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:10px;}
-[data-theme="light"] ::-webkit-scrollbar-thumb,[data-theme="combined"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.18);}
 
 /* ── AUTH ── */
 #auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;
@@ -121,7 +85,7 @@ select option{background:#0d1828;color:#e8edf5;}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .auth-logo span{display:block;font-size:11px;font-weight:500;color:var(--muted);
   -webkit-text-fill-color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
-.auth-card h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:20px 0 18px;color:var(--text);}
+.auth-card h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:20px 0 18px;}
 
 /* ── FORMS ── */
 .form-group{margin-bottom:13px;}
@@ -198,11 +162,6 @@ select option{background:#0d1828;color:#e8edf5;}
 .topbar{position:sticky;top:0;z-index:100;background:rgba(6,9,15,.9);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);padding:0 30px;height:60px;
   display:flex;align-items:center;justify-content:space-between;}
-[data-theme="light"] .topbar,[data-theme="combined"] .topbar{background:rgba(240,244,255,.95);color:var(--text);}
-[data-theme="light"] #mod-title,[data-theme="combined"] #mod-title{color:var(--text);}
-[data-theme="light"] .topbar-biz,[data-theme="combined"] .topbar-biz{color:var(--muted);background:rgba(0,0,0,.05);border-color:var(--border);}
-[data-theme="combined"] .topbar{background:rgba(248,250,255,.95);}
-
 #mod-title{font-size:17px;font-weight:800;letter-spacing:-.4px;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .topbar-biz{font-size:12px;color:var(--muted);background:rgba(255,255,255,0.05);
@@ -384,14 +343,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   backdrop-filter:blur(10px);z-index:1000;overflow-y:auto;padding:28px 16px;align-items:flex-start;justify-content:center;}
 .modal-backdrop.show{display:flex;}
 .modal{background:#0a1526;border:1px solid rgba(255,255,255,0.1);border-radius:20px;
-  width:100%;max-width:660px;animation:slideUp .22s ease;position:relative;color:var(--text);}
-[data-theme="light"] .modal,[data-theme="combined"] .modal{background:#fff;border-color:rgba(0,0,0,.1);color:var(--text);}
-[data-theme="light"] .modal-header,[data-theme="combined"] .modal-header{border-color:var(--border);}
-[data-theme="light"] .modal-close,[data-theme="combined"] .modal-close{background:rgba(0,0,0,.05);border-color:var(--border);color:var(--muted);}
-[data-theme="light"] .modal-tabs,[data-theme="combined"] .modal-tabs{border-color:var(--border);}
-[data-theme="light"] .modal-tab,[data-theme="combined"] .modal-tab{color:var(--muted);border-color:var(--border);}
-[data-theme="light"] .modal-footer,[data-theme="combined"] .modal-footer{border-color:var(--border);}
-
+  width:100%;max-width:660px;animation:slideUp .22s ease;position:relative;}
 .modal-wide{max-width:820px;}
 .modal-xl{max-width:980px;}
 @keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -520,7 +472,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 /* ── DETAIL PANEL (slide-in) ── */
 .detail-panel{position:fixed;top:0;right:-480px;width:460px;height:100vh;
-  background:#08111e;color:var(--text);border-left:1px solid var(--border);z-index:500;
+  background:#08111e;border-left:1px solid var(--border);z-index:500;
   transition:right .3s cubic-bezier(.22,1,.36,1);overflow-y:auto;padding:24px;}
 .detail-panel.open{right:0;}
 .detail-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
@@ -558,6 +510,25 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 [data-theme="light"] #gs-dropdown,[data-theme="combined"] #gs-dropdown{background:#fff;}
 [data-theme="light"] .gs-item:hover,[data-theme="combined"] .gs-item:hover,[data-theme="light"] .gs-item.focused,[data-theme="combined"] .gs-item.focused{background:rgba(37,99,235,.08);}
 @media(max-width:768px){#gs-wrap{display:none;}}
+
+/* ── PRESUPUESTO VS REAL ── */
+.pvr-row{margin-bottom:16px}
+.pvr-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.pvr-cat-name{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px}
+.pvr-amounts{font-size:12px;color:var(--muted);display:flex;gap:12px;align-items:center}
+.pvr-amounts strong{color:var(--text)}
+.pvr-bar-wrap{background:rgba(255,255,255,.06);border-radius:20px;height:10px;overflow:hidden;position:relative}
+.pvr-bar-fill{height:100%;border-radius:20px;transition:width .6s ease}
+.pvr-bar-budget{position:absolute;top:0;bottom:0;border-right:2px dashed rgba(255,255,255,.3);z-index:1}
+.pvr-semaforo{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.pvr-chart-pair{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:32px}
+.pvr-chart-bars{display:flex;gap:2px;align-items:flex-end;height:100%}
+.pvr-bar-p{background:var(--accent);border-radius:4px 4px 0 0;width:12px;transition:height .5s}
+.pvr-bar-r{background:var(--yellow);border-radius:4px 4px 0 0;width:12px;transition:height .5s}
+.pvr-edit-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:5px;transition:color .15s}
+.pvr-edit-btn:hover{color:var(--text)}
+.pvr-del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:5px;transition:color .15s}
+.pvr-del-btn:hover{color:var(--red)}
 
 /* ── DRILL-DOWN MODAL ── */
 .drill-list li{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
@@ -740,12 +711,14 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
     <div class="nav-item" data-module="proveedores"><span class="icon">🚚</span><span>Proveedores</span></div>
     <div class="nav-section">Finanzas</div>
     <div class="nav-item" data-module="contabilidad"><span class="icon">💰</span><span>Contabilidad</span></div>
+    <div class="nav-item" data-module="presupuesto-real"><span class="icon">🎯</span><span>Presupuesto vs Real</span></div>
     <div class="nav-item" data-module="reportes"><span class="icon">📈</span><span>Reportes</span></div>
     <div class="nav-section">Herramientas</div>
     <div class="nav-item" data-module="importar"><span class="icon">📥</span><span>Importar / Exportar</span></div>
     <div class="nav-item" data-module="pedidos"><span class="icon">🛍️</span><span>Pedidos clientes</span><span class="nav-badge pedidos-badge" id="pedidos-badge">0</span></div>
     <div class="nav-section">Sistema</div>
     <div class="nav-item admin-only" data-module="usuarios"><span class="icon">👥</span><span>Usuarios</span></div>
+    <div class="nav-item admin-only" data-module="empresas"><span class="icon">🏢</span><span>Mis Empresas</span><span class="nav-badge" id="empresas-badge" style="display:none"></span></div>
     <div class="nav-item" data-module="papelera"><span class="icon">🗑️</span><span>Papelera</span><span class="nav-badge" id="papelera-badge">0</span></div>
     <div class="sidebar-footer">
       <div class="user-info">
@@ -1197,6 +1170,75 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
         </div>
       </div>
 
+      <!-- PRESUPUESTO VS REAL -->
+      <div id="mod-presupuesto-real">
+        <div class="toolbar" style="flex-wrap:wrap;gap:10px;margin-bottom:20px">
+          <select class="toolbar-select" id="pvr-anio" onchange="cargarPvR()"></select>
+          <select class="toolbar-select" id="pvr-mes" onchange="cargarPvR()">
+            <option value="">Año completo</option>
+            <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+            <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+            <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <button class="btn-action" onclick="openPvrModal()">+ Nueva categoría</button>
+          <button class="btn-action" style="background:linear-gradient(135deg,var(--purple),#6d28d9)" onclick="cargarPvR()">🔄 Actualizar</button>
+        </div>
+        <!-- KPI resumen -->
+        <div class="dash-grid-3" style="margin-bottom:20px" id="pvr-kpis">
+          <div class="report-card" style="border-left:3px solid var(--accent2)">
+            <div class="report-title" style="color:var(--muted);font-size:11px">PRESUPUESTO TOTAL</div>
+            <div style="font-size:28px;font-weight:900;color:var(--accent2)" id="pvr-kpi-presup">$0</div>
+          </div>
+          <div class="report-card" style="border-left:3px solid var(--yellow)">
+            <div class="report-title" style="color:var(--muted);font-size:11px">EJECUTADO REAL</div>
+            <div style="font-size:28px;font-weight:900;color:var(--yellow)" id="pvr-kpi-real">$0</div>
+          </div>
+          <div class="report-card" id="pvr-kpi-card-dif" style="border-left:3px solid var(--green)">
+            <div class="report-title" style="color:var(--muted);font-size:11px">DIFERENCIA</div>
+            <div style="font-size:28px;font-weight:900" id="pvr-kpi-dif">$0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px" id="pvr-kpi-dif-pct">0%</div>
+          </div>
+        </div>
+        <!-- Barra global -->
+        <div class="report-card" style="margin-bottom:20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-weight:700;font-size:14px">📊 Ejecución global del presupuesto</div>
+            <div style="font-size:13px;font-weight:800" id="pvr-global-pct">0%</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:20px;height:14px;overflow:hidden;margin-bottom:6px">
+            <div id="pvr-global-bar" style="height:100%;border-radius:20px;transition:width .7s ease;width:0%;background:linear-gradient(90deg,var(--green),#059669)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+            <span>$0</span><span id="pvr-global-max">$0</span>
+          </div>
+        </div>
+        <!-- Tabla por categorías -->
+        <div class="report-card" style="margin-bottom:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div style="font-weight:700;font-size:14px">🗂️ Por categoría</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--muted)">
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span>En presupuesto</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:var(--yellow);display:inline-block"></span>Cerca del límite</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:var(--red);display:inline-block"></span>Sobregirado</span>
+            </div>
+          </div>
+          <div id="pvr-categorias">
+            <div style="color:var(--muted);text-align:center;padding:30px;font-size:13px">Cargando categorías...</div>
+          </div>
+        </div>
+        <!-- Gráfico mensual (si año completo) -->
+        <div class="report-card" id="pvr-chart-card" style="display:none">
+          <div style="font-weight:700;font-size:14px;margin-bottom:16px">📅 Evolución mensual — Presupuesto vs Real</div>
+          <div id="pvr-chart" style="display:flex;align-items:flex-end;gap:6px;height:120px;overflow-x:auto;padding-bottom:4px"></div>
+          <div id="pvr-chart-labels" style="display:flex;gap:6px;margin-top:6px;font-size:10px;color:var(--muted)"></div>
+          <div style="display:flex;gap:16px;margin-top:10px;font-size:11px">
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--accent);margin-right:4px;vertical-align:middle"></span>Presupuestado</span>
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--yellow);margin-right:4px;vertical-align:middle"></span>Ejecutado real</span>
+          </div>
+        </div>
+      </div>
+
       <!-- REPORTES -->
       <div id="mod-reportes">
         <div class="toolbar">
@@ -1232,6 +1274,27 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
           <tbody id="usuarios-tbody"><tr class="no-results"><td colspan="4">Cargando...</td></tr></tbody></table>
         </div>
         <div class="info-box" style="margin-top:16px">🔑 <strong>Admin</strong>: acceso total. <strong>Vendedor</strong>: solo ve sus cotizaciones, no accede a contabilidad, reportes ni ajustes.</div>
+      </div>
+
+      <!-- EMPRESAS (MULTI-TENANT) -->
+      <div id="mod-empresas" style="display:none">
+        <div class="toolbar">
+          <span style="font-size:13px;color:var(--muted)">Gestiona y cambia entre tus empresas.</span>
+          <button class="btn-action" onclick="window.abrirNuevaEmpresaModal()">+ Nueva empresa</button>
+        </div>
+        <!-- Empresa activa banner -->
+        <div id="emp-activa-banner" style="background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(56,189,248,.08));border:1px solid rgba(37,99,235,.25);border-radius:14px;padding:18px 22px;margin:16px 0;display:flex;align-items:center;gap:14px">
+          <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🏢</div>
+          <div style="flex:1">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);margin-bottom:3px">Empresa activa</div>
+            <div id="emp-activa-nombre" style="font-size:17px;font-weight:900;letter-spacing:-.4px">—</div>
+            <div id="emp-activa-id" style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px">—</div>
+          </div>
+          <span style="background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700">✓ Activa</span>
+        </div>
+        <!-- Lista empresas -->
+        <div id="emp-lista" style="display:grid;gap:12px"></div>
+        <div class="info-box" style="margin-top:18px;font-size:12px">💡 Cada empresa tiene sus propios datos de inventario, clientes, facturas, cotizaciones y contabilidad. Al cambiar de empresa, todos los módulos se recargan con los datos del negocio seleccionado.</div>
       </div>
 
       <!-- PAPELERA -->
@@ -1821,6 +1884,52 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
   </div>
 </div>
 
+<!-- MODAL PRESUPUESTO VS REAL — CATEGORÍA -->
+<div class="modal-backdrop" id="pvr-modal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header"><h3 id="pvr-modal-title">Nueva categoría de presupuesto</h3><button class="modal-close">✕</button></div>
+    <form id="pvr-form">
+      <div class="modal-body">
+        <div class="form-group"><label>Categoría</label>
+          <select id="pvr-categoria" required>
+            <option value="">Seleccionar...</option>
+            <option>Ventas</option><option>Compras</option><option>Nómina</option>
+            <option>Servicios</option><option>Alquiler</option><option>Transporte</option>
+            <option>Marketing</option><option>Impuestos</option><option>Producción</option>
+            <option>Administración</option><option>Tecnología</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Presupuesto ($)</label><input id="pvr-monto" type="number" step="1000" required placeholder="0"></div>
+          <div class="form-group"><label>Tipo</label>
+            <select id="pvr-tipo">
+              <option value="egreso">Gasto / Egreso</option>
+              <option value="ingreso">Ingreso objetivo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Mes</label>
+            <select id="pvr-f-mes">
+              <option value="">Anual</option>
+              <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+              <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+              <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+              <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Año</label><input id="pvr-f-anio" type="number" placeholder="2025" min="2020" max="2099"></div>
+        </div>
+        <div class="form-group"><label>Notas (opcional)</label><textarea id="pvr-notas" rows="2" placeholder="Descripción del presupuesto..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel modal-close">Cancelar</button>
+        <button type="submit" class="btn-save">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- PRESUPUESTO -->
 <div class="modal-backdrop" id="presupuesto-modal">
   <div class="modal">
@@ -1927,6 +2036,33 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
   </div>
 </div>
 
+<!-- MODAL NUEVA EMPRESA -->
+<div class="modal-backdrop" id="empresa-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3 id="empresa-modal-title">🏢 Nueva Empresa</h3>
+      <button class="modal-close" onclick="document.getElementById('empresa-modal').classList.remove('show')">✕</button>
+    </div>
+    <form id="empresa-form">
+      <div class="modal-body">
+        <div class="form-group"><label>Nombre del negocio *</label><input id="emp-nombre" placeholder="Ej: Ferretería El Campeón" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>NIT / RUT</label><input id="emp-nit" placeholder="900.123.456-7"></div>
+          <div class="form-group"><label>Teléfono</label><input id="emp-tel" placeholder="+57 300 000 0000"></div>
+        </div>
+        <div class="form-group"><label>Dirección</label><input id="emp-dir" placeholder="Calle 13 #45-67, Bogotá"></div>
+        <div class="form-group"><label>Sector / Industria</label><input id="emp-sector" placeholder="Ferretería, Construcción, Tecnología..."></div>
+        <div class="form-group"><label>Descripción (opcional)</label><textarea id="emp-desc" rows="2" placeholder="Breve descripción del negocio..."></textarea></div>
+        <div class="info-box" style="font-size:12px;margin-top:4px">💡 Los datos de esta empresa serán completamente independientes de las demás. Puedes cambiar entre empresas en cualquier momento.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="document.getElementById('empresa-modal').classList.remove('show')">Cancelar</button>
+        <button type="submit" class="btn-save" id="emp-submit-btn">🏢 Crear empresa</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="global-toast" class="toast"></div>
 <script type="module">
@@ -2001,7 +2137,7 @@ window.loadModule=async function(mod){
   const el=$(`mod-${mod}`);if(el)el.style.display='block';
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
   document.querySelector(`.nav-item[data-module="${mod}"]`)?.classList.add('active');
-  const titles={dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',contabilidad:'Contabilidad',reportes:'Reportes',papelera:'🗑️ Papelera'};
+  const titles={dashboard:'Dashboard',inventario:'Inventario',cotizaciones:'Cotizaciones',facturas:'Facturas',compras:'Compras',clientes:'Clientes',proveedores:'Proveedores',contabilidad:'Contabilidad','presupuesto-real':'🎯 Presupuesto vs Real',reportes:'Reportes',papelera:'🗑️ Papelera',empresas:'🏢 Mis Empresas',usuarios:'Usuarios'};
   $('mod-title').textContent=titles[mod]||mod;
   if(mod==='dashboard')await cargarDashboard();
   if(mod==='inventario')await cargarInventario();
@@ -2011,6 +2147,7 @@ window.loadModule=async function(mod){
   if(mod==='clientes')await cargarClientes();
   if(mod==='proveedores')await cargarProveedores();
   if(mod==='contabilidad')await cargarContabilidad();
+  if(mod==='presupuesto-real')await cargarPvR();
   if(mod==='reportes')await cargarReportes();
   if(mod==='papelera')await cargarPapelera();
 };
@@ -3357,6 +3494,229 @@ async function cargarContabilidad(){
     </div>`).join('');
 }
 $('cont-periodo').addEventListener('change',cargarContabilidad);
+
+// ══════════════════════════════════════════
+// PRESUPUESTO VS REAL
+// ══════════════════════════════════════════
+let _pvrEditId=null;
+const MESES_LABEL=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+// Inicializar selectores de año
+(function initPvrAnios(){
+  const anioEl=$('pvr-anio');if(!anioEl)return;
+  const hoy=new Date();const base=hoy.getFullYear();
+  for(let y=base+1;y>=base-3;y--){
+    const o=document.createElement('option');o.value=y;o.textContent=y;
+    if(y===base)o.selected=true;
+    anioEl.appendChild(o);
+  }
+  // Preseleccionar mes actual
+  const mesEl=$('pvr-mes');if(mesEl)mesEl.value=String(hoy.getMonth()+1).padStart(2,'0');
+})();
+
+window.cargarPvR=async function(){
+  const anio=parseInt($('pvr-anio').value)||new Date().getFullYear();
+  const mes=$('pvr-mes').value; // '' = año completo, '01'..'12' = mes específico
+  // Carga paralela
+  const [pvrSnap,movSnap,factSnap,compSnap]=await Promise.all([
+    getDocs(col('presupuestos_pvr')),
+    getDocs(col('movimientos')),
+    getDocs(col('facturas')),
+    getDocs(col('compras'))
+  ]);
+  // Filtrar presupuestos PvR por año y mes
+  const presupuestos=pvrSnap.docs
+    .filter(d=>!d.data().eliminado)
+    .map(d=>({id:d.id,...d.data()}))
+    .filter(p=>{
+      if(p.anio&&parseInt(p.anio)!==anio)return false;
+      if(mes&&p.mes&&p.mes!==mes)return false;
+      if(mes&&!p.mes)return true; // anuales siempre incluir
+      if(!mes&&p.mes)return true;
+      return true;
+    });
+  // Construir mapa real por categoría
+  const realPorCat={};
+  const filtrarFecha=(fecha)=>{
+    if(!fecha)return false;
+    if(mes)return fecha.startsWith(`${anio}-${mes}`);
+    return fecha.startsWith(`${anio}`);
+  };
+  // Facturas pagadas → ingreso Ventas
+  factSnap.docs.forEach(d=>{
+    const f=d.data();
+    if(f.eliminado||f.estado!=='Pagada'||!filtrarFecha(f.fecha))return;
+    realPorCat['Ventas']=(realPorCat['Ventas']||0)+(f.total||0);
+  });
+  // Compras
+  compSnap.docs.forEach(d=>{
+    const c=d.data();
+    if(c.eliminado||!filtrarFecha(c.fecha))return;
+    realPorCat['Compras']=(realPorCat['Compras']||0)+(c.total||0);
+  });
+  // Movimientos manuales
+  movSnap.docs.forEach(d=>{
+    const m=d.data();
+    if(m.eliminado||!filtrarFecha(m.fecha))return;
+    const cat=m.categoria||'Otro';
+    realPorCat[cat]=(realPorCat[cat]||0)+(m.monto||0);
+  });
+  // Calcular KPIs globales
+  let totalPresup=0,totalReal=0;
+  presupuestos.forEach(p=>{
+    totalPresup+=p.monto||0;
+    const r=realPorCat[p.categoria]||0;
+    totalReal+=Math.min(r,p.monto*2); // cap visual a 2x
+  });
+  const realAbsoluto=presupuestos.reduce((s,p)=>s+(realPorCat[p.categoria]||0),0);
+  const dif=totalPresup-realAbsoluto;
+  const pct=totalPresup>0?Math.round((realAbsoluto/totalPresup)*100):0;
+  // Render KPIs
+  $('pvr-kpi-presup').textContent=fmtM(totalPresup);
+  $('pvr-kpi-real').textContent=fmtM(realAbsoluto);
+  $('pvr-kpi-dif').textContent=(dif>=0?'+ ':'-')+fmtM(Math.abs(dif));
+  $('pvr-kpi-dif').style.color=dif>=0?'var(--green)':'var(--red)';
+  $('pvr-kpi-dif-pct').textContent=pct+'% ejecutado';
+  $('pvr-kpi-card-dif').style.borderLeftColor=dif>=0?'var(--green)':'var(--red)';
+  // Barra global
+  const pctCapped=Math.min(pct,100);
+  $('pvr-global-bar').style.width=pctCapped+'%';
+  $('pvr-global-bar').style.background=pct>100?'linear-gradient(90deg,var(--red),#be123c)':pct>85?'linear-gradient(90deg,var(--yellow),#d97706)':'linear-gradient(90deg,var(--green),#059669)';
+  $('pvr-global-pct').textContent=pct+'%';
+  $('pvr-global-max').textContent=fmtM(totalPresup);
+  // Render categorías
+  const catEl=$('pvr-categorias');
+  if(!presupuestos.length){
+    catEl.innerHTML=`<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px">
+      Sin categorías presupuestadas. Haz clic en <strong>"+ Nueva categoría"</strong> para empezar.
+    </div>`;
+  }else{
+    catEl.innerHTML=presupuestos.map(p=>{
+      const real=realPorCat[p.categoria]||0;
+      const pres=p.monto||1;
+      const pctCat=Math.min(Math.round((real/pres)*100),200);
+      const pctBar=Math.min(pctCat,100);
+      let color='var(--green)';
+      if(pctCat>100)color='var(--red)';
+      else if(pctCat>80)color='var(--yellow)';
+      const semColor=color;
+      const esTipo=p.tipo==='ingreso';
+      const tipoIcon=esTipo?'📈':'📉';
+      return `<div class="pvr-row">
+        <div class="pvr-row-header">
+          <span class="pvr-cat-name">
+            <span class="pvr-semaforo" style="background:${semColor}"></span>
+            ${tipoIcon} ${esc(p.categoria)}
+            ${p.mes?`<span style="font-size:10px;color:var(--muted);font-weight:500">${MESES_LABEL[parseInt(p.mes)]||''} ${p.anio||anio}</span>`:`<span style="font-size:10px;color:var(--muted);font-weight:500">Anual ${p.anio||anio}</span>`}
+          </span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="pvr-amounts">
+              Real: <strong style="color:${color}">${fmtM(real)}</strong> /
+              Presup: <strong>${fmtM(pres)}</strong>
+              <span style="font-size:11px;font-weight:800;color:${color}">${pctCat}%</span>
+            </span>
+            <button class="pvr-edit-btn" onclick="window.editPvr('${p.id}')" title="Editar">✏️</button>
+            <button class="pvr-del-btn" onclick="window.deletePvr('${p.id}','${esc(p.categoria)}')" title="Eliminar">🗑️</button>
+          </div>
+        </div>
+        <div class="pvr-bar-wrap">
+          <div class="pvr-bar-fill" style="width:${pctBar}%;background:${color}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px">
+          <span>${pctCat>100?`⚠️ Sobregirado en ${fmtM(real-pres)}`:pctCat>80?`⚡ Cerca del límite — quedan ${fmtM(pres-real)}`:`✅ Disponible: ${fmtM(pres-real)}`}</span>
+          <span>${p.notas?esc(p.notas):''}</span>
+        </div>
+      </div>`;
+    }).join('<div style="height:1px;background:var(--border);margin:4px 0"></div>');
+  }
+  // Gráfico mensual si año completo
+  const chartCard=$('pvr-chart-card');
+  if(!mes&&presupuestos.length>0){
+    chartCard.style.display='block';
+    // Calcular real por mes para el año
+    const realMes=Array(13).fill(0);
+    const presMes=Array(13).fill(0);
+    // Presupuesto: distribuir anuales entre 12 meses
+    presupuestos.forEach(p=>{
+      if(p.mes)presMes[parseInt(p.mes)]+=p.monto||0;
+      else for(let m=1;m<=12;m++)presMes[m]+=(p.monto||0)/12;
+    });
+    // Real por mes
+    factSnap.docs.forEach(d=>{const f=d.data();if(f.eliminado||f.estado!=='Pagada'||!f.fecha?.startsWith(anio+''))return;const m=parseInt(f.fecha.slice(5,7));if(m>=1&&m<=12)realMes[m]+=f.total||0;});
+    compSnap.docs.forEach(d=>{const c=d.data();if(c.eliminado||!c.fecha?.startsWith(anio+''))return;const m=parseInt(c.fecha.slice(5,7));if(m>=1&&m<=12)realMes[m]+=c.total||0;});
+    movSnap.docs.forEach(d=>{const mv=d.data();if(mv.eliminado||!mv.fecha?.startsWith(anio+''))return;const m=parseInt(mv.fecha.slice(5,7));if(m>=1&&m<=12)realMes[m]+=mv.monto||0;});
+    const maxVal=Math.max(...presMes.slice(1),...realMes.slice(1),1);
+    const H=100;
+    const chartEl=$('pvr-chart');const labEl=$('pvr-chart-labels');
+    chartEl.innerHTML='';labEl.innerHTML='';
+    for(let m=1;m<=12;m++){
+      const hp=Math.max(4,Math.round((presMes[m]/maxVal)*H));
+      const hr=Math.max(4,Math.round((realMes[m]/maxVal)*H));
+      const rColor=realMes[m]>presMes[m]*1.05?'var(--red)':realMes[m]>presMes[m]*0.85?'var(--yellow)':'var(--green)';
+      chartEl.innerHTML+=`<div class="pvr-chart-pair" title="${MESES_LABEL[m]}: Presup ${fmtM(presMes[m])} | Real ${fmtM(realMes[m])}">
+        <div class="pvr-chart-bars">
+          <div class="pvr-bar-p" style="height:${hp}px" title="Presupuesto: ${fmtM(presMes[m])}"></div>
+          <div class="pvr-bar-r" style="height:${hr}px;background:${rColor}" title="Real: ${fmtM(realMes[m])}"></div>
+        </div>
+      </div>`;
+      labEl.innerHTML+=`<div style="flex:1;text-align:center;font-size:10px;color:var(--muted)">${MESES_LABEL[m]}</div>`;
+    }
+  }else{
+    chartCard.style.display='none';
+  }
+};
+
+window.openPvrModal=function(id=null){
+  _pvrEditId=id;
+  $('pvr-form').reset();
+  $('pvr-modal-title').textContent=id?'Editar categoría':'Nueva categoría de presupuesto';
+  const hoy=new Date();
+  $('pvr-f-anio').value=$('pvr-anio').value||hoy.getFullYear();
+  $('pvr-f-mes').value=$('pvr-mes').value||'';
+  $('pvr-modal').classList.add('show');
+};
+
+window.editPvr=async function(id){
+  const d=await getDoc(tdoc('presupuestos_pvr',id));
+  if(!d.exists())return;
+  const p=d.data();
+  _pvrEditId=id;
+  $('pvr-modal-title').textContent='Editar categoría';
+  $('pvr-categoria').value=p.categoria||'';
+  $('pvr-monto').value=p.monto||0;
+  $('pvr-tipo').value=p.tipo||'egreso';
+  $('pvr-f-mes').value=p.mes||'';
+  $('pvr-f-anio').value=p.anio||new Date().getFullYear();
+  $('pvr-notas').value=p.notas||'';
+  $('pvr-modal').classList.add('show');
+};
+
+window.deletePvr=async function(id,cat){
+  if(!confirm(`¿Eliminar presupuesto de "${cat}"?`))return;
+  await updateDoc(tdoc('presupuestos_pvr',id),{eliminado:true});
+  toast('Categoría eliminada');
+  cargarPvR();
+};
+
+$('pvr-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data={
+    categoria:$('pvr-categoria').value,
+    monto:parseFloat($('pvr-monto').value)||0,
+    tipo:$('pvr-tipo').value,
+    mes:$('pvr-f-mes').value||'',
+    anio:$('pvr-f-anio').value||String(new Date().getFullYear()),
+    notas:$('pvr-notas').value,
+    eliminado:false,
+    updatedAt:serverTimestamp()
+  };
+  if(_pvrEditId)await updateDoc(tdoc('presupuestos_pvr',_pvrEditId),data);
+  else{data.createdAt=serverTimestamp();await addDoc(col('presupuestos_pvr'),data);}
+  $('pvr-modal').classList.remove('show');
+  toast('Presupuesto guardado ✅');
+  _pvrEditId=null;
+  cargarPvR();
+});
 
 // ══════════ DASHBOARD ══════════
 async function cargarDashboard(){
@@ -5618,6 +5978,262 @@ window.getPDFHeader = function(bizName, cfg, subtitulo) {
     </div>
   </div>`;
 };
+
+// ════════════════════════════════════════════════════════
+// MÓDULO MULTI-EMPRESA
+// ════════════════════════════════════════════════════════
+
+// Extender loadModule para cargar empresas
+const _origLoadModuleEmpresas = window.loadModule;
+window.loadModule = function(mod) {
+  _origLoadModuleEmpresas.apply(this, arguments);
+  if(mod === 'empresas') cargarModuloEmpresas();
+};
+
+// Extender el array de títulos del nav
+const _origLoadModuleTitles = window.loadModule;
+window.loadModule = function(mod) {
+  _origLoadModuleTitles.apply(this, arguments);
+  if(mod === 'empresas') {
+    const el = document.getElementById('mod-title');
+    if(el) el.textContent = '🏢 Mis Empresas';
+  }
+};
+
+async function cargarModuloEmpresas() {
+  // Mostrar empresa activa
+  const activaNombre = document.getElementById('emp-activa-nombre');
+  const activaId = document.getElementById('emp-activa-id');
+  if(activaNombre) activaNombre.textContent = document.querySelector('.biz-el')?.textContent || '—';
+  if(activaId) activaId.textContent = 'ID: ' + (currentTenant || '—');
+
+  const lista = document.getElementById('emp-lista');
+  if(!lista) return;
+  lista.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">⏳ Cargando empresas...</div>';
+
+  try {
+    // Buscar todas las empresas donde el usuario es owner o tiene acceso
+    const [ownerSnap, userDoc] = await Promise.all([
+      getDocs(query(collection(db, 'businesses'), where('ownerUid', '==', currentUser.uid))),
+      getDoc(doc(db, 'users', currentUser.uid))
+    ]);
+
+    // Recolectar IDs únicos de empresas con acceso
+    const businessIds = new Set();
+    ownerSnap.docs.forEach(d => businessIds.add(d.id));
+
+    // También revisar memberships (empresas donde fue invitado)
+    const memberSnap = await getDocs(query(
+      collection(db, 'business_members'),
+      where('uid', '==', currentUser.uid)
+    ));
+    memberSnap.docs.forEach(d => businessIds.add(d.data().businessId));
+
+    if(businessIds.size === 0) {
+      lista.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">No tienes empresas registradas.</div>';
+      return;
+    }
+
+    // Cargar datos de cada empresa
+    const empresas = [];
+    for(const bid of businessIds) {
+      const bDoc = await getDoc(doc(db, 'businesses', bid));
+      if(bDoc.exists()) empresas.push({ id: bid, ...bDoc.data() });
+    }
+
+    // Renderizar tarjetas
+    lista.innerHTML = empresas.map(emp => {
+      const esActiva = emp.id === currentTenant;
+      const inicial = (emp.name || 'N')[0].toUpperCase();
+      const esOwner = emp.ownerUid === currentUser.uid;
+      return `<div style="background:var(--card);border:1px solid ${esActiva ? 'rgba(37,99,235,.4)' : 'var(--border)'};border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;transition:all .2s;${esActiva ? 'box-shadow:0 0 0 2px rgba(37,99,235,.15)' : ''}">
+        <div style="width:44px;height:44px;border-radius:11px;background:${esActiva ? 'linear-gradient(135deg,var(--accent),var(--accent2))' : 'rgba(255,255,255,.07)'};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0">${inicial}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15px;font-weight:800;margin-bottom:2px">${esc(emp.name || '—')}</div>
+          <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">ID: ${emp.id.slice(0,12)}...</div>
+          ${emp.sector ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(emp.sector)}</div>` : ''}
+          <div style="font-size:10px;margin-top:4px;color:var(--muted)">${esOwner ? '👑 Propietario' : '👤 Colaborador'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+          ${esActiva
+            ? `<span style="background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700">✓ Activa</span>`
+            : `<button class="btn-action" style="padding:7px 16px;font-size:12px" onclick="window.cambiarEmpresa('${emp.id}','${esc(emp.name)}')">↩ Cambiar</button>`
+          }
+          ${esOwner && !esActiva ? `<button class="btn-icon danger" onclick="window.eliminarEmpresa('${emp.id}','${esc(emp.name)}')">🗑️ Eliminar</button>` : ''}
+          ${esOwner ? `<button class="btn-icon" onclick="window.editarNombreEmpresa('${emp.id}','${esc(emp.name)}')">✏️ Editar</button>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    // Actualizar badge
+    const badge = document.getElementById('empresas-badge');
+    if(badge) {
+      badge.textContent = empresas.length;
+      badge.style.display = empresas.length > 1 ? 'flex' : 'none';
+    }
+
+  } catch(e) {
+    console.error('Error cargando empresas:', e);
+    lista.innerHTML = '<div style="color:var(--red);text-align:center;padding:30px">Error cargando empresas. Verifica tu conexión.</div>';
+  }
+}
+
+window.cambiarEmpresa = async function(newTenantId, nombre) {
+  if(!confirm(`¿Cambiar a "${nombre}"?\n\nTodos los módulos se recargarán con los datos de esta empresa.`)) return;
+
+  // Mostrar loading
+  toast('⏳ Cambiando a ' + nombre + '...', 'info');
+
+  try {
+    // Actualizar businessId activo del usuario en Firestore
+    await updateDoc(doc(db, 'users', currentUser.uid), { businessId: newTenantId });
+
+    // Actualizar variables globales
+    currentTenant = newTenantId;
+    window._currentTenant = newTenantId;
+    window._currentTenantId = newTenantId;
+
+    // Actualizar nombre en UI
+    const biz = await getDoc(doc(db, 'businesses', newTenantId));
+    const bizName = biz.exists() ? biz.data().name : nombre;
+    document.querySelectorAll('.biz-el').forEach(el => el.textContent = bizName);
+
+    // Limpiar caches
+    window.allProdsCache = [];
+    window.allClientsCache = [];
+    window._factDocsCache = [];
+    window._cotDocsCache = [];
+    window._gsLoaded = false;
+
+    // Recargar módulo activo
+    toast('✅ Empresa cambiada a: ' + bizName);
+    setTimeout(() => {
+      window.loadModule('dashboard');
+      cargarModuloEmpresas();
+    }, 400);
+
+  } catch(e) {
+    console.error(e);
+    toast('Error al cambiar de empresa: ' + e.message, 'error');
+  }
+};
+
+window.abrirNuevaEmpresaModal = function() {
+  document.getElementById('empresa-form').reset();
+  document.getElementById('empresa-modal-title').textContent = '🏢 Nueva Empresa';
+  document.getElementById('emp-submit-btn').textContent = '🏢 Crear empresa';
+  window._editingEmpresaId = null;
+  document.getElementById('empresa-modal').classList.add('show');
+};
+
+window.editarNombreEmpresa = async function(bizId, nombre) {
+  document.getElementById('emp-nombre').value = nombre;
+  document.getElementById('empresa-modal-title').textContent = '✏️ Editar Empresa';
+  document.getElementById('emp-submit-btn').textContent = '💾 Guardar cambios';
+  window._editingEmpresaId = bizId;
+  // Cargar datos adicionales
+  try {
+    const bDoc = await getDoc(doc(db, 'businesses', bizId));
+    if(bDoc.exists()) {
+      const d = bDoc.data();
+      const set = (id, v) => { const el = document.getElementById(id); if(el) el.value = v || ''; };
+      set('emp-nit', d.nit); set('emp-tel', d.tel); set('emp-dir', d.dir);
+      set('emp-sector', d.sector); set('emp-desc', d.descripcion);
+    }
+  } catch(e) {}
+  document.getElementById('empresa-modal').classList.add('show');
+};
+
+document.getElementById('empresa-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const nombre = document.getElementById('emp-nombre').value.trim();
+  if(!nombre) { toast('El nombre es requerido', 'error'); return; }
+
+  const btn = document.getElementById('emp-submit-btn');
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  try {
+    const data = {
+      name: nombre,
+      nit: document.getElementById('emp-nit').value.trim(),
+      tel: document.getElementById('emp-tel').value.trim(),
+      dir: document.getElementById('emp-dir').value.trim(),
+      sector: document.getElementById('emp-sector').value.trim(),
+      descripcion: document.getElementById('emp-desc').value.trim(),
+      updatedAt: serverTimestamp()
+    };
+
+    if(window._editingEmpresaId) {
+      // Editar empresa existente
+      await updateDoc(doc(db, 'businesses', window._editingEmpresaId), data);
+      // Si es la empresa activa, actualizar el nombre en la UI
+      if(window._editingEmpresaId === currentTenant) {
+        document.querySelectorAll('.biz-el').forEach(el => el.textContent = nombre);
+      }
+      toast('✅ Empresa actualizada');
+    } else {
+      // Crear nueva empresa
+      data.ownerUid = currentUser.uid;
+      data.createdAt = serverTimestamp();
+      const newBizRef = doc(collection(db, 'businesses'));
+      await setDoc(newBizRef, data);
+      toast('✅ Empresa "' + nombre + '" creada exitosamente');
+
+      // Preguntar si quiere cambiar a ella
+      setTimeout(async () => {
+        if(confirm(`✅ Empresa "${nombre}" creada.\n\n¿Cambiar a esta empresa ahora?`)) {
+          await window.cambiarEmpresa(newBizRef.id, nombre);
+          return;
+        }
+        cargarModuloEmpresas();
+      }, 300);
+    }
+
+    document.getElementById('empresa-modal').classList.remove('show');
+    cargarModuloEmpresas();
+  } catch(err) {
+    console.error(err);
+    toast('Error: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = window._editingEmpresaId ? '💾 Guardar cambios' : '🏢 Crear empresa';
+  }
+});
+
+window.eliminarEmpresa = async function(bizId, nombre) {
+  if(bizId === currentTenant) {
+    toast('No puedes eliminar la empresa activa. Cambia primero a otra.', 'error');
+    return;
+  }
+  if(!confirm(`⚠️ ¿Eliminar la empresa "${nombre}"?\n\nSe eliminarán TODOS sus datos permanentemente.\nEsta acción no se puede deshacer.`)) return;
+  if(!confirm(`⚠️ CONFIRMACIÓN FINAL\n\n¿Seguro que deseas eliminar "${nombre}" y todos sus datos?`)) return;
+
+  toast('⏳ Eliminando empresa...', 'info');
+  try {
+    // Eliminar datos de todas las colecciones de esa empresa
+    const colecciones = ['productos','clientes','proveedores','cotizaciones','facturas','compras','contabilidad','crm','ajustes_inventario','pedidos'];
+    for(const c of colecciones) {
+      const snap = await getDocs(collection(db, 'businesses', bizId, c));
+      const batch = [];
+      snap.docs.forEach(d => batch.push(deleteDoc(d.ref)));
+      await Promise.all(batch);
+    }
+    // Eliminar documento de la empresa
+    await deleteDoc(doc(db, 'businesses', bizId));
+    toast('✅ Empresa eliminada');
+    cargarModuloEmpresas();
+  } catch(err) {
+    console.error(err);
+    toast('Error al eliminar: ' + err.message, 'error');
+  }
+};
+
+// Agregar selector rápido de empresa en el topbar al hacer clic en el nombre del negocio
+document.querySelectorAll('.topbar-biz').forEach(el => {
+  el.style.cursor = 'pointer';
+  el.title = 'Cambiar empresa';
+  el.addEventListener('click', () => window.loadModule('empresas'));
+});
 
 // Parchar imprimirFactura para usar logo y datos empresa
 const _origImprimirFacturaF5 = window.imprimirFactura;
