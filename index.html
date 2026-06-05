@@ -699,23 +699,48 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
 </script>
 <!-- AUTH -->
 <div id="auth-screen">
-  <div class="auth-card">
-    <div class="auth-logo">NEXORA ERP<span>Sistema de gestión v3</span></div>
+  <div class="auth-card" style="min-width:340px;max-width:400px;width:100%">
+    <div class="auth-logo">NEXORA ERP<span>Acceso al sistema</span></div>
     <div id="login-form">
       <h2>Iniciar sesión</h2>
-      <div class="form-group"><label>Email</label><input id="login-email" type="email" placeholder="tu@empresa.com" autocomplete="email"></div>
+      <div class="form-group"><label>Usuario</label><input id="login-username" type="text" placeholder="ej: vendedor1" autocomplete="username" style="text-transform:lowercase"></div>
       <div class="form-group"><label>Contraseña</label><input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
-      <button id="btn-login" class="btn-primary">Entrar →</button>
-      <p class="auth-link">¿Sin cuenta? <a href="#" id="link-to-register">Crear negocio</a></p>
+      <button id="btn-login" class="btn-primary" style="margin-top:8px">Entrar →</button>
+      <div id="login-error" style="display:none;margin-top:12px;padding:10px 14px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:8px;color:#f87171;font-size:13px;text-align:center"></div>
     </div>
-    <div id="register-form" style="display:none">
-      <h2>Crear cuenta</h2>
-      <div class="form-group"><label>Tu nombre</label><input id="reg-name" type="text" placeholder="Juan García"></div>
-      <div class="form-group"><label>Nombre del negocio</label><input id="reg-biz" type="text" placeholder="Distribuidora El Campeón"></div>
-      <div class="form-group"><label>Email</label><input id="reg-email" type="email" placeholder="tu@empresa.com"></div>
-      <div class="form-group"><label>Contraseña</label><input id="reg-pass" type="password" placeholder="••••••••"></div>
-      <button id="btn-register" class="btn-primary">Crear cuenta →</button>
-      <p class="auth-link">¿Ya tienes cuenta? <a href="#" id="link-to-login">Iniciar sesión</a></p>
+  </div>
+</div>
+
+<!-- SUPER ADMIN PANEL (oculto, solo accesible por URL especial) -->
+<div id="superadmin-screen" style="display:none;min-height:100vh;background:#0a0f1a;padding:32px 16px">
+  <div style="max-width:900px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#10b981;letter-spacing:-1px">⚙️ Super Admin</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px">Panel de control — Nexora ERP</div>
+      </div>
+      <button onclick="document.getElementById('superadmin-screen').style.display='none';document.getElementById('auth-screen').style.display='flex'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px">← Salir</button>
+    </div>
+    <!-- Empresas -->
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;margin-bottom:24px">
+      <div style="font-size:15px;font-weight:700;color:#e8edf5;margin-bottom:16px">🏢 Empresas / Sedes</div>
+      <div id="sa-empresas-list" style="margin-bottom:16px"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input id="sa-new-biz" type="text" placeholder="Nombre de la empresa" style="flex:1;min-width:180px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:9px 14px;border-radius:8px;font-size:13px">
+        <button onclick="window.saCrearEmpresa()" style="background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px">+ Crear empresa</button>
+      </div>
+    </div>
+    <!-- Usuarios -->
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px">
+      <div style="font-size:15px;font-weight:700;color:#e8edf5;margin-bottom:16px">👤 Usuarios</div>
+      <div id="sa-users-list" style="margin-bottom:16px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;flex-wrap:wrap" id="sa-new-user-form">
+        <div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">USUARIO</label><input id="sa-new-username" type="text" placeholder="ej: juan123" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box"></div>
+        <div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">CONTRASEÑA</label><input id="sa-new-userpass" type="text" placeholder="ej: 1234" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box"></div>
+        <div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">ROL</label><select id="sa-new-userrole" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box"><option value="administrador">Administrador</option><option value="supervisor">Supervisor</option><option value="comercial">Comercial</option><option value="cajero">Cajero</option><option value="jefe_inventario">Jefe Inventario</option></select></div>
+        <div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">EMPRESA</label><select id="sa-new-userbiz" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8edf5;padding:9px 12px;border-radius:8px;font-size:13px;box-sizing:border-box"></select></div>
+        <button onclick="window.saCrearUsuario()" style="background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap">+ Crear</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2196,43 +2221,223 @@ window._nexoraConfirm = function(msg) {
 
 window.sortTable=function(tbId,col){const tb=$(tbId);const rows=Array.from(tb.querySelectorAll('tr'));let asc=tb.dataset.sortCol==col&&tb.dataset.sortDir=='asc'?false:true;tb.dataset.sortCol=col;tb.dataset.sortDir=asc?'asc':'desc';rows.sort((a,b)=>{const av=a.cells[col]?.textContent.replace(/[$,.]/g,'').trim()||'';const bv=b.cells[col]?.textContent.replace(/[$,.]/g,'').trim()||'';const an=parseFloat(av),bn=parseFloat(bv);if(!isNaN(an)&&!isNaN(bn))return asc?an-bn:bn-an;return asc?av.localeCompare(bv,'es'):bv.localeCompare(av,'es');});rows.forEach(r=>tb.appendChild(r));};
 
-// ── AUTH ──
+// ── AUTH — Login por usuario/contraseña ──
 onAuthStateChanged(auth,async user=>{
-  // Si es modo portal del cliente — ignorar completamente la autenticación del ERP
   if(window._IS_PORTAL) return;
   if(user){
+    // Usuario de Firebase Auth (Super Admin interno)
     currentUser=user;
     let ud=await getDoc(doc(db,'users',user.uid));
     if(!ud.exists()||!ud.data().businessId){
       const br=doc(collection(db,'businesses'));
       await setDoc(br,{name:'Mi Negocio',ownerUid:user.uid,createdAt:serverTimestamp()});
-      await setDoc(doc(db,'users',user.uid),{email:user.email,name:user.displayName||user.email.split('@')[0],businessId:br.id},{merge:true});
+      await setDoc(doc(db,'users',user.uid),{email:user.email,name:user.displayName||user.email.split('@')[0],businessId:br.id,role:'superadmin'},{merge:true});
       ud=await getDoc(doc(db,'users',user.uid));
     }
     currentTenant=ud.data().businessId;
     window._currentTenant=currentTenant;
     window._currentTenantId=currentTenant;
+    window._currentRole=ud.data().role||'administrador';
     const biz=await getDoc(doc(db,'businesses',currentTenant));
     document.querySelectorAll('.biz-el').forEach(el=>el.textContent=biz.exists()?biz.data().name:'Mi Negocio');
-    $('user-name').textContent=user.displayName||user.email.split('@')[0];
-    $('user-avatar').textContent=(user.displayName||user.email)[0].toUpperCase();
+    $('user-name').textContent=ud.data().name||user.email.split('@')[0];
+    $('user-avatar').textContent=(ud.data().name||user.email)[0].toUpperCase();
     $('auth-screen').style.display='none';
     $('app-screen').style.display='flex';
+    window.aplicarPermisos(window._currentRole);
     window.loadModule('dashboard');
     actualizarBadgePapelera();
   } else {
-    // Solo mostrar login si NO es portal del cliente
-    if(!window._IS_PORTAL){
+    if(!window._IS_PORTAL && !window._customLoggedIn){
       $('auth-screen').style.display='flex';
       $('app-screen').style.display='none';
     }
   }
 });
-$('btn-login').addEventListener('click',async()=>{try{await signInWithEmailAndPassword(auth,$('login-email').value,$('login-pass').value);}catch(e){toast('Error: '+e.message,'error');}});
-$('btn-register').addEventListener('click',async()=>{try{const cr=await createUserWithEmailAndPassword(auth,$('reg-email').value,$('reg-pass').value);await updateProfile(cr.user,{displayName:$('reg-name').value});const br=doc(collection(db,'businesses'));await setDoc(br,{name:$('reg-biz').value,ownerUid:cr.user.uid,createdAt:serverTimestamp()});await setDoc(doc(db,'users',cr.user.uid),{businessId:br.id,email:$('reg-email').value,name:$('reg-name').value});toast('Cuenta creada ✅');}catch(e){toast(e.message,'error');}});
-$('btn-logout').addEventListener('click',()=>signOut(auth));
-$('link-to-register').addEventListener('click',e=>{e.preventDefault();$('login-form').style.display='none';$('register-form').style.display='block';});
-$('link-to-login').addEventListener('click',e=>{e.preventDefault();$('register-form').style.display='none';$('login-form').style.display='block';});
+
+// Login por usuario personalizado (sin email real)
+window._customLoggedIn = false;
+$('btn-login').addEventListener('click', async()=>{
+  const username = ($('login-username').value||'').trim().toLowerCase();
+  const pass = ($('login-pass').value||'').trim();
+  const errEl = $('login-error');
+  errEl.style.display='none';
+  if(!username||!pass){ errEl.textContent='Ingresa usuario y contraseña'; errEl.style.display='block'; return; }
+  try{
+    // Buscar usuario en colección global 'userAccounts'
+    const snap2 = await getDocs(query(collection(db,'userAccounts'), where('username','==',username)));
+    if(snap2.empty){ errEl.textContent='Usuario no encontrado'; errEl.style.display='block'; return; }
+    const userData = snap2.docs[0].data();
+    if(userData.password !== pass){ errEl.textContent='Contraseña incorrecta'; errEl.style.display='block'; return; }
+    if(!userData.activo){ errEl.textContent='Usuario desactivado. Contacta al administrador.'; errEl.style.display='block'; return; }
+    // Login exitoso
+    window._customLoggedIn = true;
+    window._currentRole = userData.role||'comercial';
+    currentTenant = userData.businessId;
+    window._currentTenant = currentTenant;
+    window._currentTenantId = currentTenant;
+    const biz = await getDoc(doc(db,'businesses',currentTenant));
+    document.querySelectorAll('.biz-el').forEach(el=>el.textContent=biz.exists()?biz.data().name:'Mi Negocio');
+    $('user-name').textContent = userData.nombre||username;
+    $('user-avatar').textContent = (userData.nombre||username)[0].toUpperCase();
+    const roleLabel = {administrador:'Administrador',supervisor:'Supervisor',comercial:'Comercial',cajero:'Cajero',jefe_inventario:'Jefe Inventario',superadmin:'Super Admin'}[window._currentRole]||window._currentRole;
+    // Mostrar rol debajo del nombre
+    const roleEl = document.createElement('div');
+    roleEl.style.cssText='font-size:10px;color:#10b981;font-weight:700;margin-top:1px';
+    roleEl.textContent = roleLabel;
+    const userNameEl = $('user-name');
+    if(userNameEl.parentNode && !userNameEl.parentNode.querySelector('.role-label')){
+      roleEl.classList.add('role-label');
+      userNameEl.parentNode.appendChild(roleEl);
+    }
+    $('auth-screen').style.display='none';
+    $('app-screen').style.display='flex';
+    window.aplicarPermisos(window._currentRole);
+    window.loadModule('dashboard');
+    actualizarBadgePapelera();
+  }catch(e){ errEl.textContent='Error: '+e.message; errEl.style.display='block'; }
+});
+
+// Enter en campos de login
+['login-username','login-pass'].forEach(id=>{
+  $(id).addEventListener('keydown',e=>{ if(e.key==='Enter') $('btn-login').click(); });
+});
+
+$('btn-logout').addEventListener('click',()=>{
+  window._customLoggedIn=false;
+  window._currentRole=null;
+  currentTenant=null;
+  window._currentTenant=null;
+  $('login-username').value='';
+  $('login-pass').value='';
+  $('app-screen').style.display='none';
+  $('auth-screen').style.display='flex';
+  signOut(auth).catch(()=>{});
+});
+
+// ── PERMISOS POR ROL ──
+const ROLE_MODULES = {
+  superadmin:    ['dashboard','inventario','cotizaciones','facturas','compras','clientes','proveedores','contabilidad','presupuesto-real','reportes','importar','pedidos','usuarios','empresas','papelera'],
+  administrador: ['dashboard','cotizaciones','facturas','clientes','inventario','compras','contabilidad','pedidos','papelera'],
+  supervisor:    ['dashboard','inventario','compras','contabilidad','pedidos','papelera'],
+  comercial:     ['dashboard','cotizaciones','clientes','compras','pedidos'],
+  cajero:        ['dashboard','facturas','contabilidad','inventario','pedidos'],
+  jefe_inventario:['dashboard','inventario','pedidos'],
+};
+
+window.aplicarPermisos = function(role){
+  const allowed = ROLE_MODULES[role] || ROLE_MODULES['comercial'];
+  // Ocultar/mostrar nav items
+  document.querySelectorAll('.nav-item[data-module]').forEach(el=>{
+    const mod = el.dataset.module;
+    el.style.display = allowed.includes(mod) ? '' : 'none';
+  });
+  // Ocultar items admin-only si no es superadmin
+  document.querySelectorAll('.admin-only').forEach(el=>{
+    el.style.display = (role==='superadmin') ? '' : 'none';
+  });
+};
+
+// ── SUPER ADMIN — acceso por ?superadmin=1 con contraseña ──
+if(new URLSearchParams(location.search).get('superadmin')==='1'){
+  const clave = prompt('🔐 Contraseña de Super Admin:');
+  // Contraseña maestra — cámbiala aquí
+  const SUPER_PASS = 'nexora2024admin';
+  if(clave === SUPER_PASS){
+    $('auth-screen').style.display='none';
+    $('superadmin-screen').style.display='block';
+    window.saCargarDatos();
+  } else {
+    alert('Contraseña incorrecta.');
+    // Redirigir al login normal
+    history.replaceState(null,'',location.pathname);
+  }
+}
+
+// ── SUPER ADMIN FUNCIONES ──
+window.saCargarDatos = async function(){
+  // Cargar empresas
+  const bizSnap = await getDocs(collection(db,'businesses'));
+  const bizList = $('sa-empresas-list');
+  const bizSelect = $('sa-new-userbiz');
+  bizList.innerHTML='';
+  bizSelect.innerHTML='';
+  const bizMap={};
+  bizSnap.forEach(d=>{
+    const b=d.data();
+    bizMap[d.id]=b.name||'Sin nombre';
+    bizList.innerHTML+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:6px">
+      <div><span style="color:#10b981;font-weight:700">${b.name||'Sin nombre'}</span><span style="color:#64748b;font-size:11px;margin-left:10px">${d.id}</span></div>
+      <button onclick="window.saEliminarEmpresa('${d.id}')" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">Eliminar</button>
+    </div>`;
+    bizSelect.innerHTML+=`<option value="${d.id}">${b.name||'Sin nombre'}</option>`;
+  });
+  if(bizList.innerHTML==='') bizList.innerHTML='<div style="color:#64748b;font-size:13px;padding:8px 0">No hay empresas creadas</div>';
+  // Cargar usuarios
+  const usrSnap = await getDocs(collection(db,'userAccounts'));
+  const usrList = $('sa-users-list');
+  usrList.innerHTML='';
+  usrSnap.forEach(d=>{
+    const u=d.data();
+    const roleLabel={administrador:'Admin',supervisor:'Supervisor',comercial:'Comercial',cajero:'Cajero',jefe_inventario:'Jefe Inv.'}[u.role]||u.role;
+    const rolColor={administrador:'#10b981',supervisor:'#3b82f6',comercial:'#f59e0b',cajero:'#8b5cf6',jefe_inventario:'#06b6d4'}[u.role]||'#94a3b8';
+    usrList.innerHTML+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-weight:700;color:#e8edf5">${(u.nombre||u.username||'?')[0].toUpperCase()}</div>
+        <div>
+          <div style="font-weight:700;color:#e8edf5">${u.nombre||'—'} <span style="color:#64748b;font-weight:400">@${u.username}</span></div>
+          <div style="font-size:11px;margin-top:2px"><span style="color:${rolColor};font-weight:700">${roleLabel}</span> · <span style="color:#64748b">${bizMap[u.businessId]||u.businessId||'—'}</span></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="background:rgba(255,255,255,.06);padding:3px 10px;border-radius:6px;font-size:12px;color:#94a3b8;font-family:monospace">🔑 ${u.password}</span>
+        <button onclick="window.saToggleUser('${d.id}',${!u.activo})" style="background:${u.activo?'rgba(16,185,129,.15)':'rgba(239,68,68,.15)'};border:1px solid ${u.activo?'rgba(16,185,129,.3)':'rgba(239,68,68,.3)'};color:${u.activo?'#10b981':'#f87171'};padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">${u.activo?'✅ Activo':'❌ Inactivo'}</button>
+        <button onclick="window.saEliminarUsuario('${d.id}')" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">Eliminar</button>
+      </div>
+    </div>`;
+  });
+  if(usrList.innerHTML==='') usrList.innerHTML='<div style="color:#64748b;font-size:13px;padding:8px 0">No hay usuarios creados</div>';
+};
+
+window.saCrearEmpresa = async function(){
+  const name = $('sa-new-biz').value.trim();
+  if(!name){ alert('Ingresa el nombre de la empresa'); return; }
+  await addDoc(collection(db,'businesses'),{name,createdAt:serverTimestamp()});
+  $('sa-new-biz').value='';
+  await window.saCargarDatos();
+};
+
+window.saEliminarEmpresa = async function(id){
+  if(!confirm('¿Eliminar esta empresa? Los datos no se borrarán de Firestore.')) return;
+  await deleteDoc(doc(db,'businesses',id));
+  await window.saCargarDatos();
+};
+
+window.saCrearUsuario = async function(){
+  const username = $('sa-new-username').value.trim().toLowerCase();
+  const password = $('sa-new-userpass').value.trim();
+  const role = $('sa-new-userrole').value;
+  const businessId = $('sa-new-userbiz').value;
+  if(!username||!password||!businessId){ alert('Completa todos los campos'); return; }
+  // Verificar que no exista
+  const existing=await getDocs(query(collection(db,'userAccounts'),where('username','==',username)));
+  if(!existing.empty){ alert('Ese nombre de usuario ya existe'); return; }
+  await addDoc(collection(db,'userAccounts'),{username,password,role,businessId,nombre:username,activo:true,createdAt:serverTimestamp()});
+  $('sa-new-username').value=''; $('sa-new-userpass').value='';
+  await window.saCargarDatos();
+  alert(`✅ Usuario "${username}" creado correctamente`);
+};
+
+window.saToggleUser = async function(docId, newState){
+  await updateDoc(doc(db,'userAccounts',docId),{activo:newState});
+  await window.saCargarDatos();
+};
+
+window.saEliminarUsuario = async function(docId){
+  if(!confirm('¿Eliminar este usuario?')) return;
+  await deleteDoc(doc(db,'userAccounts',docId));
+  await window.saCargarDatos();
+};
 
 // ── NAV ──
 window.loadModule=async function(mod){
