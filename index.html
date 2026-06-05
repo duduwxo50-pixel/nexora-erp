@@ -42,28 +42,8 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="light"] .modal-content,[data-theme="combined"] .modal-content{background:#fff;color:var(--text);}
 [data-theme="light"] input,[data-theme="combined"] input,
 [data-theme="light"] select,[data-theme="combined"] select,
-[data-theme="light"] textarea,[data-theme="combined"] textarea{background:#f1f5f9;border-color:var(--border);color:#0f172a;}
-[data-theme="light"] input::placeholder,[data-theme="combined"] input::placeholder,
-[data-theme="light"] textarea::placeholder,[data-theme="combined"] textarea::placeholder{color:#64748b;}
-/* Fix: modal inputs always readable */
-[data-theme="light"] .modal input,[data-theme="combined"] .modal input,
-[data-theme="light"] .modal select,[data-theme="combined"] .modal select,
-[data-theme="light"] .modal textarea,[data-theme="combined"] .modal textarea,
-[data-theme="light"] .auth-card input,[data-theme="combined"] .auth-card input,
-[data-theme="light"] .auth-card select,[data-theme="combined"] .auth-card select{color:#0f172a !important;background:#f1f5f9 !important;}
-/* Fix dark theme: inputs in modals/auth always white text */
-.modal .form-group input,.modal .form-group select,.modal .form-group textarea,
-.auth-card .form-group input,.auth-card .form-group select,
-.toolbar-search,.toolbar-select,
-.crm-add select,.crm-add input,.crm-add textarea{color:#e8edf5;}
-[data-theme="light"] .modal .form-group input,[data-theme="light"] .modal .form-group select,[data-theme="light"] .modal .form-group textarea,
-[data-theme="combined"] .modal .form-group input,[data-theme="combined"] .modal .form-group select,[data-theme="combined"] .modal .form-group textarea,
-[data-theme="light"] .auth-card .form-group input,[data-theme="combined"] .auth-card .form-group input,
-[data-theme="light"] .toolbar-search,[data-theme="combined"] .toolbar-search,
-[data-theme="light"] .toolbar-select,[data-theme="combined"] .toolbar-select,
-[data-theme="light"] .crm-add select,[data-theme="combined"] .crm-add select,
-[data-theme="light"] .crm-add input,[data-theme="combined"] .crm-add input,
-[data-theme="light"] .crm-add textarea,[data-theme="combined"] .crm-add textarea{color:#0f172a !important;}
+[data-theme="light"] textarea,[data-theme="combined"] textarea{background:#f1f5f9;border-color:var(--border);color:#0f172a !important;}
+[data-theme="light"] input::placeholder,[data-theme="combined"] input::placeholder{color:#64748b;}
 [data-theme="light"] .filter-chip,[data-theme="combined"] .filter-chip{background:#e8edf5;border-color:var(--border);color:var(--text);}
 [data-theme="light"] .btn-icon,[data-theme="combined"] .btn-icon,
 [data-theme="light"] .qa-btn,[data-theme="combined"] .qa-btn,
@@ -82,12 +62,9 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 }
 [data-theme="neon"] body{background:var(--bg);color:var(--text);}
 [data-theme="neon"] .topbar{background:rgba(3,12,10,.9);}
+[data-theme="neon"] thead th{background:rgba(3,12,10,0.97)!important;}
 [data-theme="neon"] .nav-item.active{background:rgba(16,185,129,0.15);color:var(--accent2);}
-[data-theme="neon"] .nav-item:hover{background:rgba(16,185,129,0.07);}
 [data-theme="neon"] .btn-action,[data-theme="neon"] .btn-primary,[data-theme="neon"] .btn-save{background:linear-gradient(135deg,#059669,#10b981);}
-[data-theme="neon"] .filter-chip:hover,[data-theme="neon"] .filter-chip.active{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--accent2);}
-[data-theme="neon"] input,[data-theme="neon"] select,[data-theme="neon"] textarea{background:rgba(16,185,129,.05);border-color:var(--border);color:var(--text);}
-[data-theme="neon"] .form-group input:focus,[data-theme="neon"] .form-group select:focus,[data-theme="neon"] .form-group textarea:focus{border-color:rgba(16,185,129,.6);box-shadow:0 0 0 3px rgba(16,185,129,.12);}
 
 [data-theme="light"] .nav-item{color:rgba(255,255,255,.7);}
 [data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
@@ -96,9 +73,8 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 #mod-empresas .emp-card-switch{transition:box-shadow .2s,border-color .2s;}
 #mod-empresas .emp-card-switch:hover{box-shadow:0 4px 24px rgba(37,99,235,.13);border-color:rgba(37,99,235,.3)!important;}
 #empresa-modal .info-box{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 14px;color:var(--muted);}
-.theme-btn{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:9px;padding:7px 4px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .22s;text-align:center;letter-spacing:.2px;position:relative;overflow:hidden;}
-.theme-btn::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .2s;border-radius:9px;}
-.theme-btn:hover{background:rgba(255,255,255,.12);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.25);}
+.theme-btn{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:9px;padding:7px 4px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .22s;text-align:center;}
+.theme-btn:hover{background:rgba(255,255,255,.12);color:#fff;transform:translateY(-1px);}
 .theme-btn.active{color:#fff;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.3);}
 #theme-dark.active{background:linear-gradient(135deg,#1e3a5f,#0f2744);border-color:rgba(56,189,248,.5);}
 #theme-light.active{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:rgba(251,191,36,.6);}
@@ -128,7 +104,6 @@ select option{background:#0d1828;color:#e8edf5;}
 .auth-logo span{display:block;font-size:11px;font-weight:500;color:var(--muted);
   -webkit-text-fill-color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
 .auth-card h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin:20px 0 18px;color:#e8edf5;}
-[data-theme="light"] .auth-card h2,[data-theme="combined"] .auth-card h2{color:#0f172a;}
 
 /* ── FORMS ── */
 .form-group{margin-bottom:13px;}
@@ -214,11 +189,11 @@ select option{background:#0d1828;color:#e8edf5;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .topbar-biz{font-size:12px;color:var(--muted);background:rgba(255,255,255,0.05);
   border:1px solid var(--border);padding:5px 13px;border-radius:20px;}
-.content{padding:28px 30px;flex:1;}
+.content{padding:14px 30px 28px;flex:1;}
 [id^="mod-"]{display:none;}
 
 /* ── TOOLBAR ── */
-.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:0;flex-wrap:wrap;padding:14px 0;position:sticky;top:60px;z-index:90;background:var(--bg);border-bottom:1px solid var(--border);}
 .toolbar-search{flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);
   border-radius:10px;padding:10px 14px;color:var(--text);font-size:13.5px;transition:all .2s;}
 .toolbar-search:focus{outline:none;border-color:rgba(37,99,235,.5);box-shadow:0 0 0 3px rgba(37,99,235,.08);}
@@ -232,9 +207,11 @@ select option{background:#0d1828;color:#e8edf5;}
 .filter-chip.clear{color:var(--red);border-color:rgba(244,63,94,.25);}
 
 /* ── TABLES ── */
-.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto;}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto;max-height:calc(100vh - 180px);}
 table{width:100%;border-collapse:collapse;min-width:500px;}
 thead tr{background:rgba(255,255,255,0.04);}
+thead th{position:sticky;top:0;z-index:10;background:rgba(14,20,32,0.97);backdrop-filter:blur(8px);}
+[data-theme="light"] thead th,[data-theme="combined"] thead th{background:rgba(240,244,255,0.97);}
 th{padding:11px 14px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;
   letter-spacing:.6px;color:var(--muted);white-space:nowrap;cursor:pointer;user-select:none;}
 th:hover{color:var(--text);}
@@ -1064,8 +1041,8 @@ if(window._IS_PORTAL) document.body.classList.add('portal-mode');
             <option value="">Todas las categorías</option>
           </select>
           <button class="btn-action" onclick="openProductoModal()">+ Nuevo producto</button>
-          <button class="btn-icon" onclick="openDuplicadosModal()" title="Eliminar productos con nombre duplicado" style="white-space:nowrap">🔍 Duplicados</button>
-          <button class="btn-icon" onclick="openBulkImgModal()" title="Carga masiva de imágenes" style="white-space:nowrap">🖼️ Imágenes masivas</button>
+          <button class="btn-icon" onclick="window.openDuplicadosModal()" style="white-space:nowrap">🔍 Duplicados</button>
+          <button class="btn-icon" onclick="window.openBulkImgModal()" style="white-space:nowrap">🖼️ Imágenes masivas</button>
         </div>
         <div class="table-wrap">
           <table><thead><tr>
@@ -2522,168 +2499,6 @@ window.editProducto=async id=>{
   $('prod-modal').classList.add('show');switchModalTab('prod','info');
 };
 window.deleteProducto=async(id,nombre)=>{if(confirm(`¿Mover "${nombre}" a la papelera?`)){await softDelete('productos',id,nombre);cargarInventario();}};
-// ══════════ DUPLICADOS ══════════
-window.openDuplicadosModal = async function() {
-  const modal = document.getElementById('duplicados-modal');
-  const body = document.getElementById('duplicados-body');
-  body.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Buscando duplicados...</p>';
-  modal.classList.add('show');
-
-  const snap = await getDocs(col('productos'));
-  const activos = snap.docs.filter(d => !d.data().eliminado);
-
-  // Agrupar por nombre normalizado
-  const grupos = {};
-  activos.forEach(d => {
-    const nombre = (d.data().nombre || '').trim().toLowerCase();
-    if (!grupos[nombre]) grupos[nombre] = [];
-    grupos[nombre].push(d);
-  });
-
-  const duplicados = Object.entries(grupos).filter(([, docs]) => docs.length > 1);
-
-  if (!duplicados.length) {
-    body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--green);font-size:15px;font-weight:700">✅ No hay productos con nombre duplicado</div>';
-    return;
-  }
-
-  let html = `<div style="margin-bottom:14px;font-size:13px;color:var(--muted)">Se encontraron <strong style="color:var(--red)">${duplicados.length}</strong> grupo(s) con nombres duplicados. Selecciona cuáles eliminar (mover a papelera).</div>`;
-
-  duplicados.forEach(([nombre, docs]) => {
-    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden">
-      <div style="padding:10px 16px;background:rgba(244,63,94,.07);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-        <span style="font-weight:800;font-size:13px">📦 ${esc(docs[0].data().nombre)}</span>
-        <span style="font-size:11px;color:var(--muted)">${docs.length} copias</span>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-        <thead><tr style="background:rgba(255,255,255,.03)">
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Selec.</th>
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Ref</th>
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Stock</th>
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Precio</th>
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Imagen</th>
-          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase">Creado</th>
-        </tr></thead><tbody>`;
-    docs.forEach((d, i) => {
-      const p = d.data();
-      const fecha = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('es-CO') : '—';
-      html += `<tr style="border-top:1px solid var(--border)">
-        <td style="padding:8px 12px"><input type="checkbox" data-dup-id="${d.id}" data-dup-nombre="${esc(p.nombre)}" style="width:16px;height:16px;cursor:pointer" ${i > 0 ? 'checked' : ''}></td>
-        <td style="padding:8px 12px;font-family:var(--mono);color:var(--accent2)">${esc(p.referencia||'—')}</td>
-        <td style="padding:8px 12px"><span class="badge ${(p.stock||0) > 0 ? 'badge-ok' : 'badge-peligro'}">${p.stock||0}</span></td>
-        <td style="padding:8px 12px">${fmtM(p.precio)}</td>
-        <td style="padding:8px 12px">${p.imagen ? `<img src="${p.imagen}" style="width:30px;height:30px;border-radius:6px;object-fit:cover">` : '<span style="color:var(--muted)">Sin img</span>'}</td>
-        <td style="padding:8px 12px;color:var(--muted);font-size:11px">${fecha}</td>
-      </tr>`;
-    });
-    html += `</tbody></table>
-      <div style="padding:10px 14px;display:flex;justify-content:flex-end">
-        <button class="btn-action" style="background:linear-gradient(135deg,var(--red),#b91c1c);font-size:12px;padding:7px 14px" onclick="eliminarDuplicadosSeleccionados(this)">🗑️ Eliminar seleccionados</button>
-      </div>
-    </div>`;
-  });
-
-  body.innerHTML = html;
-};
-
-window.eliminarDuplicadosSeleccionados = async function(btn) {
-  const grupo = btn.closest('div[style*="background:var(--card)"]');
-  const checks = grupo.querySelectorAll('input[type=checkbox]:checked');
-  if (!checks.length) { toast('No hay ninguno seleccionado', 'warn'); return; }
-  const nombres = [...checks].map(c => c.dataset.dupNombre);
-  if (!confirm(`¿Mover ${checks.length} producto(s) a la papelera?
-${nombres.join(', ')}`)) return;
-  for (const c of checks) {
-    await softDelete('productos', c.dataset.dupId, c.dataset.dupNombre);
-  }
-  toast(`✅ ${checks.length} producto(s) movido(s) a la papelera`);
-  cargarInventario();
-  openDuplicadosModal(); // refresh
-};
-
-// ══════════ CARGA MASIVA IMÁGENES ══════════
-let bulkImgFiles = []; // {file, base64, prodId}
-
-window.openBulkImgModal = async function() {
-  bulkImgFiles = [];
-  document.getElementById('bulk-img-list').innerHTML = '';
-  document.getElementById('bulk-img-status').textContent = '';
-  document.getElementById('bulk-img-input').value = '';
-  document.getElementById('bulk-img-modal').classList.add('show');
-};
-
-window.handleBulkDrop = function(e) {
-  e.preventDefault();
-  document.getElementById('bulk-drop-zone').style.borderColor = 'var(--border)';
-  handleBulkFiles(e.dataTransfer.files);
-};
-
-window.handleBulkFiles = async function(files) {
-  const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
-  if (!arr.length) { toast('No se encontraron imágenes válidas', 'warn'); return; }
-
-  // Build product options
-  const snap = await getDocs(col('productos'));
-  const prods = snap.docs.filter(d => !d.data().eliminado).map(d => ({id: d.id, nombre: d.data().nombre})).sort((a,b) => a.nombre.localeCompare(b.nombre));
-  const prodOptions = prods.map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
-
-  const container = document.getElementById('bulk-img-list');
-
-  for (const file of arr) {
-    const base64 = await new Promise(res => {
-      const r = new FileReader();
-      r.onload = () => res(r.result);
-      r.readAsDataURL(file);
-    });
-
-    // Try to auto-match by filename
-    const fnLower = file.name.replace(/\.[^.]+$/, '').toLowerCase().trim();
-    const match = prods.find(p => p.nombre.toLowerCase().trim() === fnLower || p.nombre.toLowerCase().includes(fnLower) || fnLower.includes(p.nombre.toLowerCase()));
-
-    const idx = bulkImgFiles.length;
-    bulkImgFiles.push({ file, base64, prodId: match ? match.id : '' });
-
-    const card = document.createElement('div');
-    card.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;';
-    card.innerHTML = `
-      <img src="${base64}" style="width:100%;height:140px;object-fit:cover;display:block">
-      <div style="padding:10px 12px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(file.name)}">📎 ${esc(file.name)}</div>
-        <select style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px" data-bulk-idx="${idx}" onchange="bulkImgFiles[${idx}].prodId=this.value">
-          <option value="">— Seleccionar producto —</option>
-          ${prodOptions}
-        </select>
-        ${match ? `<div style="font-size:10px;color:var(--green);margin-top:4px">✅ Autoasignado: ${esc(match.nombre)}</div>` : ''}
-      </div>`;
-
-    // Set select value if matched
-    if (match) {
-      card.querySelector('select').value = match.id;
-    }
-    container.appendChild(card);
-  }
-
-  document.getElementById('bulk-img-status').textContent = `${arr.length} imagen(es) cargada(s)`;
-};
-
-window.saveBulkImages = async function() {
-  const asignadas = bulkImgFiles.filter(f => f.prodId);
-  if (!asignadas.length) { toast('Asigna al menos una imagen a un producto', 'warn'); return; }
-
-  document.getElementById('bulk-img-status').textContent = 'Guardando...';
-  let ok = 0;
-  for (const item of asignadas) {
-    try {
-      await updateDoc(tdoc('productos', item.prodId), { imagen: item.base64, updatedAt: serverTimestamp() });
-      ok++;
-    } catch(e) { console.error(e); }
-  }
-  toast(`✅ ${ok} imagen(es) guardada(s)`);
-  document.getElementById('bulk-img-modal').classList.remove('show');
-  cargarInventario();
-};
-
-
 $('prod-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const data={nombre:$('prod-nombre').value,referencia:$('prod-ref').value,precio:parseFloat($('prod-precio').value)||0,costo:parseFloat($('prod-costo').value)||0,stock:parseInt($('prod-stock').value)||0,stockMin:parseInt($('prod-stockmin').value)||5,categoria:$('prod-categoria').value,descripcion:$('prod-descripcion').value,unidad:$('prod-unidad').value,eliminado:false,updatedAt:serverTimestamp()};
@@ -4412,23 +4227,21 @@ window.imprimirFactura=async function(factId){
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
   
-<!-- MODAL DUPLICADOS -->
+<!-- ══ MODAL DUPLICADOS ══ -->
 <div class="modal-backdrop" id="duplicados-modal">
   <div class="modal modal-wide">
     <div class="modal-header">
       <h3>🔍 Productos con nombre duplicado</h3>
       <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
     </div>
-    <div class="modal-body" id="duplicados-body" style="max-height:70vh;overflow-y:auto;padding:20px 26px">
-      <p style="color:var(--muted);text-align:center">Cargando...</p>
-    </div>
+    <div class="modal-body" id="duplicados-body" style="max-height:65vh;overflow-y:auto"></div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL CARGA MASIVA IMAGENES -->
+<!-- ══ MODAL CARGA MASIVA IMÁGENES ══ -->
 <div class="modal-backdrop" id="bulk-img-modal">
   <div class="modal modal-xl">
     <div class="modal-header">
@@ -4436,21 +4249,25 @@ window.imprimirFactura=async function(factId){
       <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
     </div>
     <div class="modal-body" style="padding:20px 26px">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-        📌 Sube varias imágenes a la vez. Luego selecciona a qué producto corresponde cada una y guarda.
+      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
+        📌 Sube varias imágenes. Luego elige a qué producto corresponde cada una. Si el nombre del archivo coincide con un producto, se asigna automáticamente.
       </div>
-      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px" onclick="document.getElementById('bulk-img-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleBulkDrop(event)">
-        <div style="font-size:36px;margin-bottom:8px">📂</div>
+      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px"
+        onclick="document.getElementById('bulk-img-input').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragleave="this.style.borderColor='var(--border)'"
+        ondrop="window.handleBulkDrop(event)">
+        <div style="font-size:34px;margin-bottom:8px">📂</div>
         <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos permitidos</div>
-        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="handleBulkFiles(this.files)">
+        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos</div>
+        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="window.handleBulkFiles(this.files)">
       </div>
-      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
+      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-height:45vh;overflow-y:auto"></div>
     </div>
     <div class="modal-footer">
       <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
       <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-      <button class="btn-save" onclick="saveBulkImages()">💾 Guardar imágenes asignadas</button>
+      <button class="btn-save" onclick="window.saveBulkImages()">💾 Guardar imágenes asignadas</button>
     </div>
   </div>
 </div>
@@ -4540,50 +4357,7 @@ window.imprimirOrdenCompra=async function(compraId){
   <div class="footer">Nexora ERP · Orden generada el ${new Date().toLocaleDateString('es-CO')} · ${esc(bizName)}</div>
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
-  
-<!-- MODAL DUPLICADOS -->
-<div class="modal-backdrop" id="duplicados-modal">
-  <div class="modal modal-wide">
-    <div class="modal-header">
-      <h3>🔍 Productos con nombre duplicado</h3>
-      <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" id="duplicados-body" style="max-height:70vh;overflow-y:auto;padding:20px 26px">
-      <p style="color:var(--muted);text-align:center">Cargando...</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CARGA MASIVA IMAGENES -->
-<div class="modal-backdrop" id="bulk-img-modal">
-  <div class="modal modal-xl">
-    <div class="modal-header">
-      <h3>🖼️ Carga masiva de imágenes</h3>
-      <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:20px 26px">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-        📌 Sube varias imágenes a la vez. Luego selecciona a qué producto corresponde cada una y guarda.
-      </div>
-      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px" onclick="document.getElementById('bulk-img-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleBulkDrop(event)">
-        <div style="font-size:36px;margin-bottom:8px">📂</div>
-        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos permitidos</div>
-        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="handleBulkFiles(this.files)">
-      </div>
-      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
-    </div>
-    <div class="modal-footer">
-      <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-      <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-      <button class="btn-save" onclick="saveBulkImages()">💾 Guardar imágenes asignadas</button>
-    </div>
-  </div>
-</div>
-</body></html>`;
+  </body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();
 };
 
@@ -5644,50 +5418,7 @@ window.imprimirRecibo = async function(factId){
   <div class="footer">Recibo generado por Nexora ERP &nbsp;·&nbsp; ${new Date().toLocaleDateString('es-CO')} &nbsp;·&nbsp; ${esc(cfg.nombre||bizName)}</div>
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
-  
-<!-- MODAL DUPLICADOS -->
-<div class="modal-backdrop" id="duplicados-modal">
-  <div class="modal modal-wide">
-    <div class="modal-header">
-      <h3>🔍 Productos con nombre duplicado</h3>
-      <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" id="duplicados-body" style="max-height:70vh;overflow-y:auto;padding:20px 26px">
-      <p style="color:var(--muted);text-align:center">Cargando...</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CARGA MASIVA IMAGENES -->
-<div class="modal-backdrop" id="bulk-img-modal">
-  <div class="modal modal-xl">
-    <div class="modal-header">
-      <h3>🖼️ Carga masiva de imágenes</h3>
-      <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:20px 26px">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-        📌 Sube varias imágenes a la vez. Luego selecciona a qué producto corresponde cada una y guarda.
-      </div>
-      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px" onclick="document.getElementById('bulk-img-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleBulkDrop(event)">
-        <div style="font-size:36px;margin-bottom:8px">📂</div>
-        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos permitidos</div>
-        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="handleBulkFiles(this.files)">
-      </div>
-      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
-    </div>
-    <div class="modal-footer">
-      <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-      <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-      <button class="btn-save" onclick="saveBulkImages()">💾 Guardar imágenes asignadas</button>
-    </div>
-  </div>
-</div>
-</body></html>`;
+  </body></html>`;
 
   const w = window.open('','_blank');
   w.document.write(html);
@@ -6666,53 +6397,148 @@ window.imprimirFactura = async function(factId) {
   <div class="footer">Generado por Nexora ERP · ${new Date().toLocaleDateString('es-CO')} · ${esc(cfg.nombre || bizName)}</div>
   </div>
   <script>window.onload=()=>{window.print();}<\/script>
-  
-<!-- MODAL DUPLICADOS -->
-<div class="modal-backdrop" id="duplicados-modal">
-  <div class="modal modal-wide">
-    <div class="modal-header">
-      <h3>🔍 Productos con nombre duplicado</h3>
-      <button class="modal-close" onclick="document.getElementById('duplicados-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" id="duplicados-body" style="max-height:70vh;overflow-y:auto;padding:20px 26px">
-      <p style="color:var(--muted);text-align:center">Cargando...</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="document.getElementById('duplicados-modal').classList.remove('show')">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CARGA MASIVA IMAGENES -->
-<div class="modal-backdrop" id="bulk-img-modal">
-  <div class="modal modal-xl">
-    <div class="modal-header">
-      <h3>🖼️ Carga masiva de imágenes</h3>
-      <button class="modal-close" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:20px 26px">
-      <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--muted)">
-        📌 Sube varias imágenes a la vez. Luego selecciona a qué producto corresponde cada una y guarda.
-      </div>
-      <div id="bulk-drop-zone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px" onclick="document.getElementById('bulk-img-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleBulkDrop(event)">
-        <div style="font-size:36px;margin-bottom:8px">📂</div>
-        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Clic aquí o arrastra imágenes</div>
-        <div style="font-size:12px;color:var(--muted)">JPG, PNG, WEBP — múltiples archivos permitidos</div>
-        <input type="file" id="bulk-img-input" accept="image/*" multiple style="display:none" onchange="handleBulkFiles(this.files)">
-      </div>
-      <div id="bulk-img-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
-    </div>
-    <div class="modal-footer">
-      <span id="bulk-img-status" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-      <button class="btn-cancel" onclick="document.getElementById('bulk-img-modal').classList.remove('show')">Cancelar</button>
-      <button class="btn-save" onclick="saveBulkImages()">💾 Guardar imágenes asignadas</button>
-    </div>
-  </div>
-</div>
-</body></html>`;
+  </body></html>`;
   const w = window.open('', '_blank');
   w.document.write(html);
   w.document.close();
+};
+
+// ══════════ DUPLICADOS ══════════
+window.openDuplicadosModal = async function() {
+  const modal = document.getElementById('duplicados-modal');
+  const body  = document.getElementById('duplicados-body');
+  body.innerHTML = '<p style="color:var(--muted);text-align:center;padding:30px">Buscando duplicados...</p>';
+  modal.classList.add('show');
+  const snap = await getDocs(col('productos'));
+  const activos = snap.docs.filter(d => !d.data().eliminado);
+  const grupos = {};
+  activos.forEach(d => {
+    const key = (d.data().nombre || '').trim().toLowerCase();
+    if (!grupos[key]) grupos[key] = [];
+    grupos[key].push(d);
+  });
+  const dups = Object.entries(grupos).filter(([,docs]) => docs.length > 1);
+  if (!dups.length) {
+    body.innerHTML = '<div style="text-align:center;padding:48px;color:var(--green);font-size:15px;font-weight:700">✅ No hay productos con nombre duplicado</div>';
+    return;
+  }
+  let html = `<div style="margin-bottom:14px;font-size:13px;color:var(--muted)">Se encontraron <strong style="color:var(--red)">${dups.length}</strong> grupo(s) con nombre duplicado. Marca los que deseas mover a la papelera.</div>`;
+  dups.forEach(([,docs]) => {
+    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden">
+      <div style="padding:10px 16px;background:rgba(244,63,94,.07);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:800;font-size:13px">📦 ${esc(docs[0].data().nombre)}</span>
+        <span style="font-size:11px;color:var(--muted)">${docs.length} copias</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead><tr style="background:rgba(255,255,255,.03)">
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Eliminar</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Ref</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Stock</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Precio</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Img</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;position:static">Creado</th>
+        </tr></thead><tbody>`;
+    docs.forEach((d, i) => {
+      const p = d.data();
+      const fecha = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('es-CO') : '—';
+      html += `<tr style="border-top:1px solid var(--border)${i===0?';background:rgba(16,185,129,.04)':''}">
+        <td style="padding:8px 12px">
+          <input type="checkbox" data-dup-id="${d.id}" data-dup-nombre="${esc(p.nombre)}" style="width:16px;height:16px;cursor:pointer" ${i > 0 ? 'checked' : ''}>
+          ${i===0?'<span style="font-size:10px;color:var(--green);margin-left:4px">Original</span>':''}
+        </td>
+        <td style="padding:8px 12px;font-family:var(--mono);color:var(--accent2);font-size:11px">${esc(p.referencia||'—')}</td>
+        <td style="padding:8px 12px"><span class="badge ${(p.stock||0)>0?'badge-ok':'badge-peligro'}">${p.stock||0}</span></td>
+        <td style="padding:8px 12px">${fmtM(p.precio)}</td>
+        <td style="padding:8px 12px">${p.imagen?`<img src="${p.imagen}" style="width:28px;height:28px;border-radius:6px;object-fit:cover">`:'<span style="color:var(--muted);font-size:11px">—</span>'}</td>
+        <td style="padding:8px 12px;color:var(--muted);font-size:11px">${fecha}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>
+      <div style="padding:10px 14px;display:flex;justify-content:flex-end">
+        <button class="btn-action" style="background:linear-gradient(135deg,var(--red),#b91c1c);font-size:12px;padding:7px 14px" onclick="window.eliminarDupsGrupo(this)">🗑️ Eliminar marcados</button>
+      </div></div>`;
+  });
+  body.innerHTML = html;
+};
+
+window.eliminarDupsGrupo = async function(btn) {
+  const grupo = btn.closest('div[style*="border-radius:12px"]');
+  const checks = [...grupo.querySelectorAll('input[type=checkbox]:checked')];
+  if (!checks.length) { toast('Ninguno seleccionado','warn'); return; }
+  const lista = checks.map(c=>c.dataset.dupNombre).join(', ');
+  if (!confirm(`¿Mover ${checks.length} producto(s) a la papelera?\n${lista}`)) return;
+  for (const c of checks) await softDelete('productos', c.dataset.dupId, c.dataset.dupNombre);
+  toast(`✅ ${checks.length} producto(s) a la papelera`);
+  cargarInventario();
+  window.openDuplicadosModal();
+};
+
+// ══════════ CARGA MASIVA IMÁGENES ══════════
+window._bulkFiles = [];
+
+window.openBulkImgModal = function() {
+  window._bulkFiles = [];
+  document.getElementById('bulk-img-list').innerHTML = '';
+  document.getElementById('bulk-img-status').textContent = '';
+  const inp = document.getElementById('bulk-img-input');
+  if (inp) inp.value = '';
+  document.getElementById('bulk-img-modal').classList.add('show');
+};
+
+window.handleBulkDrop = function(e) {
+  e.preventDefault();
+  document.getElementById('bulk-drop-zone').style.borderColor = 'var(--border)';
+  window.handleBulkFiles(e.dataTransfer.files);
+};
+
+window.handleBulkFiles = async function(files) {
+  const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!arr.length) { toast('No hay imágenes válidas','warn'); return; }
+  const snap = await getDocs(col('productos'));
+  const prods = snap.docs.filter(d=>!d.data().eliminado)
+    .map(d=>({id:d.id,nombre:d.data().nombre||''}))
+    .sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const opts = prods.map(p=>`<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
+  const container = document.getElementById('bulk-img-list');
+  for (const file of arr) {
+    const base64 = await new Promise(res=>{
+      const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(file);
+    });
+    const fnClean = file.name.replace(/\.[^.]+$/,'').toLowerCase().trim();
+    const match = prods.find(p=>{
+      const n=p.nombre.toLowerCase().trim();
+      return n===fnClean||n.includes(fnClean)||fnClean.includes(n);
+    });
+    const idx = window._bulkFiles.length;
+    window._bulkFiles.push({base64, prodId: match?match.id:''});
+    const card = document.createElement('div');
+    card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden';
+    card.innerHTML=`<img src="${base64}" style="width:100%;height:130px;object-fit:cover;display:block">
+      <div style="padding:10px 12px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(file.name)}">${esc(file.name)}</div>
+        <select style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;color:#e8edf5" onchange="window._bulkFiles[${idx}].prodId=this.value">
+          <option value="">— Seleccionar producto —</option>${opts}
+        </select>
+        ${match?`<div style="font-size:10px;color:var(--green);margin-top:5px">✅ ${esc(match.nombre)}</div>`:''}
+      </div>`;
+    if (match) card.querySelector('select').value = match.id;
+    container.appendChild(card);
+  }
+  document.getElementById('bulk-img-status').textContent=`${arr.length} imagen(es) cargada(s)`;
+};
+
+window.saveBulkImages = async function() {
+  const asig = window._bulkFiles.filter(f=>f.prodId);
+  if (!asig.length) { toast('Asigna al menos una imagen a un producto','warn'); return; }
+  document.getElementById('bulk-img-status').textContent='Guardando...';
+  let ok=0;
+  for (const item of asig) {
+    try { await updateDoc(tdoc('productos',item.prodId),{imagen:item.base64,updatedAt:serverTimestamp()}); ok++; }
+    catch(e){console.error(e);}
+  }
+  toast(`✅ ${ok} imagen(es) guardada(s)`);
+  document.getElementById('bulk-img-modal').classList.remove('show');
+  cargarInventario();
 };
 
 </script>
