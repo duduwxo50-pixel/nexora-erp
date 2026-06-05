@@ -2167,6 +2167,7 @@ const fmtDate=ts=>{if(!ts)return'—';if(ts?.toDate)return ts.toDate().toLocaleD
 const esc=str=>{const d=document.createElement('div');d.textContent=str||'';return d.innerHTML;};
 
 function toast(msg,type='success'){const t=$('global-toast');t.textContent=msg;t.className=`toast toast-${type} show`;clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
+window.toast=toast;
 
 // ══ Custom confirm (replaces native confirm which is blocked in some contexts) ══
 window._nexoraConfirm = function(msg) {
@@ -6971,6 +6972,365 @@ if(typeof window._nexoraRegister === 'function') {
   ].forEach(function(fn){ if(window[fn]) window._nexoraRegister(fn, window[fn]); });
 }
 
+// ════════════════════════════════════════════════════════════════
+// NEXORA v5 — PDF COTIZACIÓN + ENVÍO WA/EMAIL + EMPRESA COLAPSABLE
+// (Dentro del módulo ES: acceso directo a db, getDoc, doc, toast, currentTenant)
+// ════════════════════════════════════════════════════════════════
+
+// ── Helpers internos ──
+const getBizCfg = () => { try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};} };
+
+// ── Toggle panel empresa colapsable ──
+window.toggleEmpresaPanel = function(){
+  const body = document.getElementById('empresa-panel-body');
+  const icon = document.getElementById('empresa-toggle-icon');
+  if(!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(icon) icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+  if(!isOpen) _cargarEmpresaPanel();
+};
+
+function _cargarEmpresaPanel(){
+  const cfg = getBizCfg();
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.value=v||''; };
+  set('biz-nombre', cfg.nombre||'');
+  set('biz-nit',    cfg.nit||'');
+  set('biz-tel',    cfg.tel||'');
+  set('biz-dir',    cfg.dir||'');
+  const logo = localStorage.getItem('nexora-logo') || '';
+  if(logo){
+    window._logoDataUrl = logo;
+    const img = document.getElementById('logo-preview');
+    const wrap = document.getElementById('logo-preview-wrap');
+    if(img){ img.src=logo; img.style.display='block'; }
+    if(wrap) wrap.style.display='none';
+  }
+  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
+  if(firma){
+    window._firmaDataUrl = firma;
+    const img2 = document.getElementById('firma-preview');
+    const wrap2 = document.getElementById('firma-preview-wrap');
+    if(img2){ img2.src=firma; img2.style.display='block'; }
+    if(wrap2) wrap2.style.display='none';
+  }
+}
+
+// Override guardarConfigEmpresa para guardar logo y cerrar panel
+const __origGuardar5 = window.guardarConfigEmpresa;
+window.guardarConfigEmpresa = function(){
+  if(window._logoDataUrl) localStorage.setItem('nexora-logo', window._logoDataUrl);
+  if(__origGuardar5) __origGuardar5();
+  const body = document.getElementById('empresa-panel-body');
+  const icon = document.getElementById('empresa-toggle-icon');
+  if(body) body.style.display='none';
+  if(icon) icon.style.transform='rotate(0deg)';
+};
+
+// ── Generar HTML del PDF de cotización ──
+async function _buildCotPDF(cotId){
+  const snap = await getDoc(tdoc('cotizaciones', cotId));
+  if(!snap.exists()) return null;
+  const c = snap.data();
+
+  let bizName = 'Mi Negocio';
+  try{
+    const biz = await getDoc(doc(db,'businesses',currentTenant));
+    if(biz.exists()) bizName = biz.data().name || bizName;
+  }catch(e){}
+
+  const cfg = getBizCfg();
+  const logo = localStorage.getItem('nexora-logo') || window._logoDataUrl || '';
+  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
+
+  let cliInfo = {nit:'',email:'',telefono:'',ciudad:'',direccion:'',condicionesPago:''};
+  if(c.clienteId){
+    try{
+      const cs = await getDoc(tdoc('clientes', c.clienteId));
+      if(cs.exists()) cliInfo = {...cliInfo, ...cs.data()};
+    }catch(e){}
+  }
+
+  const items = c.items || [];
+  const subtotalBruto = items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  const descItemsMonto = items.reduce((s,i)=>s+(i.precio*i.cantidad*(i.descItem||0)/100),0);
+  const subtotal = subtotalBruto - descItemsMonto;
+  const dp = c.descuento || 0;
+  const descMonto = subtotal * dp / 100;
+  const base = subtotal - descMonto;
+  const ip = c.iva || 0;
+  const ivaMonto = Math.round(base * ip / 100);
+  const total = Math.round(base + ivaMonto);
+
+  const e2 = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const fmt = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
+
+  const estadoStyles = {
+    'Borrador':'background:#475569;color:#fff','En Espera':'background:#d97706;color:#fff',
+    'Aprobado':'background:#059669;color:#fff','Cancelado':'background:#e11d48;color:#fff','Facturada':'background:#7c3aed;color:#fff',
+  };
+  const badgeStyle = estadoStyles[c.estado||'Borrador'] || 'background:#475569;color:#fff';
+
+  const logoHtml = logo
+    ? `<img src="${logo}" style="max-height:60px;max-width:150px;object-fit:contain">`
+    : `<div style="font-size:26px;font-weight:900;color:#1e40af">${e2(cfg.nombre||bizName)}</div>`;
+
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Cotización ${e2(c.numero||'')}</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4ff;color:#1e293b;font-size:13px;}
+  .page{background:#fff;max-width:820px;margin:24px auto;padding:44px 48px;box-shadow:0 6px 48px rgba(0,0,0,.13);border-radius:4px;}
+  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:3px solid #1e40af;}
+  .biz-info{font-size:11.5px;color:#64748b;line-height:1.75;margin-top:9px;}
+  .doc-title{text-align:right;}
+  .doc-title h1{font-size:34px;font-weight:900;color:#1e40af;letter-spacing:-1.5px;line-height:1;}
+  .doc-title .num{font-size:14px;font-weight:700;color:#64748b;margin-top:4px;font-family:monospace;}
+  .estat{display:inline-block;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:800;margin-top:8px;${badgeStyle}}
+  .asesor-tag{font-size:11.5px;color:#64748b;margin-top:6px;}
+  .parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:26px;}
+  .party-box{background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:15px 17px;}
+  .party-box.blue{background:#eff6ff;border-color:#bfdbfe;}
+  .party-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:7px;}
+  .party-label.bl{color:#3b82f6;}
+  .party-name{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:5px;}
+  .party-detail{font-size:11.5px;color:#475569;line-height:1.7;}
+  table{width:100%;border-collapse:collapse;margin-bottom:24px;border-radius:10px;overflow:hidden;}
+  thead tr{background:#1e40af;}
+  thead th{color:#fff;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:11px 13px;text-align:left;}
+  thead th.r{text-align:right;}thead th.c{text-align:center;}
+  tbody tr:nth-child(even){background:#f8faff;}
+  tbody tr:hover{background:#eff6ff;}
+  tbody td{padding:11px 13px;border-bottom:1px solid #e8edf5;font-size:12.5px;vertical-align:middle;}
+  tbody td.r{text-align:right;font-weight:600;} tbody td.c{text-align:center;}
+  .prod-name{font-weight:700;color:#0f172a;}
+  .prod-ref{font-size:10px;color:#94a3b8;margin-top:2px;}
+  .totals{display:flex;justify-content:flex-end;margin-bottom:28px;}
+  .totals-box{width:290px;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;}
+  .totals-row{display:flex;justify-content:space-between;padding:9px 16px;font-size:13px;border-bottom:1px solid #f1f5f9;}
+  .totals-row:last-child{border-bottom:none;background:#eff6ff;padding:13px 16px;}
+  .tkey{color:#64748b;font-weight:500;}
+  .tval{font-weight:700;color:#1e293b;}
+  .tval.red{color:#e11d48;} .tval.big{font-size:17px;font-weight:900;color:#1e40af;}
+  .notas-box{background:#fefce8;border:1.5px solid #fde68a;border-radius:12px;padding:15px 17px;margin-bottom:28px;}
+  .notas-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#92400e;margin-bottom:6px;}
+  .footer-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:36px;padding-top:22px;border-top:1.5px solid #e2e8f0;}
+  .validity{font-size:11px;color:#94a3b8;margin-bottom:3px;}
+  .validity-date{font-size:15px;font-weight:800;color:#1e293b;}
+  .firma-block{text-align:center;min-width:220px;}
+  .firma-img{max-height:72px;max-width:190px;object-fit:contain;margin-bottom:8px;}
+  .firma-line{width:210px;border-top:1.5px solid #cbd5e1;margin:0 auto 8px;}
+  .firma-label{font-size:10px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:.6px;}
+  .firma-name{font-size:12px;color:#1e293b;font-weight:700;margin-top:3px;}
+  .powered{font-size:10px;color:#e2e8f0;text-align:right;margin-top:22px;}
+  @media print{
+    body{background:#fff;}
+    .page{box-shadow:none;margin:0;padding:28px 32px;border-radius:0;}
+    thead tr{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .estat{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style></head><body>
+<div class="page">
+  <div class="header">
+    <div>${logoHtml}<div class="biz-info">
+      ${cfg.nombre||bizName?`<strong style="color:#1e293b;font-size:13px">${e2(cfg.nombre||bizName)}</strong><br>`:''}
+      ${cfg.nit?`NIT: ${e2(cfg.nit)}<br>`:''}
+      ${cfg.tel?`${e2(cfg.tel)}<br>`:''}
+      ${cfg.dir?`${e2(cfg.dir)}`:''}
+    </div></div>
+    <div class="doc-title">
+      <h1>COTIZACIÓN</h1>
+      <div class="num">${e2(c.numero||'—')}</div>
+      <div><span class="estat">${e2(c.estado||'Borrador')}</span></div>
+      ${c.asesorNombre?`<div class="asesor-tag">Asesor: <strong>${e2(c.asesorNombre)}</strong></div>`:''}
+    </div>
+  </div>
+
+  <div class="parties">
+    <div class="party-box">
+      <div class="party-label">Cliente</div>
+      <div class="party-name">${e2(c.cliente||'—')}</div>
+      <div class="party-detail">
+        ${cliInfo.nit?`NIT/CC: <strong>${e2(cliInfo.nit)}</strong><br>`:''}
+        ${cliInfo.email?`${e2(cliInfo.email)}<br>`:''}
+        ${cliInfo.telefono?`Tel: ${e2(cliInfo.telefono)}<br>`:''}
+        ${cliInfo.ciudad?`${e2(cliInfo.ciudad)}<br>`:''}
+        ${cliInfo.direccion?e2(cliInfo.direccion):''}
+      </div>
+    </div>
+    <div class="party-box blue">
+      <div class="party-label bl">Datos de la cotización</div>
+      <div class="party-detail" style="color:#1e3a8a">
+        <strong>Fecha emisión:</strong> ${e2(c.fecha||'—')}<br>
+        <strong>Vence:</strong> ${e2(c.vencimiento||'—')}<br>
+        ${c.asesorTel?`<strong>Tel. asesor:</strong> ${e2(c.asesorTel)}<br>`:''}
+        ${cliInfo.condicionesPago?`<strong>Cond. pago:</strong> ${e2(cliInfo.condicionesPago)}`:''}
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th style="width:42%">Producto / Servicio</th>
+      <th class="c">Cant.</th>
+      <th class="r">Precio Unit.</th>
+      <th class="c">Dto.</th>
+      <th class="r">Subtotal</th>
+    </tr></thead>
+    <tbody>
+      ${items.map(i=>{
+        const sub = i.precio * i.cantidad * (1-(i.descItem||0)/100);
+        return `<tr>
+          <td><div class="prod-name">${e2(i.nombre||'—')}</div>${i.ref?`<div class="prod-ref">Ref: ${e2(i.ref)}</div>`:''}</td>
+          <td class="c">${i.cantidad}</td>
+          <td class="r">${fmt(i.precio)}</td>
+          <td class="c">${i.descItem||0}%</td>
+          <td class="r">${fmt(Math.round(sub))}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>
+
+  <div class="totals"><div class="totals-box">
+    <div class="totals-row"><span class="tkey">Subtotal bruto</span><span class="tval">${fmt(Math.round(subtotalBruto))}</span></div>
+    ${descItemsMonto>0?`<div class="totals-row"><span class="tkey">Desc. por ítem</span><span class="tval red">−${fmt(Math.round(descItemsMonto))}</span></div>`:''}
+    ${dp>0?`<div class="totals-row"><span class="tkey">Descuento (${dp}%)</span><span class="tval red">−${fmt(Math.round(descMonto))}</span></div>`:''}
+    ${ip>0?`<div class="totals-row"><span class="tkey">IVA (${ip}%)</span><span class="tval">${fmt(ivaMonto)}</span></div>`:''}
+    <div class="totals-row"><span class="tkey" style="font-weight:800;font-size:14px">TOTAL</span><span class="tval big">${fmt(total)}</span></div>
+  </div></div>
+
+  ${c.notas?`<div class="notas-box"><div class="notas-title">📝 Notas y condiciones</div><div style="font-size:12.5px;color:#78350f;line-height:1.65">${e2(c.notas)}</div></div>`:''}
+
+  <div class="footer-row">
+    <div>
+      <div class="validity">Esta cotización es válida hasta:</div>
+      <div class="validity-date">${e2(c.vencimiento||'—')}</div>
+    </div>
+    <div class="firma-block">
+      ${firma?`<img src="${firma}" class="firma-img"><br>`:'<div class="firma-line"></div>'}
+      <div class="firma-label">Firma autorizada</div>
+      <div class="firma-name">${e2(cfg.nombre||bizName)}</div>
+    </div>
+  </div>
+  <div class="powered">Generado con Nexora ERP · ${new Date().toLocaleDateString('es-CO')}</div>
+</div>
+<script>
+  // Botón descargar en la ventana de impresión
+  document.addEventListener('DOMContentLoaded', function(){
+    const bar = document.createElement('div');
+    bar.style.cssText='position:fixed;top:0;left:0;right:0;background:#1e40af;color:#fff;padding:10px 20px;display:flex;gap:10px;align-items:center;z-index:999;font-family:sans-serif;font-size:13px;';
+    bar.innerHTML='<strong>Nexora ERP — Cotización ${e2(c.numero||'')}</strong><span style="flex:1"></span><button onclick="window.print()" style="background:#fff;color:#1e40af;border:none;border-radius:7px;padding:7px 18px;font-weight:800;cursor:pointer;font-size:13px">🖨️ Imprimir / Guardar PDF</button><button onclick="window.close()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:13px">✕ Cerrar</button>';
+    document.body.prepend(bar);
+    document.querySelector('.page').style.marginTop='60px';
+  });
+<\/script>
+</body></html>`;
+}
+
+// Exponer generarPDFCotizacion globalmente
+window.generarPDFCotizacion = async function(cotId){
+  return await _buildCotPDF(cotId);
+};
+
+// ── Abrir modal de envío ──
+window._enviarCotId = null;
+window.abrirEnviarCot = async function(cotId){
+  window._enviarCotId = cotId;
+  const snap = await getDoc(tdoc('cotizaciones', cotId));
+  if(!snap.exists()) return;
+  const c = snap.data();
+
+  let tel='', email='', clienteNombre=c.cliente||'';
+  if(c.clienteId){
+    try{
+      const cs = await getDoc(tdoc('clientes', c.clienteId));
+      if(cs.exists()){
+        tel = cs.data().telefono||'';
+        email = cs.data().email||'';
+      }
+    }catch(e){}
+  }
+
+  const cfg = getBizCfg();
+  const fmtCOP = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
+
+  document.getElementById('enviar-cot-tel').value = tel;
+  document.getElementById('enviar-cot-email').value = email;
+  document.getElementById('enviar-cot-info').innerHTML =
+    `<strong>📄 ${c.numero||''}</strong> — Cliente: <strong>${clienteNombre}</strong><br>
+     <span style="font-size:12px;color:var(--muted)">Total: ${fmtCOP(c.total)} · Vence: ${c.vencimiento||'—'}</span>`;
+
+  document.getElementById('enviar-cot-msg').value =
+`Estimado(a) ${clienteNombre},
+
+Le compartimos la cotización *${c.numero||''}* de ${cfg.nombre||'nuestra empresa'}.
+
+📋 Resumen:
+• Total: ${fmtCOP(c.total)}
+• Válido hasta: ${c.vencimiento||'—'}
+
+Para confirmar o solicitar ajustes, con gusto lo atendemos.
+
+¡Quedamos atentos!
+${cfg.nombre||''}${cfg.tel?'\n📞 '+cfg.tel:''}`;
+
+  document.getElementById('enviar-cot-modal').classList.add('show');
+};
+
+function _abrirPDFVentana(html){
+  const win = window.open('','_blank');
+  if(!win){ toast('El navegador bloqueó la ventana emergente. Permite popups para este sitio.','error'); return; }
+  win.document.write(html);
+  win.document.close();
+}
+
+window._ejecutarPDFCot = async function(){
+  if(!window._enviarCotId){ toast('Sin cotización seleccionada','error'); return; }
+  toast('Generando PDF...');
+  try{
+    const html = await _buildCotPDF(window._enviarCotId);
+    if(!html){ toast('Error obteniendo la cotización','error'); return; }
+    _abrirPDFVentana(html);
+  }catch(err){ toast('Error generando PDF: '+err.message,'error'); }
+};
+
+window._enviarWACot = async function(){
+  if(!window._enviarCotId) return;
+  const tel = document.getElementById('enviar-cot-tel').value.trim();
+  const msg = document.getElementById('enviar-cot-msg').value.trim();
+  if(!tel){ toast('Ingresa un número de WhatsApp','error'); return; }
+  toast('Abriendo PDF y WhatsApp...');
+  try{
+    const html = await _buildCotPDF(window._enviarCotId);
+    if(html) _abrirPDFVentana(html);
+  }catch(e){}
+  setTimeout(()=>{
+    const phone = tel.replace(/[^0-9]/g,'');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');
+  }, 900);
+  document.getElementById('enviar-cot-modal').classList.remove('show');
+};
+
+window._enviarEmailCot = async function(){
+  if(!window._enviarCotId) return;
+  const email = document.getElementById('enviar-cot-email').value.trim();
+  const msg = document.getElementById('enviar-cot-msg').value.trim();
+  if(!email){ toast('Ingresa un correo electrónico','error'); return; }
+  toast('Abriendo PDF y correo...');
+  try{
+    const html = await _buildCotPDF(window._enviarCotId);
+    if(html) _abrirPDFVentana(html);
+  }catch(e){}
+  const cfg2 = getBizCfg();
+  setTimeout(()=>{
+    const subject = encodeURIComponent(`Cotización — ${cfg2.nombre||'Nexora ERP'}`);
+    window.open(`mailto:${email}?subject=${subject}&body=${encodeURIComponent(msg)}`,'_blank');
+  }, 900);
+  document.getElementById('enviar-cot-modal').classList.remove('show');
+};
+
+// ── Fin NEXORA v5 ──
+
 </script>
 
 <!-- ══ CUSTOM CONFIRM MODAL ══ -->
@@ -7054,347 +7414,10 @@ if(typeof window._nexoraRegister === 'function') {
 })();
 
 // ════════════════════════════════════════════════════════════════
-// NEXORA v5 — PDF COTIZACIÓN + ENVÍO WA/EMAIL + EMPRESA COLAPSABLE
+// NEXORA v5 block moved into main ES module — see below
 // ════════════════════════════════════════════════════════════════
 
-// ── Toggle panel empresa ──
-window.toggleEmpresaPanel = function(){
-  const body = document.getElementById('empresa-panel-body');
-  const icon = document.getElementById('empresa-toggle-icon');
-  if(!body) return;
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  if(icon) icon.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
-  // Cargar datos al abrir
-  if(!open) _cargarEmpresaPanel();
-};
 
-function _cargarEmpresaPanel(){
-  const cfg = (() => { try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};} })();
-  const set = (id,v) => { const el=document.getElementById(id); if(el) el.value=v||''; };
-  set('biz-nombre', cfg.nombre||'');
-  set('biz-nit',    cfg.nit||'');
-  set('biz-tel',    cfg.tel||'');
-  set('biz-dir',    cfg.dir||'');
-  // Logo
-  const logo = localStorage.getItem('nexora-logo') || '';
-  if(logo){
-    window._logoDataUrl = logo;
-    const img = document.getElementById('logo-preview');
-    const wrap = document.getElementById('logo-preview-wrap');
-    if(img){ img.src=logo; img.style.display='block'; }
-    if(wrap) wrap.style.display='none';
-  }
-  // Firma
-  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
-  if(firma){
-    window._firmaDataUrl = firma;
-    const img = document.getElementById('firma-preview');
-    const wrap = document.getElementById('firma-preview-wrap');
-    if(img){ img.src=firma; img.style.display='block'; }
-    if(wrap) wrap.style.display='none';
-  }
-}
-
-// Extender guardarConfigEmpresa para guardar logo también
-const __origGuardar5 = window.guardarConfigEmpresa;
-window.guardarConfigEmpresa = function(){
-  if(window._logoDataUrl) localStorage.setItem('nexora-logo', window._logoDataUrl);
-  if(__origGuardar5) __origGuardar5();
-  // Cerrar panel después de guardar
-  const body = document.getElementById('empresa-panel-body');
-  const icon = document.getElementById('empresa-toggle-icon');
-  if(body){ body.style.display='none'; }
-  if(icon){ icon.style.transform='rotate(0deg)'; }
-};
-
-// ── PDF COTIZACIÓN ──
-window.generarPDFCotizacion = async function(cotId){
-  const {getDoc:gd, doc:firestoreDoc, getFirestore} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-  const snap = await gd(window._tdoc('cotizaciones', cotId));
-  if(!snap.exists()) return null;
-  const c = snap.data();
-
-  let bizName = 'Mi Negocio';
-  try{
-    const fdb = getFirestore();
-    const biz = await gd(firestoreDoc(fdb, 'businesses', window._currentTenant||window._currentTenantId||''));
-    if(biz.exists()) bizName = biz.data().name || bizName;
-  }catch(e){}
-  const cfg = (() => { try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};} })();
-  const logo = localStorage.getItem('nexora-logo') || window._logoDataUrl || '';
-  const firma = cfg.firma || localStorage.getItem('nexora-firma') || '';
-
-  // Datos cliente
-  let cliInfo = {nit:'',email:'',telefono:'',ciudad:'',direccion:''};
-  if(c.clienteId){
-    try{
-      const cs = await gd(window._tdoc('clientes', c.clienteId));
-      if(cs.exists()) cliInfo = {...cliInfo, ...cs.data()};
-    }catch(e){}
-  }
-
-  const items = c.items || [];
-  const subtotalBruto = items.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-  const descItems = items.reduce((s,i)=>s+(i.precio*i.cantidad*(i.descItem||0)/100),0);
-  const subtotal = subtotalBruto - descItems;
-  const dp = c.descuento || 0;
-  const descMonto = subtotal * dp / 100;
-  const base = subtotal - descMonto;
-  const ip = c.iva || 0;
-  const ivaMonto = Math.round(base * ip / 100);
-  const total = Math.round(base + ivaMonto);
-
-  const logoHtml = logo
-    ? `<img src="${logo}" style="max-height:60px;max-width:150px;object-fit:contain">`
-    : `<div style="font-size:26px;font-weight:900;color:#1e40af">${cfg.nombre||bizName}</div>`;
-
-  const esc2 = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const fmt = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
-
-  const estadoBadge = {
-    'Borrador':'background:#475569;color:#fff',
-    'En Espera':'background:#d97706;color:#fff',
-    'Aprobado':'background:#059669;color:#fff',
-    'Cancelado':'background:#e11d48;color:#fff',
-    'Facturada':'background:#7c3aed;color:#fff',
-  }[c.estado||'Borrador'] || 'background:#475569;color:#fff';
-
-  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-  <title>Cotización ${esc2(c.numero||'')}</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Segoe UI',Arial,sans-serif;background:#f8faff;color:#1e293b;font-size:13px;}
-    .page{background:#fff;max-width:800px;margin:0 auto;padding:40px 44px;box-shadow:0 4px 40px rgba(0,0,0,.1);}
-    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid #e2e8f0;}
-    .biz-info{font-size:12px;color:#64748b;line-height:1.7;}
-    .doc-title{text-align:right;}
-    .doc-title h1{font-size:32px;font-weight:900;color:#1e40af;letter-spacing:-1px;}
-    .doc-title .num{font-size:14px;font-weight:700;color:#64748b;margin-top:2px;}
-    .badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;${estadoBadge};}
-    .parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
-    .party-box{background:#f8faff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;}
-    .party-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#94a3b8;margin-bottom:8px;}
-    .party-name{font-size:15px;font-weight:800;color:#1e293b;margin-bottom:4px;}
-    .party-detail{font-size:11.5px;color:#64748b;line-height:1.65;}
-    .meta-row{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
-    .meta-box{background:#f1f5f9;border-radius:8px;padding:9px 14px;flex:1;min-width:130px;}
-    .meta-key{font-size:10px;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:.6px;}
-    .meta-val{font-size:13px;font-weight:700;color:#1e293b;margin-top:2px;}
-    table{width:100%;border-collapse:collapse;margin-bottom:24px;}
-    thead{background:#1e40af;}
-    thead th{color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:left;}
-    thead th:last-child{text-align:right;}
-    tbody tr:nth-child(even){background:#f8faff;}
-    tbody td{padding:10px 12px;border-bottom:1px solid #e2e8f0;font-size:12.5px;vertical-align:top;}
-    tbody td:last-child{text-align:right;font-weight:600;}
-    .prod-name{font-weight:700;color:#1e293b;}
-    .prod-ref{font-size:10.5px;color:#94a3b8;}
-    .totals{display:flex;justify-content:flex-end;margin-bottom:28px;}
-    .totals-box{width:280px;}
-    .totals-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px;}
-    .totals-row.grand{border-top:2px solid #1e40af;border-bottom:none;padding-top:12px;margin-top:4px;}
-    .totals-row.grand .tval{font-size:18px;font-weight:900;color:#1e40af;}
-    .totals-row.grand .tkey{font-weight:800;font-size:14px;}
-    .tkey{color:#64748b;}
-    .tval{font-weight:600;color:#1e293b;}
-    .notas-box{background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:14px 16px;margin-bottom:28px;}
-    .notas-title{font-size:11px;font-weight:700;text-transform:uppercase;color:#92400e;margin-bottom:6px;}
-    .footer-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;padding-top:24px;border-top:1px solid #e2e8f0;}
-    .firma-block{text-align:center;}
-    .firma-img{max-height:70px;max-width:180px;object-fit:contain;margin-bottom:6px;}
-    .firma-line{width:200px;border-top:1.5px solid #cbd5e1;margin:0 auto 6px;}
-    .firma-label{font-size:10.5px;color:#94a3b8;font-weight:600;}
-    .powered{font-size:10px;color:#cbd5e1;text-align:right;}
-    @media print{body{background:#fff;}.page{box-shadow:none;padding:20px;}}
-  </style></head><body>
-  <div class="page">
-    <div class="header">
-      <div>
-        ${logoHtml}
-        <div class="biz-info" style="margin-top:8px">
-          ${cfg.nombre||bizName ? `<div style="font-weight:700;color:#1e293b;font-size:13px">${esc2(cfg.nombre||bizName)}</div>` : ''}
-          ${cfg.nit ? `<div>NIT: ${esc2(cfg.nit)}</div>` : ''}
-          ${cfg.tel ? `<div>Tel: ${esc2(cfg.tel)}</div>` : ''}
-          ${cfg.dir ? `<div>${esc2(cfg.dir)}</div>` : ''}
-        </div>
-      </div>
-      <div class="doc-title">
-        <h1>COTIZACIÓN</h1>
-        <div class="num">${esc2(c.numero||'—')}</div>
-        <div style="margin-top:8px"><span class="badge">${esc2(c.estado||'Borrador')}</span></div>
-        ${c.asesorNombre ? `<div style="margin-top:8px;font-size:12px;color:#64748b">Asesor: <strong>${esc2(c.asesorNombre)}</strong></div>` : ''}
-      </div>
-    </div>
-
-    <div class="parties">
-      <div class="party-box">
-        <div class="party-label">Cliente</div>
-        <div class="party-name">${esc2(c.cliente||'—')}</div>
-        <div class="party-detail">
-          ${cliInfo.nit ? `NIT/CC: ${esc2(cliInfo.nit)}<br>` : ''}
-          ${cliInfo.email ? `${esc2(cliInfo.email)}<br>` : ''}
-          ${cliInfo.telefono ? `Tel: ${esc2(cliInfo.telefono)}<br>` : ''}
-          ${cliInfo.ciudad ? `${esc2(cliInfo.ciudad)}<br>` : ''}
-          ${cliInfo.direccion ? `${esc2(cliInfo.direccion)}` : ''}
-        </div>
-      </div>
-      <div class="party-box" style="background:#eff6ff;border-color:#bfdbfe">
-        <div class="party-label" style="color:#3b82f6">Detalles</div>
-        <div class="party-detail" style="color:#1e3a8a">
-          <strong>Fecha:</strong> ${esc2(c.fecha||'—')}<br>
-          <strong>Vence:</strong> ${esc2(c.vencimiento||'—')}<br>
-          ${c.asesorTel ? `<strong>Asesor tel:</strong> ${esc2(c.asesorTel)}<br>` : ''}
-          ${cliInfo.condicionesPago ? `<strong>Pago:</strong> ${esc2(cliInfo.condicionesPago)}` : ''}
-        </div>
-      </div>
-    </div>
-
-    <table>
-      <thead><tr>
-        <th style="width:40%">Producto / Servicio</th>
-        <th style="text-align:center">Cant.</th>
-        <th style="text-align:right">Precio Unit.</th>
-        <th style="text-align:center">Dto.</th>
-        <th style="text-align:right">Subtotal</th>
-      </tr></thead>
-      <tbody>
-        ${items.map((i,idx)=>{
-          const sub = i.precio * i.cantidad * (1 - (i.descItem||0)/100);
-          return `<tr>
-            <td><div class="prod-name">${esc2(i.nombre||'—')}</div>${i.ref?`<div class="prod-ref">Ref: ${esc2(i.ref)}</div>`:''}</td>
-            <td style="text-align:center">${i.cantidad}</td>
-            <td style="text-align:right">${fmt(i.precio)}</td>
-            <td style="text-align:center">${i.descItem||0}%</td>
-            <td>${fmt(Math.round(sub))}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
-
-    <div class="totals">
-      <div class="totals-box">
-        <div class="totals-row"><span class="tkey">Subtotal bruto</span><span class="tval">${fmt(Math.round(subtotalBruto))}</span></div>
-        ${descItems>0?`<div class="totals-row"><span class="tkey">Desc. por ítem</span><span class="tval" style="color:#e11d48">−${fmt(Math.round(descItems))}</span></div>`:''}
-        ${dp>0?`<div class="totals-row"><span class="tkey">Descuento (${dp}%)</span><span class="tval" style="color:#e11d48">−${fmt(Math.round(descMonto))}</span></div>`:''}
-        ${ip>0?`<div class="totals-row"><span class="tkey">IVA (${ip}%)</span><span class="tval">${fmt(ivaMonto)}</span></div>`:''}
-        <div class="totals-row grand"><span class="tkey">TOTAL</span><span class="tval">${fmt(total)}</span></div>
-      </div>
-    </div>
-
-    ${c.notas?`<div class="notas-box"><div class="notas-title">📝 Notas y condiciones</div><div style="font-size:12.5px;color:#78350f;line-height:1.6">${esc2(c.notas)}</div></div>`:''}
-
-    <div class="footer-row">
-      <div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:4px">Esta cotización es válida hasta:</div>
-        <div style="font-size:14px;font-weight:700;color:#1e293b">${esc2(c.vencimiento||'—')}</div>
-      </div>
-      <div class="firma-block">
-        ${firma?`<img src="${firma}" class="firma-img"><br>`:'<div class="firma-line"></div>'}
-        <div class="firma-label">Firma autorizada</div>
-        <div style="font-size:11px;color:#1e293b;font-weight:700;margin-top:2px">${esc2(cfg.nombre||bizName)}</div>
-      </div>
-    </div>
-    <div class="powered" style="margin-top:20px">Generado con Nexora ERP · ${new Date().toLocaleDateString('es-CO')}</div>
-  </div>
-  <script>window.onload=()=>window.print();<\/script>
-  </body></html>`;
-
-  return html;
-};
-
-// ── Abrir modal de envío ──
-window._enviarCotId = null;
-window.abrirEnviarCot = async function(cotId){
-  const {getDoc:gd} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-  window._enviarCotId = cotId;
-  const snap = await gd(window._tdoc('cotizaciones', cotId));
-  if(!snap.exists()) return;
-  const c = snap.data();
-
-  // Cargar datos del cliente
-  let tel='', email='', clienteNombre=c.cliente||'';
-  if(c.clienteId){
-    const cs = await gd(window._tdoc('clientes', c.clienteId));
-    if(cs.exists()){
-      tel = cs.data().telefono||'';
-      email = cs.data().email||'';
-    }
-  }
-
-  const cfg = (() => { try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};} })();
-
-  document.getElementById('enviar-cot-tel').value = tel;
-  document.getElementById('enviar-cot-email').value = email;
-  document.getElementById('enviar-cot-info').innerHTML =
-    `<strong>📄 ${c.numero||''}</strong> — Cliente: <strong>${clienteNombre}</strong><br>
-     <span style="font-size:12px;color:var(--muted)">Total: ${new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(c.total||0)} · Vence: ${c.vencimiento||'—'}</span>`;
-
-  const msgDefault =
-`Estimado(a) ${clienteNombre},
-
-Adjunto encontrará la cotización *${c.numero||''}* de ${cfg.nombre||'nuestra empresa'}.
-
-📋 Resumen:
-• Total: ${new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(c.total||0)}
-• Válido hasta: ${c.vencimiento||'—'}
-
-Para confirmar o solicitar ajustes, no dude en contactarnos.
-
-¡Quedamos atentos!
-${cfg.nombre||''}${cfg.tel?'\n📞 '+cfg.tel:''}`;
-
-  document.getElementById('enviar-cot-msg').value = msgDefault;
-  document.getElementById('enviar-cot-modal').classList.add('show');
-};
-
-// ── Generar PDF (abrir ventana) ──
-window._ejecutarPDFCot = async function(){
-  if(!window._enviarCotId) return;
-  toast('Generando PDF...');
-  const html = await window.generarPDFCotizacion(window._enviarCotId);
-  if(!html) return toast('Error generando PDF','error');
-  const win = window.open('','_blank');
-  win.document.write(html);
-  win.document.close();
-};
-
-// ── Enviar por WhatsApp ──
-window._enviarWACot = async function(){
-  if(!window._enviarCotId) return;
-  const tel = document.getElementById('enviar-cot-tel').value.trim();
-  const msg = document.getElementById('enviar-cot-msg').value.trim();
-  if(!tel){ toast('Ingresa un número de WhatsApp','error'); return; }
-  // Abrir PDF también
-  toast('Abriendo PDF y WhatsApp...');
-  const html = await window.generarPDFCotizacion(window._enviarCotId);
-  if(html){ const w=window.open('','_blank'); w.document.write(html); w.document.close(); }
-  setTimeout(()=>{
-    const phone = tel.replace(/[^0-9]/g,'');
-    const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/${phone}?text=${encoded}`,'_blank');
-  }, 800);
-  document.getElementById('enviar-cot-modal').classList.remove('show');
-};
-
-// ── Enviar por correo ──
-window._enviarEmailCot = async function(){
-  if(!window._enviarCotId) return;
-  const email = document.getElementById('enviar-cot-email').value.trim();
-  const msg = document.getElementById('enviar-cot-msg').value.trim();
-  if(!email){ toast('Ingresa un correo electrónico','error'); return; }
-  // Abrir PDF
-  toast('Abriendo PDF y correo...');
-  const html = await window.generarPDFCotizacion(window._enviarCotId);
-  if(html){ const w=window.open('','_blank'); w.document.write(html); w.document.close(); }
-  const cfg = (() => { try{ return JSON.parse(localStorage.getItem('nexora-biz-config')||'{}'); }catch(e){return{};} })();
-  setTimeout(()=>{
-    const subject = encodeURIComponent(`Cotización — ${cfg.nombre||'Nexora ERP'}`);
-    const body = encodeURIComponent(msg);
-    window.open(`mailto:${email}?subject=${subject}&body=${body}`,'_blank');
-  }, 800);
-  document.getElementById('enviar-cot-modal').classList.remove('show');
-};
 
 </script>
 </body>
