@@ -70,6 +70,16 @@ window._PORTAL_ID = new URLSearchParams(window.location.search).get('portal');
 [data-theme="light"] .nav-item:hover,[data-theme="light"] .nav-item.active{color:#fff;background:rgba(255,255,255,.12);}
 .theme-switcher{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:10px 14px;margin-top:4px;}
 /* ─── MULTI-EMPRESA ─── */
+/* ── SUPERADMIN: forzar texto blanco sin importar el tema ── */
+#superadmin-screen input,
+#superadmin-screen select {
+  background: rgba(255,255,255,.08) !important;
+  color: #e8edf5 !important;
+  border-color: rgba(255,255,255,.15) !important;
+}
+#superadmin-screen input::placeholder { color: rgba(255,255,255,.35) !important; }
+#superadmin-screen select option { background: #0d1828 !important; color: #e8edf5 !important; }
+#superadmin-screen label { color: #94a3b8 !important; }
 #mod-empresas .emp-card-switch{transition:box-shadow .2s,border-color .2s;}
 #mod-empresas .emp-card-switch:hover{box-shadow:0 4px 24px rgba(37,99,235,.13);border-color:rgba(37,99,235,.3)!important;}
 #empresa-modal .info-box{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 14px;color:var(--muted);}
